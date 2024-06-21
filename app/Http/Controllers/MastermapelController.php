@@ -25,6 +25,7 @@ class MastermapelController extends Controller
             1 => 'name',
             2 => 'kelompok',
             3 => 'type',
+            4 => 'kelas',
         ];
 
         $start = $request->start;
@@ -110,6 +111,7 @@ class MastermapelController extends Controller
     public function updateData(Request $request,$id)
     {
         $find = MasterMapel::where('id',$id)->first();
+        
         if(!$find)
         {
             return response()->json([
@@ -117,17 +119,23 @@ class MastermapelController extends Controller
                 'message' => 'Update data gagal!, data tidak ditemukan',
             ],400);
         }else{
-            $request->name != null ? $find->name = $request->name : true;
+            $request->name != null ? $find->name = $request->name : true;   
             $request->kelompok != null ? $find->kelompok = $request->kelompok : true;
-            $request->type != null ? $find->type = $request->name : true;
+            $request->type != null ? $find->type = $request->type : true;
             $request->jurusan_id != null ? $find->jurusan_id = $request->jurusan_id : true;
             $find->save();
 
+            // $find->name = $request->name;
+            // $find->kelompok = $request->kelompok;
+            // $find->type = $request->type;
+            // $find->jurusan_id = $request->jurusan_id;
+            // $find->save();
             return response()->json([
                 'success' => true,
                 'message' => 'Berhasil melakukan update data master mapel',
             ],201);
         }
+
     }
 
     public function deleteData($id)
@@ -169,7 +177,7 @@ class MastermapelController extends Controller
             $item['kelompok'] = $m->kelompok;
             $item['type'] = $m->type;
             $data[] = $item;
-        }
+        }   
 
         return Excel::download(new MastermapelExport($data), 'Master-Mapel-Export.xlsx');
     }

@@ -28,15 +28,17 @@ class MasterMapelImport implements ToCollection, WithHeadingRow
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
-            $kelas = MasterJurusan::where('name','ILIKE','%'.$row['kelas'].'%')->where('is_active',1)->first();
+            $kelas = MasterJurusan::where('name','LIKE','%'.$row['kelas'].'%')->where('is_active',1)->first();
             if($kelas)
             {
                 $mapel = MasterMapel::updateOrCreate([
                     'jurusan_id' => $kelas->id,
                     'name' => $row['nama_mapel'],
+                    'kelompok' => $row['kelompok'],
+                    'type' => $row['tipe_nilai'],
                 ],[
                     'jurusan_id' => $kelas->id,
-                    'name' => $row['nama_kelas'],
+                    'name' => $row['nama_mapel'],
                     'kelompok' => $row['kelompok'],
                     'type' => $row['tipe_nilai'],
                 ]);

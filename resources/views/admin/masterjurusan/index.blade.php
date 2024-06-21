@@ -41,7 +41,7 @@ License: You must have a valid license purchased only from themeforest(the above
         <div class="mobile-menu md:hidden">
             <div class="mobile-menu-bar">
                 <a href="" class="flex mr-auto">
-                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo.svg') }}">
+                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo-taqmir.png') }}">
                 </a>
                 <a href="javascript:;" class="mobile-menu-toggler"> <i data-lucide="bar-chart-2" class="w-8 h-8 text-white transform -rotate-90"></i> </a>
             </div>
@@ -148,7 +148,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <!-- BEGIN: Side Menu -->
             <nav class="side-nav">
                 <a href="" class="intro-x flex items-center pl-5 pt-4 mt-3">
-                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo.svg') }}">
+                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo-taqmir.png') }}">
                     <span class="hidden xl:block text-white text-lg ml-3"> Aplikasi PSB </span> 
                 </a>
                 <div class="side-nav__devider my-6"></div>
@@ -483,15 +483,15 @@ License: You must have a valid license purchased only from themeforest(the above
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-1" class="form-label">Kode Kelas</label>
                                 <input type="hidden" class="form-control update-id">
-                                <input type="text" class="form-control update-kode" placeholder="IPA010">
+                                <input type="text" class="form-control update-kode" placeholder="IPA010" required>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Nama Kelas</label>
-                                <input type="text" class="form-control update-nama" placeholder="IPA 10">
+                                <input type="text" class="form-control update-nama" placeholder="IPA 10" required>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-3" class="form-label">Status</label>
-                                <select class="form-select update-status">
+                                <select class="form-select update-status" required>
                                     <option selected disabled> --- Pilih Status Kelas --- </option>
                                     <option value="1"> Aktif </option>
                                     <option value="0"> Nonaktif </option>
@@ -791,12 +791,12 @@ License: You must have a valid license purchased only from themeforest(the above
                     });
 
                     // Tombol Update Admin
-                    jQuery(".update-btn").click(function() {
+                    jQuery(".btn-update").click(function() {
                         // Ajax update
                         var id = jQuery('.update-id').val();
                         var kode = jQuery('.update-kode').val();
                         var name = jQuery('.update-nama').val();
-                        var is_active = jQuery('.update-is_active').val();
+                        var is_active = jQuery('.update-status').val();
 
                         // Kirim permintaan pembaruan produk ke API
                         jQuery.ajax({

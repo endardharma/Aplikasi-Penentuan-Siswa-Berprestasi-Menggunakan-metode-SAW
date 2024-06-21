@@ -7,6 +7,7 @@ use App\Exports\TemplateMastersiswa;
 use App\Imports\MastersiswaImport;
 use App\Models\MasterJurusan;
 use App\Models\MasterSiswa;
+use App\Models\TahunAjar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
@@ -26,7 +27,8 @@ class MastersiswaController extends Controller
             2 => 'jenkel',
             3 => 'jurusan_id',
             4 => 'email',
-            5 => 'telpon',
+            5 => 'tajar_id',
+            6 => 'telpon',
         ];
 
         $start = $request->start;
@@ -55,7 +57,8 @@ class MastersiswaController extends Controller
             $item['jurusan_name'] = $s->jurusan->name ?? '';
             $item['jenkel'] = $s->jenkel;
             $item['telpon'] = $s->telpon;
-            $item['periode'] = $s->periode;
+            $item['tajar_id'] = $s->tajar_id;
+            $item['tajar_name'] = $s->tajar->name ?? '';
             $data[] = $item;
         }
 
@@ -92,7 +95,7 @@ class MastersiswaController extends Controller
         $siswa->jurusan_id = $request->jurusan_id;
         $siswa->jenkel = $request->jenkel;
         $siswa->telpon = $request->telpon;
-        $siswa->periode = $request->periode;
+        $siswa->tajar_id = $request->tajar_id;
         $siswa->save();
 
         return response()->json([
@@ -118,6 +121,22 @@ class MastersiswaController extends Controller
         ],200);
     }
 
+    public function listTajar()
+    {
+        $tajar = TahunAjar::all();
+        $data = array();
+        foreach($tajar as $t)
+        {
+            $item['id'] = $t->id;
+            $item['name'] = $t->name;
+            $data[] = $item;
+        }
+
+        return response()->json([
+            'data' => $data,
+        ],200);
+    }
+
     public function updateData(Request $request,$id)
     {
         $find = MasterSiswa::where('id',$id)->first();
@@ -129,7 +148,7 @@ class MastersiswaController extends Controller
             $request->jurusan_id != null ? $find->jurusan_id = $request->jurusan_id : true;
             $request->jenkel != null ? $find->jenkel = $request->jenkel : true;
             $request->telpon != null ? $find->telpon = $request->telpon : true;
-            $request->periode != null ? $find->periode = $request->periode : true;
+            $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
             $find->save();
 
             return response()->json([
@@ -174,7 +193,7 @@ class MastersiswaController extends Controller
             $item['kelas'] = $m->jurusan->name ?? '';
             $item['jenkel'] = $m->jenkel;
             $item['telpon'] = $m->telpon;
-            $item['periode'] = $m->periode;
+            $item['periode'] = $m->tajar->name ?? '';
             $data[] = $item;
         }
 

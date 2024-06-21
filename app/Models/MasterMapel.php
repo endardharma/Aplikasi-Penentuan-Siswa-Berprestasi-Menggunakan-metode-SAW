@@ -14,4 +14,9 @@ class MasterMapel extends Model
     {
         return $this->belongsTo(MasterJurusan::class,'jurusan_id');
     }
+    
+    public function rapor()
+    {
+        return $this->hasMany(RaporSiswa::class,'mapel_id')->orderby('id', 'asc');
+    }
 }

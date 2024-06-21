@@ -41,7 +41,7 @@ License: You must have a valid license purchased only from themeforest(the above
         <div class="mobile-menu md:hidden">
             <div class="mobile-menu-bar">
                 <a href="" class="flex mr-auto">
-                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo.svg') }}">
+                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo-taqmir.png') }}">
                 </a>
                 <a href="javascript:;" class="mobile-menu-toggler"> <i data-lucide="bar-chart-2" class="w-8 h-8 text-white transform -rotate-90"></i> </a>
             </div>
@@ -148,7 +148,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <!-- BEGIN: Side Menu -->
             <nav class="side-nav">
                 <a href="" class="intro-x flex items-center pl-5 pt-4 mt-3">
-                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo.svg') }}">
+                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo-taqmir.png') }}">
                     <span class="hidden xl:block text-white text-lg ml-3"> Aplikasi PSB </span> 
                 </a>
                 <div class="side-nav__devider my-6"></div>
@@ -654,7 +654,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     formData.append('kode', kode);
                     formData.append('name', name);
                     formData.append('tahun', tahun);
-                    formData.append('semster', semster);
+                    formData.append('semester', semester);
 
                     // Kirim permintaan pembaruan produk ke API
                     jQuery.ajax({
@@ -802,7 +802,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     });
 
                     // Tombol Update Admin
-                    jQuery(".update-btn").click(function() {
+                    jQuery(".btn-update").click(function() {
                         // Ajax update
                         var id = jQuery('.update-id').val();
                         var kode = jQuery('.update-kode').val();

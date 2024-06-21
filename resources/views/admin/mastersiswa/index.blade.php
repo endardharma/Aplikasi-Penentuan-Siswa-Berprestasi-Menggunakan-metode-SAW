@@ -41,7 +41,7 @@ License: You must have a valid license purchased only from themeforest(the above
         <div class="mobile-menu md:hidden">
             <div class="mobile-menu-bar">
                 <a href="" class="flex mr-auto">
-                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo.svg') }}">
+                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo-taqmir.png') }}">
                 </a>
                 <a href="javascript:;" class="mobile-menu-toggler"> <i data-lucide="bar-chart-2" class="w-8 h-8 text-white transform -rotate-90"></i> </a>
             </div>
@@ -148,7 +148,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <!-- BEGIN: Side Menu -->
             <nav class="side-nav">
                 <a href="" class="intro-x flex items-center pl-5 pt-4 mt-3">
-                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo.svg') }}">
+                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo-taqmir.png') }}">
                     <span class="hidden xl:block text-white text-lg ml-3"> Aplikasi PSB </span> 
                 </a>
                 <div class="side-nav__devider my-6"></div>
@@ -468,8 +468,10 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <input type="number" class="form-control form-telpon" placeholder="62821********" required>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-6" class="form-label">Periode Angkatan Siswa</label>
-                                <input type="number" class="form-control form-periode" placeholder="2013" required>
+                                <label for="modal-form-6" class="form-label">Periode Angkatan</label>
+                                <select class="form-select form-tajar" required>
+                                    <option selected disabled> --- Pilih Periode Angkatan Tahun Ajar --- </option>
+                                </select>
                             </div>
                         </div>
                         <!-- END: Modal Body -->
@@ -547,8 +549,10 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <input type="number" class="form-control update-telpon" placeholder="62821********" required>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Periode Angkatan Siswa</label>
-                                <input type="number" class="form-control update-periode" placeholder="2013" required>
+                                <label for="modal-form-6" class="form-label">Periode Angkatan</label>
+                                <select class="form-select update-tajar" required>
+                                    <option selected disabled> --- Pilih Periode Angkatan Tahun Ajar --- </option>
+                                </select>
                             </div>
                         </div>
                         <!-- END: Modal Body -->
@@ -760,6 +764,28 @@ License: You must have a valid license purchased only from themeforest(the above
                     console.error('Error:', error);
                 });
 
+                // Panggil data support tahun ajar (periode)
+                var url = 'http://127.0.0.1:8000/api/master-siswa/data-support/tajar';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }).then(response => response.json()).then(data => {
+                    var select = jQuery('.form-tajar');
+                    var selectUpdate = jQuery('.update-tajar');
+
+                    // Iterasi melalui data dan membuat objek untuk setiap entri
+                    jQuery.each(data, function(index, item) {
+                        for (let i = 0; i < item.length; i++) {
+                            select.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selectUpdate.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                        }
+                    });
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+
                 jQuery('.btn-simpan').click(function() {
                     // Show the modal
                     event.preventDefault(); // Prevent default form submission
@@ -852,13 +878,13 @@ License: You must have a valid license purchased only from themeforest(the above
                         { data: 'jurusan_name', className: 'text-center' },
                         { data: 'email', className: 'text-center' },
                         { data: 'telpon', className: 'text-center' },
-                        { data: 'periode', className: 'text-center' },
+                        { data: 'tajar_name', className: 'text-center' },
                         {
                             data: null,
                             render: function (data, type, row) {
 
                                 // Create action buttons
-                                var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-nis="' + data.nis + '" data-name="' + data.name + '" data-jenkel="' + data.jenkel + '" data-jurusan_id="' + data.jurusan_id + '" data-email="' + data.email + '" data-telpon="' + data.telpon + '" data-periode="' + data.periode + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-nis="' + data.nis + '" data-name="' + data.name + '" data-jenkel="' + data.jenkel + '" data-jurusan_id="' + data.jurusan_id + '" data-email="' + data.email + '" data-telpon="' + data.telpon + '" data-tajar_id="' + data.tajar_id + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
                                 var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
 
                                 // Combine the buttons
@@ -886,7 +912,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     var jurusan_id = jQuery(this).attr("data-jurusan_id");
                     var email = jQuery(this).attr("data-email");
                     var telpon = jQuery(this).attr("data-telpon");
-                    var periode = jQuery(this).attr("data-periode");
+                    var tajar_id = jQuery(this).attr("data-tajar_id");
 
                     // Handle edit action
                     jQuery('.update-id').val(id);
@@ -896,7 +922,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     jQuery('.update-jurusan').val(jurusan_id);
                     jQuery('.update-jenkel').val(jenkel);
                     jQuery('.update-telpon').val(telpon);
-                    jQuery('.update-periode').val(periode);
+                    jQuery('.update-tajar').val(tajar_id);
                 });
 
                 // Fungsi button update data
@@ -909,11 +935,11 @@ License: You must have a valid license purchased only from themeforest(the above
                     var jenkel = jQuery('.update-jenkel').val();
                     var jurusan_id = jQuery('.update-jurusan').val();
                     var telpon = jQuery('.update-telpon').val();
-                    var periode = jQuery('.update-periode').val();
+                    var tajar_id = jQuery('.update-tajar').val();
 
                     // Kirim permintaan pembaruan produk ke API
                     jQuery.ajax({
-                        url: '{{ env('BASE_URL') }}api/master-siswa/update-data/' + id,
+                        url: 'http://127.0.0.1:8000/api/master-siswa/update-data/' + id,
                         type: "PUT",
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader('Authorization', 'Bearer ' + token);
@@ -925,7 +951,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             jenkel: jenkel,
                             jurusan_id: jurusan_id,
                             telpon: telpon,
-                            periode: periode,
+                            tajar_id: tajar_id,
                         },
                         success: function(response) {
                             // Show the modal

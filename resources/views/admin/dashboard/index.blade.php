@@ -28,7 +28,7 @@ License: You must have a valid license purchased only from themeforest(the above
         <div class="mobile-menu md:hidden">
             <div class="mobile-menu-bar">
                 <a href="" class="flex mr-auto">
-                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo.svg') }}">
+                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo-taqmir.png') }}">
                 </a>
                 <a href="javascript:;" class="mobile-menu-toggler"> <i data-lucide="bar-chart-2" class="w-8 h-8 text-white transform -rotate-90"></i> </a>
             </div>
@@ -90,31 +90,31 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="menu">
+                                <a href="{{ route('data_nilai.presensi') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="clipboard"></i> </div>
                                     <div class="menu__title"> Presensi </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="menu">
+                                <a href="{{ route('data_nilai.sikap') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="thumbs-up"></i> </div>
                                     <div class="menu__title"> Sikap Siswa </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="menu">
+                                <a href="{{ route('data_nilai.prestasi') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="activity"></i> </div>
                                     <div class="menu__title"> Prestasi </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="menu">
+                                <a href="{{ route('data_nilai.keterlambatan') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="user-x"></i> </div>
                                     <div class="menu__title"> Keterlambatan </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="menu">
+                                <a href="{{ route('data_nilai.hafalan') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="book"></i> </div>
                                     <div class="menu__title"> Hafalan Qur'an </div>
                                 </a>
@@ -122,10 +122,24 @@ License: You must have a valid license purchased only from themeforest(the above
                         </ul>
                     </li>
                     <li>
-                        <a href="{{ route('comingsoon') }}" class="menu">
-                            <div class="menu__icon"> <i data-lucide="award"></i> </div>
-                            <div class="menu__title"> Penilaian (Ranking) </div>
+                        <a href="javascript:;" class="menu menu--active">
+                            <div class="menu__icon"> <i data-lucide="book-open"></i> </div>
+                            <div class="menu__title"> Penilaian <i data-lucide="chevron-down" class="menu__sub-icon "></i> </div>
                         </a>
+                        <ul class="">
+                            <li>
+                                <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="menu">
+                                    <div class="menu__icon"> <i data-lucide="award"></i> </div>
+                                    <div class="menu__title"> Nilai Keseluruhan </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('comingsoon') }}" class="menu">
+                                    <div class="menu__icon"> <i data-lucide="columns"></i> </div>
+                                    <div class="menu__title"> Perangkingan </div>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -135,7 +149,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <!-- BEGIN: Side Menu -->
             <nav class="side-nav">
                 <a href="" class="intro-x flex items-center pl-5 pt-4 mt-3">
-                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo.svg') }}">
+                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('template/dist/images/logo-taqmir.png') }}">
                     <span class="hidden xl:block text-white text-lg ml-3"> Aplikasi PSB </span> 
                 </a>
                 <div class="side-nav__devider my-6"></div>
@@ -198,31 +212,31 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="side-menu">
+                                <a href="{{ route('data_nilai.presensi') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="clipboard"></i> </div>
                                     <div class="side-menu__title"> Presensi </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="side-menu">
+                                <a href="{{ route('data_nilai.sikap') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="thumbs-up"></i> </div>
                                     <div class="side-menu__title"> Sikap Siswa </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="side-menu">
+                                <a href="{{ route('data_nilai.prestasi') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="activity"></i> </div>
                                     <div class="side-menu__title"> Prestasi </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="side-menu">
+                                <a href="{{ route('data_nilai.keterlambatan') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="calendar"></i> </div>
                                     <div class="side-menu__title"> Keterlambatan </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="side-menu">
+                                <a href="{{ route('data_nilai.hafalan') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="calendar"></i> </div>
                                     <div class="side-menu__title"> Hafalan Qur'an </div>
                                 </a>
@@ -230,10 +244,27 @@ License: You must have a valid license purchased only from themeforest(the above
                         </ul>
                     </li>
                     <li>
-                        <a href="{{ route('comingsoon') }}" class="side-menu">
-                            <div class="side-menu__icon"> <i data-lucide="award"></i> </div>
-                            <div class="side-menu__title"> Penilaian (Ranking) </div>
+                        <a href="javascript:;" class="side-menu">
+                            <div class="side-menu__icon"> <i data-lucide="book"></i> </div>
+                            <div class="side-menu__title">
+                                Penilaian
+                                <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                            </div>
                         </a>
+                        <ul class="">
+                            <li>
+                                <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-lucide="grid"></i> </div>
+                                    <div class="side-menu__title"> Nilai Keseluruhan </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('comingsoon') }}" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-lucide="award"></i> </div>
+                                    <div class="side-menu__title"> Perangkingan </div>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </nav>

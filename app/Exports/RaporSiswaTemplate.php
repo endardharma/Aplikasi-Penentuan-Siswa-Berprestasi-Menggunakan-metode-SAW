@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\MasterJurusan;
 use App\Models\MasterSiswa;
 use App\Models\TahunAjar;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -27,22 +28,52 @@ class RaporSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
     {
         // Fungsi Template Export dan detail rapor siswa
         $siswa = MasterSiswa::all();
+        $tajar = TahunAjar::all();
+        $jurusan = MasterJurusan::first();
+
         $data = array();
-        foreach($siswa as $s)
-        {
-            foreach($s->jurusan->mapel as $m)
+        if($siswa->isNotEmpty()) {
+            foreach($siswa as $s)
             {
-                $find = TahunAjar::where('id',$this->data)->first();
-                if($find)
+                $item['nama_siswa'] = $s->name;
+                
+                
+                
+                foreach($s->jurusan->mapel as $m)
                 {
-                    $item['nama_siswa'] = $s->name;
-                    $item['nama_mapel'] = $m->name;
-                    $item['kelompok_mapel'] = $m->kelompok;
-                    $item['type_mapel'] = $m->type;
-                    $item['nilai'] = 'Isi nilai dengan angka';
-                    $item['jurusan'] = $s->jurusan->name ?? '';
-                    $item['semester'] = $find->semester;
-                    $item['tahun_ajar'] = $find->name;
+                    // if($find)
+                    // {
+                        //     $item['nama_siswa'] = $s->name;
+                        //     $item['nama_mapel'] = $m->name;
+                        //     $item['kelompok'] = $m->kelompok;
+                        //     $item['type'] = $m->type;
+                        //     $item['nilai'] = 'Isi nilai dengan angka';
+                        //     $item['jurusan'] = $s->jurusan->name ?? '';
+                        //     $item['semester'] = $find->semester;
+                        //     $item['tahun_ajar'] = $find->name;
+                        //     $data[] = $item;
+                        // }
+                        $item['nama_mapel'] = $m->name;
+                        $item['kelompok'] = $m->kelompok;
+                        $item['type'] = $m->type;
+                        $item['nilai'] = 'Isi nilai dengan angka';
+
+                        $jurusansiswa = $jurusan->firstWhere('id', $s->jurusan_id);
+                        if($jurusansiswa)
+                        {
+                            $item['jurusan'] = $jurusansiswa->name;
+                        }
+                        else
+                        {
+                            $item['jurusan'] = 'Jurusan tidak ditemukan';
+                        }
+                    
+                    foreach($tajar as $t)
+                    {
+                        $item['semester'] = $t->semester;
+                        $item['tahun_ajar'] = $t->tahun;
+                    }
+
                     $data[] = $item;
                 }
             }
@@ -55,7 +86,7 @@ class RaporSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:H1'; // All headers
+                $cellRange = 'A1:I1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -85,7 +116,7 @@ class RaporSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
     {
         return [
             'Nama',
-            'Mata Pelajaran',
+            'Nama Mapel',
             'Kelompok',
             'Tipe',
             'Nilai',

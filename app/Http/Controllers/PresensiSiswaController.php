@@ -1,0 +1,440 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Exports\PresensiSiswaExport;
+use App\Exports\PresensiSiswaTemplate;
+use App\Imports\PresensiSiswaImport;
+use App\Models\MasterJurusan;
+use App\Models\MasterSiswa;
+use App\Models\PresensiSiswa;
+use App\Models\TahunAjar;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+
+class PresensiSiswaController extends Controller
+{
+    public function testPresensi()
+    {
+        // Fungsi template export dan detail presensi siswa
+        $siswa = MasterSiswa::all();
+        $data = array();
+        foreach($siswa as $s)
+        {
+            $find = TahunAjar::where('tahun', date('Y'))->first();
+            if($find)
+            {                
+                $item['nama_siswa'] = $s->name;
+                $item['ket_ketidakhadiran'] = 'Tidak Ada';
+                $item['nilai'] = $s->nilai;
+                $item['jurusan'] = $s->jurusan->name ?? '';
+                $item['semester'] = $s->semester;
+                $item['tahun_ajar'] = $s->tahun_ajar;
+                $data[] = $item;
+            }
+        }
+
+        return response()->json([
+            'data' => $data,
+        ], 200);
+    }
+
+    public function index()
+    {
+        return view('admin.data_nilai.presensi.index');
+    }
+
+    // public function listPresensi(Request $request)
+    // {
+    //     // Data / Function Dummy
+    //     $columns = [
+    //         0 => 'id',
+    //         1 => 'nama_siswa',
+    //         2 => 'ket_ketidakhadiran',
+    //         3 => 'jumlah_hari',
+    //         4 => 'nilai',
+    //     ];
+
+    //     $start = $request->start;
+    //     $limit = $request->length;
+    //     $orderColumn = $columns[$request->input('order.0.column')];
+    //     $dir = $request->input('order.0.dir');
+    //     $search = $request->input('search')['value'];
+
+    //     // Hitung Keseluruhan
+    //     $hitung = MasterSiswa::count();
+
+    //     $siswa = MasterSiswa::where(function ($q) use ($search) {
+    //         if($search != null)
+    //         {
+    //             return $q->where('name','LIKE','%'.$search.'%');
+    //         }
+    //     })->orderby($orderColumn, $dir)->skip($start)->take($limit)->get();
+    //     $presensi = PresensiSiswa::all();
+    //     $data = array();
+    //     // dd($presensi)->toArray();
+    //     foreach($siswa as $s)
+    //     {
+    //         $item['id'] = $s->id;
+    //         $item['nama_siswa'] = $s->name;
+    //         foreach($presensi as $p)
+    //         {
+    //             $item['ket_ketidakhadiran'] = $p->ket_ketidakhadiran;
+    //             $item['jumlah_hari'] = $p->jumlah_hari;
+    //             $item['nilai'] = $p->nilai;
+    //         }
+    //         $data[] = $item;
+    //     }
+        
+    //     return response()->json([
+    //         'draw' => $request->draw,
+    //         'recordsTotal' => $hitung,
+    //         'recordsFiltered' => $hitung,
+    //         'data' => $data,
+    //     ], 200);
+    // }
+
+    // public function listDetailPresensi (Request $request)
+    // {
+    //     // Data / Function Dummy
+    //     $columns = [
+    //         0 => 'id',
+    //         1 => 'nama_siswa',
+    //         2 => 'ket_ketidakhadiran',
+    //         3 => 'jumlah_hari',
+    //         4 => 'nilai',
+    //         5 => 'jurusan',
+    //         6 => 'semester',
+    //         7 => 'tahun_ajar',
+    //     ];
+
+    //     $start = $request->start;
+    //     $limit = $request->length;
+    //     $orderColumn = $columns[$request->input('order.0.column')];
+    //     $dir = $request->input('order.0.dir');
+    //     $search = $request->input('search')['value'];
+
+    //     // Hitung Keseluruhan
+    //     $hitung = MasterSiswa::count();
+        
+    //     $siswa = MasterSiswa::where(function($q) use ($search) {
+    //         if($search != null)
+    //         {
+    //             return $q-> where('name', 'LIKE', '%'.$search.'%');
+    //         }
+    //     })->orderby($orderColumn, $dir)->skip($start)->take($limit)->get();
+
+    //     $tajar = TahunAjar::all();
+    //     $presensi = PresensiSiswa::all();
+    //     $data = array();
+    //     foreach($siswa as $s)
+    //     {
+            
+    //         foreach($presensi as $p)
+    //         {
+    //             foreach($tajar as $t)
+    //             {
+    //                 $item['id'] = $s->id;
+    //                 $item['nama_siswa'] = $s->name;
+    //                 $item['ket_ketidakhadiran'] = $p->ket_ketidakhadiran;
+    //                 $item['jumlah_hari'] = $p->jumlah_hari;
+    //                 $item['nilai'] = $p->nilai;
+    //                 $item['jurusan'] = $s->jurusan->name;
+    //                 $item['semester'] = $t->semester;
+    //                 $item['tahun_ajar'] = $t->tahun;
+    //             }
+    //         }
+    //         $data[] = $item;
+    //     }
+
+    //     return response()->json([
+    //         'draw' => $request->draw,
+    //         'recordsTotal' => $hitung,
+    //         'recordsFiltered' => $hitung,
+    //         'data' => $data,
+    //     ], 200);
+    // }
+
+    public function listPresensi(Request $request)
+    {
+        // Data / function dummy
+        $columns = [
+            0 => 'id',
+            1 => 'nama_siswa',
+            2 => 'ket_ketidakhadiran',
+            3 => 'jumlah_hari',
+            4 => 'jumlah_hari_lainnya',
+            5 => 'nilai',
+        ];
+
+        $start = $request->start;
+        $limit = $request->length;
+        $orderColumn = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
+        $search = $request->input('search')['value'];
+
+        // Hitung keseluruhan
+        $hitung = PresensiSiswa::count();
+
+        $presensi = PresensiSiswa::where(function ($q) use ($search) {
+            if($search != null)
+            {
+                return $q->where('tajar_id','LIKE','%'.$search.'%')->orWhere('siswa_id','LIKE','%'.$search.'%')->orwhere('jurusan_id','LIKE','%'.$search.'%')->orWhere('nilai',$search);
+            }
+        })->orderby($orderColumn, $dir)->skip($start)->take($limit)->get();
+        $data = array();
+
+        // dd($presensi)->toArray();
+        foreach($presensi as $p)
+        {
+            $item['id'] = $p->id;
+
+            $item['id_siswa_nama'] = $p->siswa_id;
+            $item['nama_siswa'] = $p->siswa->name ?? '';
+            
+            $item['ket_ketidakhadiran'] = $p->ket_ketidakhadiran;
+            $item['jumlah_hari'] = $p->jumlah_hari;
+            $item['jumlah_hari_lainnya'] = $p->jumlah_hari_lainnya;
+            $item['nilai'] = $p->nilai;
+            $data[] = $item;
+            
+        }
+        // dd($data)->toArray();
+
+
+        return response()->json([
+            'draw' => $request->draw,
+            'recordsTotal' => $hitung,
+            'recordsFiltered' => $hitung,
+            'data' => $data,
+        ], 200);
+    }
+    
+    public function listDetailPresensi(Request $request)
+    {
+        // Data / function Dummy
+        $columns = [
+            0 => 'id',
+            1 => 'nama_siswa',
+            2 => 'ket_ketidakhadiran',
+            3 => 'jumlah_hari',
+            4 => 'jumlah_hari_lainnya',
+            5 => 'nilai',
+            6 => 'jurusan',
+            7 => 'semester',
+            8 => 'tahun_ajar',
+        ];
+
+        $start = $request->start;
+        $limit = $request->length;
+        $orderColumn = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
+        $search = $request->input('search')['value'];
+
+        // hitung keseluruhan
+        $hitung = PresensiSiswa::count();
+
+        $presensi = PresensiSiswa::where(function ($q) use ($search) {
+            if($search != null)
+            {
+                return $q->where('tajar_id','LIKE','%'.$search.'%')->orWhere('siswa_id','LIKE','%'.$search.'%')->orWhere('jurusan_id','LIKE','%'.$search.'%')->orWhere('ket_ketidakhadiran','LIKE','%'.$search.'%')->orWhere('nilai',$search);
+            }
+        })->orderby($orderColumn,$dir)->skip($start)->take($limit)->get();
+        $data = array();
+
+        foreach($presensi as $p)
+        {
+            $item['id'] = $p->id;
+
+            $item['id_siswa_nama'] = $p->siswa_id;
+            $item['nama_siswa'] = $p->siswa->name ?? '';
+            
+            $item['ket_ketidakhadiran'] = $p->ket_ketidakhadiran;
+            $item['jumlah_hari'] = $p->jumlah_hari;
+            $item['jumlah_hari_lainnya'] = $p->jumlah_hari_lainnya;
+            $item['nilai'] = $p->nilai;
+            $item['jurusan'] = $p->jurusan->name ?? '';
+            $item['semester'] = $p->tajar->semester ?? '';
+            $item['tahun_ajar'] = $p->tajar->tahun ?? '';
+            $data[] = $item;
+        }
+        
+        return response()->json([
+            'draw' => $request->draw,
+            'recordsTotal' => $hitung,
+            'recordsFiltered' => $hitung,
+            'data' => $data,
+        ], 200);
+        
+    }
+
+    public function supportTajar()
+    {
+        $tajar = TahunAjar::all();
+        $data = array();
+        foreach($tajar as $t)
+        {
+            $item['id'] = $t->id;
+            $item['name'] = $t->name;
+            $item['semester'] = $t->semester;
+            $item['tahun'] = $t->tahun;
+            $data[] = $item;
+        }
+
+        return response()->json([
+            'data' => $data,
+        ],200);
+    }
+
+    public function supportSiswa()
+    {
+        $siswa = MasterSiswa::all();
+        $data = array();
+
+        foreach($siswa as $s)
+        {
+            $item['id'] = $s->id;
+            $item['name'] = $s->name;
+            $data[] = $item;
+        }
+
+        return response()->json([
+            'data' => $data,
+        ], 201);
+    }
+
+    public function template(Request $request)
+    {
+        return Excel::download(new PresensiSiswaTemplate($request->tajar), 'Template-Presensi-Siswa.xlsx');
+    }
+
+    public function importData(Request $request)
+    {
+        // Lakukan Validasi data import
+        $request->validate([
+            'excel' => 'required|mimes:xls,xlsx',
+        ]);
+
+        // Proses data import
+        $file = $request->file('excel');
+
+        Excel::import(new PresensiSiswaImport, $file);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil melakukan import data presensi siswa'
+        ], 201);
+    }
+
+    public function updateData(Request $request, $id)
+    {
+        $find = PresensiSiswa::where('id',$id)->first();
+
+        if(!$find)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Update data gagal!, data tidak ditemukan',
+            ], 400);
+        }
+        else
+        {
+            $request->siswa_id != null ? $find->siswa_id = $request->siswa_id : true;
+            $request->ket_ketidakhadiran != null ? $find->ket_ketidakhadiran = $request->ket_ketidakhadiran : true;
+            $request->jumlah_hari != null ? $find->jumlah_hari = $request->jumlah_hari : true;
+            
+            // $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari) : true; // nilai otomatis berdasarkan jumlah hari
+            
+            if ($request->jumlah_hari !== 'lainnya')
+            {
+                $request->jumlah_hari_lainnya != null ? $find->jumlah_hari_lainnya = $request->jumlah_hari_lainnya : true;
+                $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari_lainnya) : true; // nilai otomatis berdasarkan jumlah hari
+            }
+            else
+            {
+                $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari) : true; // nilai otomatis berdasarkan jumlah hari
+            }
+     
+
+            $find->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil melakukan update data nilai presensi siswa',
+            ], 201);
+        }
+    }
+
+    public function getNilai(Request $request)
+    {
+        $jumlah_hari = $request->jumlah_hari;
+        
+        $nilai = $this->getNilaiBasedOnJumlahHari($jumlah_hari);
+
+        return response()->json(['nilai' => $nilai], 200);
+    }
+
+    private function getNilaiBasedOnJumlahHari($jumlah_hari)
+    {
+        $nilaiMapping = [
+            '0 Hari' => 5,
+            '1 Hari' => 4,
+            '2 Hari' => 3,
+            '3 Hari' => 2,
+            '4 Hari' => 1,
+        ];
+
+        return $nilaiMapping[$jumlah_hari] ?? 0; // Nilai default jika jumlah hari tidak ditemukan / jumlah hari melebihi 4 hari
+    }
+
+    public function deleteData($id)
+    {
+        $find = PresensiSiswa::where('id',$id)->first();
+
+        if(!$find)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Update data gagal!, data tidak ditemukan',
+            ], 400);
+        }
+        else
+        {
+            $hapus = PresensiSiswa::where('id',$id)->delete();
+
+            if($hapus)
+            {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Berhasil menghapus data nilai presensi siswa',
+                ], 201);
+            }
+            else
+            {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat menghapus data nilai presensi siswa',
+                ], 400);
+            }
+        }
+    }
+
+    public function exportData()
+    {
+        $presensi = PresensiSiswa::all();
+        $data = array();
+        foreach($presensi as $p)
+        {
+            $item['id'] = $p->id;
+            $item['tahun_ajar'] = $p->tajar->tahun ?? '';
+            $item['jurusan'] = $p->jurusan->name ?? '';
+            $item['nama_siswa'] = $p->siswa->name ?? '';
+            $item['ket_ketidakhadiran'] = $p->ket_ketidakhadiran;
+            $item['jumlah_hari'] = $p->jumlah_hari;
+            $item['nilai'] = $p->nilai;
+            $data[] = $item;
+        }
+        // dd($data)->toArray();
+        return Excel::download(new PresensiSiswaExport($data), 'Data-Presensi-Siswa.xlsx');
+    }
+}
