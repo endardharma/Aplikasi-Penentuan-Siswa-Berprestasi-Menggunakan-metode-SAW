@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <!-- BEGIN: Head -->
+    
     <head>
         <meta charset="utf-8">
         <link href="{{ asset('template/dist/images/logo.svg') }}" rel="shortcut icon">

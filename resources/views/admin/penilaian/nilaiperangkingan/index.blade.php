@@ -19,7 +19,6 @@
             }
             
             /* Menyesuaikan lebar opsi dropdown'*/
-            .dataTables_length select {
                 width: 30%; /* Menggunakan lebar penuh */
                 box-sizing: border-box; /* Menambahkan padding dan border ke dalam lebar */
             }
