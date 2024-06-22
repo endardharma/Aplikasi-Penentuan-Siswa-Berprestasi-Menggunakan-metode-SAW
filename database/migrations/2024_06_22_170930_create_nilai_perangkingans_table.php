@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('nilai_perangkingans', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('tajar_id');
+            $table->bigInteger('siswa_id');
+            $table->bigInteger('jurusan_id');
+            $table->float('nilai_akhir');
             $table->timestamps();
         });
     }

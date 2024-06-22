@@ -8,7 +8,7 @@
         <meta name="description" content="Tinker admin is super flexible, powerful, clean & modern responsive tailwind admin template with unlimited possibilities.">
         <meta name="keywords" content="admin template, Tinker Admin Template, dashboard template, flat admin template, responsive admin template, web app">
         <meta name="author" content="LEFT4CODE">
-        <title>Nilai Keseluruhan - Aplikasi PSB</title>
+        <title>Nilai Perangkingan - Aplikasi PSB</title>
         <!-- BEGIN: CSS Assets-->
         <link rel="stylesheet" href="{{ asset('template/dist/css/app.css') }}" />
         <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -137,7 +137,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="menu">
+                                <a href="{{ route('penilaian.nilaiperangkingan') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="columns"></i> </div>
                                     <div class="menu__title"> Perangkingan </div>
                                 </a>
@@ -256,13 +256,13 @@
                         </a>
                         <ul class="">
                             <li>
-                                <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="side-menu side-menu--active">
+                                <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="grid"></i> </div>
                                     <div class="side-menu__title"> Nilai Keseluruhan </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="side-menu">
+                                <a href="{{ route('penilaian.nilaiperangkingan') }}" class="side-menu side-menu--active">
                                     <div class="side-menu__icon"> <i data-lucide="award"></i> </div>
                                     <div class="side-menu__title"> Perangkingan </div>
                                 </a>
@@ -280,7 +280,7 @@
                     <nav aria-label="breadcrumb" class="-intro-x mr-auto hidden sm:flex">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#">Aplikasi</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Nilai Keseluruhan Kriteria</li>
+                            <li class="breadcrumb-item active" aria-current="page">Nilai Perangkingan</li>
                         </ol>
                     </nav>
                     <!-- END: Breadcrumb -->
@@ -399,7 +399,7 @@
                 <!-- END: Top Bar -->
                 <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
                     <h2 class="text-lg font-medium mr-auto">
-                        List Nilai Keseluruhan
+                        List Nilai Perangkingan
                     </h2>
                     <div class="w-full sm:w-10 flex mt-4 sm:mt-0">
                         <div class="dropdown ml-auto sm:ml-0">
@@ -441,8 +441,10 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nama Siswa</th>
-                                    <th>Nama Kriteria</th>
-                                    <th>Nilai</th>
+                                    <th>Nilai Akhir</th>
+                                    <th>Jurusan</th>
+                                    <th>Semester</th>
+                                    <th>Tahun Ajar</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -451,42 +453,6 @@
                     </div>
                 </div>
                 <!-- END: HTML Table Data -->
-                <!-- BEGIN: Modal Detail Content -->
-                <div id="header-detail-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <!-- BEGIN: Modal Header -->
-                            <div class="modal-header">
-                                <h2 class="font-medium text-base mr-auto">
-                                    Detail Nilai Keseluruhan
-                                </h2>
-                                <a href="javascript:;" data-tw-dismiss="modal"> <i data-feather="x" class="w-8 h-8 text-gray-500"></i> </a>
-                            </div>
-                            <!-- END: Modal Header -->
-                            <!-- BEGIN: Modal Body -->
-                            <div class="intro-y box p-5 mt-5">
-                                <div class="overflow-x-auto scrollbar-hidden">
-                                    <table id="data-table-detail" class="table table-striped" style="width: 100%">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Nama Siswa</th>
-                                                <th>Nilai</th>
-                                                <th>Jurusan</th>
-                                                <th>Semester</th>
-                                                <th>Tahun Ajar</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <!-- END: Modal Body -->
-                        </div>
-                    </div>
-                </div>
-                <!-- END: Modal Detail Content -->
             </div>
             <!-- END: Content -->
         </div>
@@ -545,42 +511,13 @@
                 }).catch(error => {
                     console.error('Error: ', error);
                 });
-                
-                // var startValue = 0;
-                // var limitValue = 100;
-                // // Data table list nilai keseluruhan
-                // jQuery('#data-table').dataTable({
-                //     "processing": true,
-                //     "serverSide": true,
-                //     "ajax": {
-                //         "url": "http://127.0.0.1:8000/api/data-penilaian/nilai-keseluruhan/list",
-                //         "dataType": "json",
-                //         "type": "POST",
-                //         "headers": {
-                //             'Authorization': 'Bearer ' + token
-                //         },
-                //         "data": {
-                //             start: startValue,
-                //             limit: limitValue
-                //         }
-                //     },
-                //     "columns": [
-                //         { data: 'id', className: 'text-center'},
-                //         { data: 'nama_siswa', clasName: 'text-center'},
-                //         { data: 'nama_kriteria', className: 'text-center'},
-                //         { data: 'nilai', className: 'text-center'},
-                //     ],
-                //     "drawCallback": function(settings) {
-                //         feather.replace();
-                //     }
-                // })
 
-                // Data table list nilai keseluruhan
+                // Data table list nilai perangkingan
                 jQuery('#data-table').dataTable({
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        "url": "http://127.0.0.1:8000/api/data-penilaian/nilai-keseluruhan/list",
+                        "url": "http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/list",
                         "dataType": "json",
                         "type": "POST",
                         "headers": {
@@ -590,39 +527,15 @@
                     "columns": [
                         { data: 'id', className: 'text-center' },
                         { data: 'nama_siswa', className: 'text-center' },
-                        { data: 'nama_kriteria', className: 'text-center' },
-                        { data: 'nilai', className: 'text-center' },
+                        { data: 'nilai_akhir', className: 'text-center' },
+                        { data: 'jurusan', className: 'text-center' },
+                        { data: 'semester', className: 'text-center' },
+                        { data: 'tahun_ajar', className: 'text-center' },
                     ],
                     "drawCallback": function (settings) {
                         feather.replace(); // Asumsikan feather adalah plugin ikon yang digunakan
                     }
                 });
-
-                
-                // Data table list detail nilai keseluruhan
-                jQuery('#data-table-detail').dataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": "http://127.0.0.1:8000/api/data-penilaian/nilai-keseluruhan/list-detail",
-                        "dataType": "json",
-                        "type": "POST",
-                        "headers": {
-                            'Authorization': 'Bearer ' + token,
-                        }
-                    },
-                    "columns": [
-                        { data: 'id', className: 'text-center' },
-                        { data: 'nama_siswa', className: 'text-center' },
-                        { data: 'nilai', className: 'text-center' },
-                        { data: 'jurusan', className: 'text-center' },
-                        { data: 'semester', className: 'text-center' },
-                        { data: 'tahun_ajar', className: 'text-center' },
-                    ],
-                    "drawCallback": function(settings) {
-                        feather.replace();
-                    }
-                })
 
                 // Show modal detail
                 jQuery('.modal-detail').click(function(){
@@ -634,7 +547,7 @@
                 
                 jQuery('.btn-export').click(function() {
                     // Akses URL Export data
-                    var linkto = 'http://127.0.0.1:8000/api/data-penilaian/nilai-keseluruhan/export-data/export-xls';
+                    var linkto = 'http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/export-data/export-xls';
                     jQuery.ajax({
                         xhrFields: {
                             responseType: 'blob',
@@ -648,7 +561,7 @@
 
                             var disposition = xhr.getResponseHeader('content-disposition');
                             var matches = /"([^"]*)"/.exec(disposition);
-                            var filename = (matches != null && matches[1] ? matches[1] : 'Export-Rapor-Siswa.xlsx');
+                            var filename = (matches != null && matches[1] ? matches[1] : 'Export-Nilai-Rangking-Siswa.xlsx');
 
                             // The actual download
                             var blob = new Blob([result], {

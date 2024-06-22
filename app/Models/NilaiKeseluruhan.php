@@ -9,7 +9,7 @@ class NilaiKeseluruhan extends Model
 {
     use HasFactory;
     protected $table = 'nilai_keseluruhans';
-    protected $fillable = ['tajar_id','siswa_id','jurusan_id','kriteria_id','nilai','total_nilai','rapor_id','ketidakhadiran_id','sikap_id','prestasi_id','keterlambatan_id','hafalan_id'];
+    protected $fillable = ['tajar_id','siswa_id','jurusan_id','kriteria_id','nilai'];
 
     public function siswa()
     {

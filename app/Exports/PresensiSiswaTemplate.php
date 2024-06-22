@@ -33,17 +33,6 @@ class PresensiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
         
         $data = array();
 
-        // foreach($presensi as $p)
-        // {
-        //     $item['nama_siswa'] = $p->siswa->name ?? '';
-        //     $item['ket_ketidakhadiran'] = 'Isi dengan Sakit/Izin/Tanpa Keterangan';
-        //     $item['nilai'] = 'Isi dengan nilai max 5, min 1';
-        //     $item['jurusan'] = $p->jurusan->name ?? '';
-        //     $item['semester'] = $p->tajar->semester ?? '';
-        //     $item['tahun_ajar'] = $p->tajar->tahun ?? '';
-        //     $data[] = $item;
-        // }
-
         if($siswa->isNotEmpty())
         {
             foreach($siswa as $s)

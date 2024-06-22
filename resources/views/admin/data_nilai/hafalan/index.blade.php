@@ -113,23 +113,37 @@
                             </li>
                             <li>
                                 <a href="{{ route('data_nilai.keterlambatan') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="user-x"></i> </div>
+                                    <div class="menu__icon"> <i data-lucide="calendar"></i> </div>
                                     <div class="menu__title"> Keterlambatan </div>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('data_nilai.hafalan') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="book"></i> </div>
+                                    <div class="menu__icon"> <i data-lucide="album"></i> </div>
                                     <div class="menu__title"> Hafalan Qur'an </div>
                                 </a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <a href="{{ route('comingsoon') }}" class="menu">
-                            <div class="menu__icon"> <i data-lucide="award"></i> </div>
-                            <div class="menu__title"> Penilaian (Ranking) </div>
+                        <a href="javascript:;" class="menu">
+                            <div class="menu__icon"> <i data-lucide="book"></i> </div>
+                            <div class="menu__title"> Penilaian <i data-lucide="chevron-down" class="menu__sub-icon "></i> </div>
                         </a>
+                        <ul class="">
+                            <li>
+                                <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="menu">
+                                    <div class="menu__icon"> <i data-lucide="grid"></i> </div>
+                                    <div class="menu__title"> Nilai Keseluruhan </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('penilaian.nilaiperangkingan') }}" class="menu">
+                                    <div class="menu__icon"> <i data-lucide="award"></i> </div>
+                                    <div class="menu__title"> Perangkingan </div>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -227,17 +241,34 @@
                             </li>
                             <li>
                                 <a href="{{ route('data_nilai.hafalan') }}" class="side-menu side-menu--active">
-                                    <div class="side-menu__icon"> <i data-lucide="calendar"></i> </div>
+                                    <div class="side-menu__icon"> <i data-lucide="album"></i> </div>
                                     <div class="side-menu__title"> Hafalan Qur'an </div>
                                 </a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <a href="{{ route('comingsoon') }}" class="side-menu">
-                            <div class="side-menu__icon"> <i data-lucide="award"></i> </div>
-                            <div class="side-menu__title"> Penilaian (Ranking) </div>
+                        <a href="javascript:;" class="side-menu">
+                            <div class="side-menu__icon"> <i data-lucide="book"></i> </div>
+                            <div class="side-menu__title">
+                                Penilaian
+                                <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                            </div>
                         </a>
+                        <ul class="">
+                            <li>
+                                <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-lucide="grid"></i> </div>
+                                    <div class="side-menu__title"> Nilai Keseluruhan </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('penilaian.nilaiperangkingan') }}" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-lucide="award"></i> </div>
+                                    <div class="side-menu__title"> Perangkingan </div>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </nav>
@@ -1037,6 +1068,41 @@
                         }
                     });
                 });
+
+                jQuery('.btn-export').click(function() {
+                    // Akses URL Export Data
+                    var linkto = 'http://127.0.0.1:8000/api/data-nilai/hafalan-siswa/export-data/export-xls';
+                    jQuery.ajax({
+                        xhrFields: {
+                            responseType: 'blob',
+                        },
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        type: 'GET',
+                        url: linkto,
+                        success: function(result, status, xhr) {
+
+                            var disposition = xhr.getResponseHeader('content-disposition');
+                            var mathes = /"([^"]*)"/.exec(disposition);
+                            var filename = (mathes != null && mathes[1] ? mathes[1] : 'Export-Hafalan-Siswa.xlsx');
+
+                            // the actual download
+                            var blob = new Blob([result], {
+                                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                            });
+
+                            var link = document.createElement('a');
+                            link.href = window.URL.createObjectURL(blob);
+                            link.download = filename;
+
+                            document.body.appendChild(link);
+
+                            link.click();
+                            document.body.removeChild(link);
+                        }
+                    });
+                })
                 
             })
         </script>

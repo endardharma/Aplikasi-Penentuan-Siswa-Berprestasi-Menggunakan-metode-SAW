@@ -113,33 +113,33 @@
                             </li>
                             <li>
                                 <a href="{{ route('data_nilai.keterlambatan') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="user-x"></i> </div>
+                                    <div class="menu__icon"> <i data-lucide="calendar"></i> </div>
                                     <div class="menu__title"> Keterlambatan </div>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('data_nilai.hafalan') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="book"></i> </div>
+                                    <div class="menu__icon"> <i data-lucide="album"></i> </div>
                                     <div class="menu__title"> Hafalan Qur'an </div>
                                 </a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <a href="javascript:;" class="menu menu--active">
-                            <div class="menu__icon"> <i data-lucide="book-open"></i> </div>
+                        <a href="javascript:;" class="menu">
+                            <div class="menu__icon"> <i data-lucide="book"></i> </div>
                             <div class="menu__title"> Penilaian <i data-lucide="chevron-down" class="menu__sub-icon "></i> </div>
                         </a>
                         <ul class="">
                             <li>
                                 <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="award"></i> </div>
+                                    <div class="menu__icon"> <i data-lucide="grid"></i> </div>
                                     <div class="menu__title"> Nilai Keseluruhan </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="columns"></i> </div>
+                                <a href="{{ route('penilaian.nilaiperangkingan') }}" class="menu">
+                                    <div class="menu__icon"> <i data-lucide="award"></i> </div>
                                     <div class="menu__title"> Perangkingan </div>
                                 </a>
                             </li>
@@ -241,7 +241,7 @@
                             </li>
                             <li>
                                 <a href="{{ route('data_nilai.hafalan') }}" class="side-menu">
-                                    <div class="side-menu__icon"> <i data-lucide="calendar"></i> </div>
+                                    <div class="side-menu__icon"> <i data-lucide="album"></i> </div>
                                     <div class="side-menu__title"> Hafalan Qur'an </div>
                                 </a>
                             </li>
@@ -263,7 +263,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="side-menu">
+                                <a href="{{ route('penilaian.nilaiperangkingan') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="award"></i> </div>
                                     <div class="side-menu__title"> Perangkingan </div>
                                 </a>

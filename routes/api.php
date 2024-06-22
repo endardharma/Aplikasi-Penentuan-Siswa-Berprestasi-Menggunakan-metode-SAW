@@ -12,6 +12,7 @@ use App\Http\Controllers\MasterkriteriaController;
 use App\Http\Controllers\MastermapelController;
 use App\Http\Controllers\MastertajarController;
 use App\Http\Controllers\NilaiKeseluruhanController;
+use App\Http\Controllers\NilaiPerangkinganController;
 use App\Http\Controllers\PresensiSiswaController;
 use App\Http\Controllers\PrestasiSiswaController;
 use App\Http\Controllers\RaporController;
@@ -176,6 +177,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get("/data-support/tajar", [HafalanSiswaController::class, 'supportTajar']);
             Route::get("/data-support/siswa", [HafalanSiswaController::class, 'supportSiswa']);
             Route::get("/export-data/download-template", [HafalanSiswaController::class, 'template']);
+            Route::get("/export-data/export-xls", [HafalanSiswaController::class, 'exportData']);
             Route::post("/import-data/import-xls", [HafalanSiswaController::class, 'importData']);
             Route::put("/update-data/{id}", [HafalanSiswaController::class, 'updateData']);
             Route::delete("/hapus-data/{id}", [HafalanSiswaController::class, 'deleteData']);
@@ -190,7 +192,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
 
         Route::prefix('nilai-perangkingan')->group(function(){
-
+            Route::post("list", [NilaiPerangkinganController::class, 'listNilaiPerangkingan']);
+            Route::post("list-detail", [NilaiPerangkinganController::class, 'listDetailNilaiPerangkingan']);
+            Route::get("/export-data/export-xls", [NilaiPerangkinganController::class, 'exportData']);
         });
     });
 });

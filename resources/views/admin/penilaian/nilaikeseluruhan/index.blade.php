@@ -139,7 +139,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="menu">
+                                <a href="{{ route('penilaian.nilaiperangkingan') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="columns"></i> </div>
                                     <div class="menu__title"> Perangkingan </div>
                                 </a>
@@ -264,7 +264,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="side-menu">
+                                <a href="{{ route('penilaian.nilaiperangkingan') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="award"></i> </div>
                                     <div class="side-menu__title"> Perangkingan </div>
                                 </a>

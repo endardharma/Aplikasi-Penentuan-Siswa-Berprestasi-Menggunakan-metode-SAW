@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\HafalanSiswaExport;
 use App\Exports\HafalanSiswaTemplate;
 use App\Imports\HafalanSiswaImport;
 use App\Models\HafalanSiswa;
@@ -226,5 +227,23 @@ class HafalanSiswaController extends Controller
         ], 201);
     }
 
+    public function exportData(Request $request)
+    {
+        $hafalan = HafalanSiswa::all();
+        $data = [];
+
+        foreach ($hafalan as $h)
+        {
+            $item['id'] = $h->id;
+            $item['nama_siswa'] = $h->siswa->name ?? '';
+            $item['ket_hafalan'] = $h->ket_hafalan;
+            $item['nilai'] = $h->nilai;
+            $item['jurusan'] = $h->jurusan->name ?? '';
+            $item['semester'] = $h->tajar->semester ?? '';
+            $item['tahun_ajar'] = $h->tajar->tahun ?? '';
+            $data[] = $item;
+        }
+        return Excel::download(new HafalanSiswaExport($data), 'Export-Hafalan-Siswa.xlsx');
+    }
 
 }

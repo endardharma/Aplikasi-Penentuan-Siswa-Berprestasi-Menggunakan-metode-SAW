@@ -53,6 +53,11 @@ class MasterSiswa extends Model
 
     public function nilaiKeseluruhan()
     {
-        return $this->hasMany(NilaiKeseluruhan::class, 'siswa_id')->orderby('name', 'asc');
+        return $this->hasMany(NilaiKeseluruhan::class, 'siswa_id')->orderby('id', 'asc');
+    
+    }
+    public function perangkingan()
+    {
+        return $this->hasMany(NilaiPerangkingan::class, 'siswa_id')->orderby('id', 'asc');
     }
 }

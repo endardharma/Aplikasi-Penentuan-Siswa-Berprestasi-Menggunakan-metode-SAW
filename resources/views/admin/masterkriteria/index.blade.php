@@ -103,42 +103,56 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="menu">
+                                <a href="{{ route('data_nilai.presensi') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="clipboard"></i> </div>
                                     <div class="menu__title"> Presensi </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="menu">
+                                <a href="{{ route('data_nilai.sikap') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="thumbs-up"></i> </div>
                                     <div class="menu__title"> Sikap Siswa </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="menu">
+                                <a href="{{ route('data_nilai.prestasi') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="activity"></i> </div>
                                     <div class="menu__title"> Prestasi </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="user-x"></i> </div>
+                                <a href="{{ route('data_nilai.keterlambatan') }}" class="menu">
+                                    <div class="menu__icon"> <i data-lucide="calendar"></i> </div>
                                     <div class="menu__title"> Keterlambatan </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="book"></i> </div>
+                                <a href="{{ route('data_nilai.hafalan') }}" class="menu">
+                                    <div class="menu__icon"> <i data-lucide="album"></i> </div>
                                     <div class="menu__title"> Hafalan Qur'an </div>
                                 </a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <a href="{{ route('comingsoon') }}" class="menu">
-                            <div class="menu__icon"> <i data-lucide="award"></i> </div>
-                            <div class="menu__title"> Penilaian (Ranking) </div>
+                        <a href="javascript:;" class="menu">
+                            <div class="menu__icon"> <i data-lucide="book"></i> </div>
+                            <div class="menu__title"> Penilaian <i data-lucide="chevron-down" class="menu__sub-icon "></i> </div>
                         </a>
+                        <ul class="">
+                            <li>
+                                <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="menu">
+                                    <div class="menu__icon"> <i data-lucide="grid"></i> </div>
+                                    <div class="menu__title"> Nilai Keseluruhan </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('penilaian.nilaiperangkingan') }}" class="menu">
+                                    <div class="menu__icon"> <i data-lucide="award"></i> </div>
+                                    <div class="menu__title"> Perangkingan </div>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -211,42 +225,59 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="side-menu">
+                                <a href="{{ route('data_nilai.presensi') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="clipboard"></i> </div>
                                     <div class="side-menu__title"> Presensi </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="side-menu">
+                                <a href="{{ route('data_nilai.sikap') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="thumbs-up"></i> </div>
                                     <div class="side-menu__title"> Sikap Siswa </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="side-menu">
+                                <a href="{{ route('data_nilai.prestasi') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="activity"></i> </div>
                                     <div class="side-menu__title"> Prestasi </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="side-menu">
+                                <a href="{{ route('data_nilai.keterlambatan') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="calendar"></i> </div>
                                     <div class="side-menu__title"> Keterlambatan </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="side-menu">
-                                    <div class="side-menu__icon"> <i data-lucide="calendar"></i> </div>
+                                <a href="{{ route('data_nilai.hafalan') }}" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-lucide="album"></i> </div>
                                     <div class="side-menu__title"> Hafalan Qur'an </div>
                                 </a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <a href="{{ route('comingsoon') }}" class="side-menu">
-                            <div class="side-menu__icon"> <i data-lucide="award"></i> </div>
-                            <div class="side-menu__title"> Penilaian (Ranking) </div>
+                        <a href="javascript:;" class="side-menu">
+                            <div class="side-menu__icon"> <i data-lucide="book"></i> </div>
+                            <div class="side-menu__title">
+                                Penilaian
+                                <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                            </div>
                         </a>
+                        <ul class="">
+                            <li>
+                                <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-lucide="grid"></i> </div>
+                                    <div class="side-menu__title"> Nilai Keseluruhan </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('penilaian.nilaiperangkingan') }}" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-lucide="award"></i> </div>
+                                    <div class="side-menu__title"> Perangkingan </div>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </nav>

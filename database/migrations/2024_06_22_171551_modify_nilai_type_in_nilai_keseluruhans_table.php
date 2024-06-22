@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('master_siswas', function (Blueprint $table) {
-            $table->dropColumn('user_id');
-            $table->string('name')->after('id');
-            $table->string('email')->unique()->after('id');
-            $table->string('periode',25)->after('jenkel');
+        Schema::table('nilai_keseluruhans', function (Blueprint $table) {
+            $table->float('nilai')->change();
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('nilai_keseluruhans', function (Blueprint $table) {
+            //
+        });
     }
 };

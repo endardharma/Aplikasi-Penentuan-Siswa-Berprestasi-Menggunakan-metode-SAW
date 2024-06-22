@@ -109,13 +109,13 @@ License: You must have a valid license purchased only from themeforest(the above
                             </li>
                             <li>
                                 <a href="{{ route('data_nilai.keterlambatan') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="user-x"></i> </div>
+                                    <div class="menu__icon"> <i data-lucide="calender"></i> </div>
                                     <div class="menu__title"> Keterlambatan </div>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('data_nilai.hafalan') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="book"></i> </div>
+                                    <div class="menu__icon"> <i data-lucide="album"></i> </div>
                                     <div class="menu__title"> Hafalan Qur'an </div>
                                 </a>
                             </li>
@@ -134,7 +134,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="menu">
+                                <a href="{{ route('penilaian.nilaiperangkingan') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="columns"></i> </div>
                                     <div class="menu__title"> Perangkingan </div>
                                 </a>
@@ -237,7 +237,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             </li>
                             <li>
                                 <a href="{{ route('data_nilai.hafalan') }}" class="side-menu">
-                                    <div class="side-menu__icon"> <i data-lucide="calendar"></i> </div>
+                                    <div class="side-menu__icon"> <i data-lucide="album"></i> </div>
                                     <div class="side-menu__title"> Hafalan Qur'an </div>
                                 </a>
                             </li>
@@ -259,7 +259,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('comingsoon') }}" class="side-menu">
+                                <a href="{{ route('penilaian.nilaiperangkingan') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="award"></i> </div>
                                     <div class="side-menu__title"> Perangkingan </div>
                                 </a>
