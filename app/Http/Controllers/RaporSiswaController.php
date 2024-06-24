@@ -24,28 +24,52 @@ class RaporSiswaController extends Controller
     {
         $columns = [
             0 => 'id',
-            1 => 'nama_siswa',
-            2 => 'nama_mapel',
-            3 => 'kelompok',
-            3 => 'type',
+            1 => 'tajar_id',
+            2 => 'siswa_id',
+            3 => 'jurusan_id',
             4 => 'nilai',
+            5 => 'mapel_id',
         ];
 
         $start = $request->start;
         $limit = $request->length;
-        $orderColumn = $columns[$request->input('order.0.column')];
+        $orderColumnIndex = $request->input('order.0.column');
+        $orderColumn = isset($columns[$orderColumnIndex]) ? $columns [$orderColumnIndex] : 'id';
         $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
 
-        // Hitunga keseluruhan
-        $hitung = RaporSiswa::count();
+        // Hitung total keseluruhan data tanpa paginasi dan pencarian
+        $totalData = RaporSiswa::count();
 
-        $rapor = RaporSiswa::where(function ($q) use ($search) {
-            if($search != null)
-            {
-                return $q->where('tajar_id','LIKE','%'.$search.'%')->orWhere('siswa_id','LIKE','%'.$search.'%')->orWhere('jurusan_id','LIKE','%'.$search.'%')->orWhere('mapel_id','LIKE','%'.$search.'%');
-            }
-        })->orderby($orderColumn,$dir)->skip($start)->take($limit)->get();
+        // Query mendapatkan data rapor siswa berdasarkan pencarian dan paginasi
+        $query = RaporSiswa::with(['siswa','mapel','tajar','jurusan'])
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('siswa', function ($q) use ($search) {
+                    $q->where('name','LIKE','%'.$search.'%');
+                })
+                ->orWhereHas('mapel', function ($q) use ($search){
+                    $q->where('name','LIKE','%'.$search.'%');
+                })
+                ->orWhereHas('tajar', function ($q) use ($search) {
+                    $q->where('tahun','LIKE','%'.$search.'%')
+                    ->orWhere('semester','LIKE','%'.$search.'%');
+                })
+                ->orWhereHas('jurusan', function ($q) use ($search) {
+                    $q->where('name','LIKE','%'.$search.'%');
+                })
+                ->orWhere('nilai', 'LIKE', '%'.$search.'%');
+            });
+        
+        // Hitung total filtered sesuai dengan pencarian
+        $totalFiltered = $query->count();
+
+        // Ambil data rapor sesuai dengan paginasi dan urutan
+        $rapor = $query
+            ->orderBy($orderColumn, $dir)
+            ->skip($start)
+            ->take($limit)
+            ->get();
+        
         $data = array();
         foreach($rapor as $r)
         {
@@ -70,8 +94,8 @@ class RaporSiswaController extends Controller
         
         return response()->json([
             'draw' => $request->draw,
-            'recordsTotal' => $hitung,
-            'recordsFiltered' => $hitung,
+            'recordsTotal' => $totalData,
+            'recordsFiltered' => $totalFiltered,
             'data' => $data,
         ],200);
     }

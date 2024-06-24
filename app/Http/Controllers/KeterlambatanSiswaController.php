@@ -24,26 +24,48 @@ class KeterlambatanSiswaController extends Controller
         // Data/Funtion Dummy
         $columns = [
             0 => 'id',
-            1 => 'nama_siswa',
-            2 => 'jumlah_keterlambatan',
-            3 => 'nilai',
+            1 => 'tajar_id',
+            2 => 'siswa_id',
+            3 => 'jurusan_id',
+            4 => 'jumlah_keterlambatan',
+            5 => 'nilai',
         ];
 
         $start = $request->start;
         $limit = $request->length;
-        $orderColumn = $columns[$request->input('order.0.column')];
+        $orderColumnIndex = $request->input('order.0.column');
+        $orderColumn = isset($columns [$orderColumnIndex]) ? $columns [$orderColumnIndex] : 'id';
         $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
 
-        // HitungKeseluruhan
-        $hitung = KeterlambatanSiswa::count();
+        // Hitung total keterlambatan berdasarkan pencarian dan paginasi
+        $totalData = KeterlambatanSiswa::count();
 
-        $keterlambatan = KeterlambatanSiswa::where(function ($q) use ($search) {
-            if($search != null)
-            {
-                return $q->where('tajar_id','LIKE','%'.$search.'%')->orWhere('siswa_id','LIKE','%'.$search.'%')->orWhere('jurusan_id','LIKE','%'.$search.'%');
-            }
-        })->orderby($orderColumn, $dir)->skip($start)->take($limit)->get();
+        // Query mendapatkan data keterlambatan berdasarkan pencarian dan paginasi
+        $query = KeterlambatanSiswa::with(['tajar','siswa','jurusan'])
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('tajar', function ($q) use ($search) {
+                    $q->where('tahun','LIKE','%'.$search.'%')
+                    ->orWhere('semester','LIKE','%'.$search.'%');
+                })
+                ->orWhereHas('siswa', function ($q) use ($search) {
+                    $q->where('name','LIKE','%'.$search.'%');
+                })
+                ->orWhereHas('jurusan', function ($q) use ($search) {
+                    $q->where('name','LIKE','%'.$search.'%');
+                })
+                ->orWhere('jumlah_keterlambatan','LIKE','%'.$search.'%')
+                ->orWhere('nilai','LIKE','%'.$search.'%');
+            });
+        
+        // Hitung total filtered sesuai dengan pencarian
+        $totalFiltered = $query->count();
+
+        // Ambil data keterlambatan sesuai dengan paginasi dan urutan
+        $keterlambatan = $query->orderBy($orderColumn, $dir)
+            ->skip($start)
+            ->take($limit)
+            ->get();
 
         $data = array();
         foreach($keterlambatan as $k)
@@ -58,8 +80,8 @@ class KeterlambatanSiswaController extends Controller
 
         return response()->json([
             'draw' => $request->draw,
-            'recordsTotal' => $hitung,
-            'recordsFiltered' => $hitung,
+            'recordsTotal' => $totalData,
+            'recordsFiltered' => $totalFiltered,
             'data' => $data,
         ], 200);
     }

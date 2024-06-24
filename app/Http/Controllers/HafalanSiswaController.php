@@ -24,26 +24,48 @@ class HafalanSiswaController extends Controller
         // Data Dummy
         $columns = [
             0 => 'id',
-            1 => 'nama_siswa',
-            2 => 'ket_hafalan',
-            3 => 'nilai',
+            1 => 'tajar_id',
+            2 => 'siswa_id',
+            3 => 'jurusan_id',
+            4 => 'ket_hafalan',
+            5 => 'nilai',
         ];
 
         $start = $request->start;
         $limit = $request->length;
-        $orderColumn = $columns[$request->input('order.0.column')];
+        $orderColumnIndex = $request->input('order.0.column');
+        $orderColumn = isset($columns[$orderColumnIndex]) ? $columns [$orderColumnIndex] : 'id';
         $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
 
-        // hitung keseluruhan
-        $hitung = HafalanSiswa::count();
+        // Hitung total keseluruhan data tanpa paginasi dan pencarian
+        $totalData = HafalanSiswa::count();
 
-        $hafalan = HafalanSiswa::where(function ($q) use ($search){
-            if($search != null)
-            {
-                return $q->where('tajar_id','LIKE','%'.$search.'%')->where('siswa_id','LIKE','%'.$search.'%')->where('jurusan_id','LIKE','%'.$search.'%')->where('ket_hafalan','LIKE','%'.$search.'%');
-            }
-        })->orderby($orderColumn, $dir)->skip($start)->take($limit)->get();
+        // Query mendapatkan data keterlambatan berdasarkan pencarian dan paginasi
+        $query = HafalanSiswa::with(['tajar','siswa','jurusan'])
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('tajar', function ($q) use ($search) {
+                    $q->where('tahun','LIKE','%'.$search.'%')
+                    ->orWhere('semester','LIKE','%'.$search.'%');
+                })
+                ->orWhereHas('siswa', function ($q) use ($search) {
+                    $q->where('name','LIKE','%'.$search.'%');
+                })
+                ->orWhereHas('jurusan', function ($q) use ($search) {
+                    $q->where('name','LIKE','%'.$search.'%');
+                })
+                ->orWhere('ket_hafalan','LIKE','%'.$search.'%')
+                ->orWhere('nilai','LIKE','%'.$search.'%');
+            });
+        
+        // Hitung total filtered sesuai dengan pencarian
+        $totalFiltered = $query->count();
+
+        // Ambil data hafalan sesuai dengan paginasi dan urutan
+        $hafalan = $query->orderBy($orderColumn, $dir)
+            ->skip($start)
+            ->take($limit)
+            ->get();
 
         $data = array();
         foreach($hafalan as $h)
@@ -58,8 +80,8 @@ class HafalanSiswaController extends Controller
 
         return response()->json([
             'draw' => $request->draw,
-            'recordsTotal' => $hitung,
-            'recordsFiltered' => $hitung,
+            'recordsTotal' => $totalData,
+            'recordsFiltered' => $totalFiltered,
             'data' => $data,
         ], 200);
     }

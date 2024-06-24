@@ -24,26 +24,48 @@ class PrestasiSiswaController extends Controller
         // Data/Function Dummy
         $columns = [
             0 => 'id',
-            1 => 'nama_siswa',
-            2 => 'ket_prestasi',
-            3 => 'nilai',
+            1 => 'tajar_id',
+            2 => 'siswa_id',
+            3 => 'jurusan_id',
+            4 => 'ket_prestasi',
+            5 => 'nilai',
         ];
 
         $start = $request->start;
         $limit = $request->length;
-        $orderColumn = $columns[$request->input('order.0.column')];
+        $orderColumnIndex = $request->input('order.0.column');
+        $orderColumn = isset($columns[$orderColumnIndex]) ? $columns [$orderColumnIndex] : 'id';
         $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
 
-        // Hitung Keseluruhan
-        $hitung = PrestasiSiswa::count();
+        // Hitung Keseluruhan tanpa paginasi
+        $totalData = PrestasiSiswa::count();
 
-        $prestasi = PrestasiSiswa::where(function ($q) use ($search) {
-            if ($search != null)
-            {
-                return $q->where('tajar_id','LIKE','%'.$search.'%')->orWhere('siswa_id','LIKE','%'.$search.'%')->orWhere('jurusan_id','LIKE','%'.$search.'%')->orWhere('ket_prestasi',$search);
-            }
-        })->orderby($orderColumn, $dir)->skip($start)->take($limit)->get();
+        // Query search and paginasi
+        $query = PrestasiSiswa::with(['tajar','siswa','jurusan'])
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('tajar', function ($q) use ($search) {
+                    $q->where('tahun','LIKE','%'.$search.'%')
+                    ->orWhere('semester','LIKE','%'.$search.'%');
+                })
+                ->orWhereHas('siswa', function ($q) use ($search) {
+                    $q->where('name','LIKE','%'.$search.'%');
+                })
+                ->orWhereHas('jurusan', function ($q) use ($search) {
+                    $q->where('name','LIKE','%'.$search.'%');
+                })
+                ->orWhere('ket_prestasi','LIKE','%'.$search.'%')
+                ->orWhere('nilai','LIKE','%'.$search.'%');
+            });
+
+        // Hitung total filtered berdasarkan pencarian
+        $totalFiltered = $query->count();
+
+        // Ambil data prestasi sesuai paginasi dan pencarian
+        $prestasi = $query->orderBy($orderColumn, $dir)
+            ->skip($start)
+            ->take($limit)
+            ->get();
 
         $data = array();
         foreach ($prestasi as $p)
@@ -53,13 +75,13 @@ class PrestasiSiswaController extends Controller
             $item['nama_siswa'] = $p->siswa->name ?? '';
             $item['ket_prestasi'] = $p->ket_prestasi;
             $item['nilai'] = $p->nilai;
-            $data[] = $item;
+            $data[] = $item; 
         }
 
         return response()->json([
             'draw' => $request->draw,
-            'recordsTotal' => $hitung,
-            'recordsFiltered' => $hitung,
+            'recordsTotal' => $totalData,
+            'recordsFiltered' => $totalFiltered,
             'data' => $data,
         ], 200);
     }

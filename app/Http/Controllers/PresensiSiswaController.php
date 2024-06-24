@@ -160,30 +160,55 @@ class PresensiSiswaController extends Controller
         // Data / function dummy
         $columns = [
             0 => 'id',
-            1 => 'nama_siswa',
-            2 => 'ket_ketidakhadiran',
-            3 => 'jumlah_hari',
-            4 => 'jumlah_hari_lainnya',
-            5 => 'nilai',
+            1 => 'tajar_id',
+            2 => 'siswa_id',
+            3 => 'jurusan_id',
+            4 => 'ket_ketidakhadiran',
+            5 => 'jumlah_hari',
+            6 => 'jumlah_hari_lainnya',
+            7 => 'nilai',
         ];
 
         $start = $request->start;
         $limit = $request->length;
-        $orderColumn = $columns[$request->input('order.0.column')];
+        $orderColumnIndex = $request->input('order.0.column');
+        $orderColumn = isset($columns[$orderColumnIndex]) ? $columns [$orderColumnIndex] : 'id';
         $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
 
-        // Hitung keseluruhan
-        $hitung = PresensiSiswa::count();
+        // Hitung total keseluruhan data tnapa paginasi dan pencarian
+        $totalData = PresensiSiswa::count();
+        
+        // Query mendapatkan data presensi siswa berdasarkan pencarian dan paginasi
+        $query = PresensiSiswa::with(['siswa','tajar','jurusan'])
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('siswa', function ($q) use ($search) {
+                    $q->where('name','LIKE','%'.$search.'%');
+                })
+                ->orWhereHas('tajar', function ($q) use ($search) {
+                    $q->where('tahun','LIKE','%'.$search.'%')
+                    ->orWhere('semester','LIKE','%'.$search.'%');
+                })
+                ->orWhereHas('jurusan', function ($q) use ($search) {
+                    $q->where('name','LIKE','%'.$search.'%');
+                })
+                ->orWhere('ket_ketidakhadiran','LIKE','%'.$search.'%')
+                ->orWhere('jumlah_hari','LIKE','%'.$search.'%')
+                ->orWhere('jumlah_hari_lainnya','LIKE','%'.$search.'%')
+                ->orWhere('nilai','LIKE','%'.$search.'%');
+            });
+        
+        // Hitung total filtered sesuai dengan pencarian
+        $totalFiltered = $query->count();
 
-        $presensi = PresensiSiswa::where(function ($q) use ($search) {
-            if($search != null)
-            {
-                return $q->where('tajar_id','LIKE','%'.$search.'%')->orWhere('siswa_id','LIKE','%'.$search.'%')->orwhere('jurusan_id','LIKE','%'.$search.'%')->orWhere('nilai',$search);
-            }
-        })->orderby($orderColumn, $dir)->skip($start)->take($limit)->get();
+        // Ambil data presensi sesuai dengan paginasi dan urutan
+        $presensi = $query
+            ->orderBy($orderColumn, $dir)
+            ->skip($start)
+            ->take($limit)
+            ->get();
+        
         $data = array();
-
         // dd($presensi)->toArray();
         foreach($presensi as $p)
         {
@@ -204,8 +229,8 @@ class PresensiSiswaController extends Controller
 
         return response()->json([
             'draw' => $request->draw,
-            'recordsTotal' => $hitung,
-            'recordsFiltered' => $hitung,
+            'recordsTotal' => $totalData,
+            'recordsFiltered' => $totalFiltered,
             'data' => $data,
         ], 200);
     }
