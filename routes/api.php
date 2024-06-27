@@ -19,6 +19,7 @@ use App\Http\Controllers\RaporController;
 use App\Http\Controllers\RaporSiswaController;
 use App\Http\Controllers\SikapSiswaController;
 use App\Models\KeterlambatanSiswa;
+use App\Models\MasterGuru;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,6 +40,10 @@ Route::prefix('autentikasi')->group(function () {
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get("/home", [DashboardController::class, 'getProfile']);
+        Route::get("/data-support/siswa", [DashboardController::class, 'jumlahSiswa']);
+        Route::get("/data-support/guru", [DashboardController::class, 'jumlahGuru']);
+        Route::get("data-support/user", [DashboardController::class, 'jumlahUser']);
+        Route::get("/data-support/nilai", [DashboardController::class, 'nilaiTertinggi']);
     });
 
     Route::prefix('master-guru')->group(function () {

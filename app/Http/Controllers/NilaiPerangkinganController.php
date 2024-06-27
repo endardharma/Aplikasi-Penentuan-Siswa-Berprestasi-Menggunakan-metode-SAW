@@ -144,6 +144,8 @@ class NilaiPerangkinganController extends Controller
             }
         }
 
+        // dd($normalisasi)->toArray();
+
         // Hitung nilai akhir (hasil preferensi (V1) )
         $nilaiakhir = [];
         

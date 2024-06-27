@@ -401,7 +401,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             <div class="col-span-12 mt-8">
                                 <div class="intro-y flex items-center h-10">
                                     <h2 class="text-lg font-medium truncate mr-5">
-                                        General Report
+                                        Data Report
                                     </h2>
                                     <a href="" class="ml-auto flex items-center text-primary"> <i data-lucide="refresh-ccw" class="w-4 h-4 mr-3"></i> Reload Data </a>
                                 </div>
@@ -412,11 +412,14 @@ License: You must have a valid license purchased only from themeforest(the above
                                                 <div class="flex">
                                                     <i data-lucide="shopping-cart" class="report-box__icon text-primary"></i> 
                                                     <div class="ml-auto">
-                                                        <div class="report-box__indicator bg-success tooltip cursor-pointer" title="33% Higher than last month"> 33% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i> </div>
+                                                        <div class="report-box__indicator bg-success cursor-pointer jumlah-siswa-container" title="">
+                                                            <span class="jumlah-siswa"></span>
+                                                            <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5 "></i> 
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="text-3xl font-medium leading-8 mt-6">4.710</div>
-                                                <div class="text-base text-slate-500 mt-1">Item Sales</div>
+                                                <div class="text-3xl font-medium leading-8 mt-6 jumlah-siswa"></div>
+                                                <div class="text-base text-slate-500 mt-1 ">Total Siswa</div>
                                             </div>
                                         </div>
                                     </div>
@@ -426,11 +429,14 @@ License: You must have a valid license purchased only from themeforest(the above
                                                 <div class="flex">
                                                     <i data-lucide="credit-card" class="report-box__icon text-pending"></i> 
                                                     <div class="ml-auto">
-                                                        <div class="report-box__indicator bg-danger tooltip cursor-pointer" title="2% Lower than last month"> 2% <i data-lucide="chevron-down" class="w-4 h-4 ml-0.5"></i> </div>
+                                                        <div class="report-box__indicator bg-success cursor-pointer jumlah-guru-container" title="">
+                                                            <span class="jumlah-guru"></span>
+                                                            <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="text-3xl font-medium leading-8 mt-6">3.721</div>
-                                                <div class="text-base text-slate-500 mt-1">New Orders</div>
+                                                <div class="text-3xl font-medium leading-8 mt-6 jumlah-guru"></div>
+                                                <div class="text-base text-slate-500 mt-1">Total Guru</div>
                                             </div>
                                         </div>
                                     </div>
@@ -440,11 +446,14 @@ License: You must have a valid license purchased only from themeforest(the above
                                                 <div class="flex">
                                                     <i data-lucide="monitor" class="report-box__icon text-warning"></i> 
                                                     <div class="ml-auto">
-                                                        <div class="report-box__indicator bg-success tooltip cursor-pointer" title="12% Higher than last month"> 12% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i> </div>
+                                                        <div class="report-box__indicator bg-success cursor-pointer jumlah-user-container" title="">
+                                                            <span class="jumlah-user"></span>
+                                                            <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="text-3xl font-medium leading-8 mt-6">2.149</div>
-                                                <div class="text-base text-slate-500 mt-1">Total Products</div>
+                                                <div class="text-3xl font-medium leading-8 mt-6 jumlah-user"></div>
+                                                <div class="text-base text-slate-500 mt-1">Total User</div>
                                             </div>
                                         </div>
                                     </div>
@@ -454,11 +463,14 @@ License: You must have a valid license purchased only from themeforest(the above
                                                 <div class="flex">
                                                     <i data-lucide="user" class="report-box__icon text-success"></i> 
                                                     <div class="ml-auto">
-                                                        <div class="report-box__indicator bg-success tooltip cursor-pointer" title="22% Higher than last month"> 22% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i> </div>
+                                                        <div class="report-box__indicator bg-success cursor-pointer nilai-tertinggi-container">
+                                                            <span class="nilai-tertinggi"></span>
+                                                            <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i> </div>
                                                     </div>
                                                 </div>
-                                                <div class="text-3xl font-medium leading-8 mt-6">152.040</div>
-                                                <div class="text-base text-slate-500 mt-1">Unique Visitor</div>
+                                                <div class="text-3xl font-medium leading-8 mt-6 nilai-tertinggi">
+                                                </div>
+                                                <div class="text-base text-slate-500 mt-1">Nilai Tertinggi</div>
                                             </div>
                                         </div>
                                     </div>
@@ -504,14 +516,20 @@ License: You must have a valid license purchased only from themeforest(the above
                                     </div>
                                     <div class="report-chart">
                                         <div class="h-[275px]">
-                                            <canvas id="report-line-chart" class="mt-6 -mb-6"></canvas>
+                                            <canvas id="report-line-chart" class="mt-6 mb-6"></canvas>
                                         </div>
                                     </div>
+                                    {{-- <div class="report-chart">
+                                        <div class="h-[275px]">
+                                            <canvas id="bar-chart-horizontal" class="mt-6 mb-6"></canvas>
+                                        </div>
+                                    </div> --}}
                                 </div>
                             </div>
+
                             <!-- END: Sales Report -->
                             <!-- BEGIN: Weekly Top Seller -->
-                            <div class="col-span-12 sm:col-span-6 lg:col-span-3 mt-8">
+                            {{-- <div class="col-span-12 sm:col-span-6 lg:col-span-3 mt-8">
                                 <div class="intro-y flex items-center h-10">
                                     <h2 class="text-lg font-medium truncate mr-5">
                                         Weekly Top Seller
@@ -539,10 +557,10 @@ License: You must have a valid license purchased only from themeforest(the above
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- END: Weekly Top Seller -->
                             <!-- BEGIN: Sales Report -->
-                            <div class="col-span-12 sm:col-span-6 lg:col-span-3 mt-8">
+                            {{-- <div class="col-span-12 sm:col-span-6 lg:col-span-3 mt-8">
                                 <div class="intro-y flex items-center h-10">
                                     <h2 class="text-lg font-medium truncate mr-5">
                                         Sales Report
@@ -570,10 +588,10 @@ License: You must have a valid license purchased only from themeforest(the above
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- END: Sales Report -->
                             <!-- BEGIN: Official Store -->
-                            <div class="col-span-12 xl:col-span-8 mt-6">
+                            {{-- <div class="col-span-12 xl:col-span-8 mt-6">
                                 <div class="intro-y block sm:flex items-center h-10">
                                     <h2 class="text-lg font-medium truncate mr-5">
                                         Official Store
@@ -587,10 +605,10 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <div>250 Official stores in 21 countries, click the marker to see location details.</div>
                                     <div class="report-maps mt-5 bg-slate-200 rounded-md" data-center="-6.2425342, 106.8626478" data-sources="{{ asset('template/dist/json/location.json') }}"></div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- END: Official Store -->
                             <!-- BEGIN: Weekly Best Sellers -->
-                            <div class="col-span-12 xl:col-span-4 mt-6">
+                            {{-- <div class="col-span-12 xl:col-span-4 mt-6">
                                 <div class="intro-y flex items-center h-10">
                                     <h2 class="text-lg font-medium truncate mr-5">
                                         Weekly Best Sellers
@@ -647,10 +665,10 @@ License: You must have a valid license purchased only from themeforest(the above
                                     </div>
                                     <a href="" class="intro-y w-full block text-center rounded-md py-4 border border-dotted border-slate-400 dark:border-darkmode-300 text-slate-500">View More</a> 
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- END: Weekly Best Sellers -->
                             <!-- BEGIN: General Report -->
-                            <div class="col-span-12 grid grid-cols-12 gap-6 mt-8">
+                            {{-- <div class="col-span-12 grid grid-cols-12 gap-6 mt-8">
                                 <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
                                     <div class="box p-5 zoom-in">
                                         <div class="flex items-center">
@@ -709,10 +727,10 @@ License: You must have a valid license purchased only from themeforest(the above
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- END: General Report -->
                             <!-- BEGIN: Weekly Top Products -->
-                            <div class="col-span-12 mt-6">
+                            {{-- <div class="col-span-12 mt-6">
                                 <div class="intro-y block sm:flex items-center h-10">
                                     <h2 class="text-lg font-medium truncate mr-5">
                                         Weekly Top Products
@@ -882,7 +900,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                         <option>50</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- END: Weekly Top Products -->
                         </div>
                     </div>
@@ -962,7 +980,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </div>
                                 <!-- END: Transactions -->
                                 <!-- BEGIN: Recent Activities -->
-                                <div class="col-span-12 md:col-span-6 xl:col-span-4 2xl:col-span-12 mt-3">
+                                {{-- <div class="col-span-12 md:col-span-6 xl:col-span-4 2xl:col-span-12 mt-3">
                                     <div class="intro-x flex items-center h-10">
                                         <h2 class="text-lg font-medium truncate mr-5">
                                             Recent Activities
@@ -1041,10 +1059,10 @@ License: You must have a valid license purchased only from themeforest(the above
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- END: Recent Activities -->
                                 <!-- BEGIN: Important Notes -->
-                                <div class="col-span-12 md:col-span-6 xl:col-span-12 xl:col-start-1 xl:row-start-1 2xl:col-start-auto 2xl:row-start-auto mt-3">
+                                {{-- <div class="col-span-12 md:col-span-6 xl:col-span-12 xl:col-start-1 xl:row-start-1 2xl:col-start-auto 2xl:row-start-auto mt-3">
                                     <div class="intro-x flex items-center h-10">
                                         <h2 class="text-lg font-medium truncate mr-auto">
                                             Important Notes
@@ -1085,9 +1103,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- END: Important Notes -->
-                                <!-- BEGIN: Schedules -->
+                                {{-- <!-- BEGIN: Schedules -->
                                 <div class="col-span-12 md:col-span-6 xl:col-span-4 2xl:col-span-12 xl:col-start-1 xl:row-start-2 2xl:col-start-auto 2xl:row-start-auto mt-3">
                                     <div class="intro-x flex items-center h-10">
                                         <h2 class="text-lg font-medium truncate mr-5">
@@ -1172,7 +1190,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                         </div>
                                     </div>
                                 </div>
-                                <!-- END: Schedules -->
+                                <!-- END: Schedules --> --}}
                             </div>
                         </div>
                     </div>
@@ -1182,10 +1200,22 @@ License: You must have a valid license purchased only from themeforest(the above
         </div>
         
         <!-- BEGIN: JS Assets-->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=["your-google-map-api"]&libraries=places"></script>
+        <script src="{{ asset('template/dist/js/app.js') }}"></script> --}}
+
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- Google Maps API dan MarkerClusterer -->
+        <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=your-google-map-api&libraries=places"></script>
+
+        <!-- JavaScript Asset Anda (app.js) -->
         <script src="{{ asset('template/dist/js/app.js') }}"></script>
+        {{-- <script src="{{ asset('template/src/js/chart.js') }}"></script> --}}
+
         <script>
             // cek package jquery
             jQuery(document).ready(function(){
@@ -1233,6 +1263,71 @@ License: You must have a valid license purchased only from themeforest(the above
 
                 }).catch(error => {
                     console.error('Error:', error);
+                });
+                
+                // Menampilkan jumlah siswa 
+                var url = 'http://127.0.0.1:8000/api/dashboard/data-support/siswa';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }).then(response => response.json()).then(data => {
+
+                    jQuery('.jumlah-siswa').text(data.jumlah_siswa);
+                    jQuery('.jumlah-siswa-container').attr('title', data.message);
+
+                }).catch(error => {
+                    console.error('Error', error);
+                });
+
+                // Menampilkan jumlah guru
+                var url = 'http://127.0.0.1:8000/api/dashboard/data-support/guru';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }).then(response => response.json()).then(data => {
+
+                    jQuery('.jumlah-guru').text(data.jumlah_guru);
+                    jQuery('.jumlah-guru-container').attr('title', data.message);
+                    
+                }).catch(error => {
+                    console.error('Error', error);
+                });
+
+                // Menampilkan jumlah user
+                var url = 'http://127.0.0.1:8000/api/dashboard/data-support/user';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }).then(response => response.json()).then(data => {
+                    
+                    jQuery('.jumlah-user').text(data.jumlah_user);
+                    jQuery('.jumlah-user-container').attr('title', data.message);
+                    
+                }).catch(error => {
+                    console.error('Error', error);
+                });
+
+                // Menampilkan nilai tertinggi siswa berprestasi
+                var url = 'http://127.0.0.1:8000/api/dashboard/data-support/nilai';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }).then(response => response.json()).then(data => {
+
+                    jQuery('.nilai-tertinggi').text(data.nilai_tertinggi);
+                    jQuery('.nama-siswa').text(data.nama_siswa);
+                    jQuery('.nilai-tertinggi-container').attr('title', data.message);
+                    
+                }).catch(error => {
+                    console.error('Error', error);
                 });
 
                 function logout(name) {
