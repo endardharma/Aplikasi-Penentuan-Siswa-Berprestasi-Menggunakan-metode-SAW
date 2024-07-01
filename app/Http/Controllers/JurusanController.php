@@ -21,6 +21,7 @@ class JurusanController extends Controller
         foreach($jurusan as $j)
         {
             $item['id'] = $j->id;
+            $item['jurusan'] = $j->jurusan;
             $item['kode'] = $j->kode;
             $item['name'] = $j->name;
             $item['status'] = $j->is_active == 1 ? 'Aktif' : 'Non Aktif';
@@ -49,6 +50,7 @@ class JurusanController extends Controller
         }
 
         $jurusan = new MasterJurusan();
+        $jurusan->jurusan = $request->jurusan;
         $jurusan->kode = $request->kode;
         $jurusan->name = $request->name;
         $jurusan->is_active = $request->is_active;
@@ -70,6 +72,7 @@ class JurusanController extends Controller
                 'message' => 'Update data gagal, data jurusan tidak ditemukan',
             ],400);
         }else{
+            $find->jurusan = $request->jurusan;
             $find->kode = $request->kode;
             $find->name = $request->name;
             $find->is_active = $request->is_active;

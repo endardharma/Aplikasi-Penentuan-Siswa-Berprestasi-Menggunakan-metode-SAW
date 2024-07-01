@@ -22,7 +22,7 @@ class MastertajarController extends Controller
             $item['id'] = $t->id;
             $item['kode'] = $t->kode;
             $item['name'] = $t->name;
-            $item['tahun'] = $t->tahun;
+            $item['periode'] = $t->periode;
             $item['semester'] = $t->semester;
             $data[] = $item;
         }
@@ -38,7 +38,7 @@ class MastertajarController extends Controller
         $validator = Validator::make($request->all(), [
             'kode' => 'required',
             'name' => 'required',
-            'tahun' => 'required',
+            'periode' => 'required',
             'semester' => 'required',
         ]);
 
@@ -50,7 +50,7 @@ class MastertajarController extends Controller
         $tajar = new TahunAjar();
         $tajar->kode = $request->kode;
         $tajar->name = $request->name;
-        $tajar->tahun = $request->tahun;
+        $tajar->periode = $request->periode;
         $tajar->semester = $request->semester;
         $tajar->save();
 
@@ -72,7 +72,7 @@ class MastertajarController extends Controller
         }else{
             $request->kode != null ? $find->kode = $request->kode : true;
             $request->name != null ? $find->name = $request->name : true;
-            $request->tahun != null ? $find->tahun = $request->tahun : true;
+            $request->periode != null ? $find->periode = $request->periode : true;
             $request->semester != null ? $find->semester = $request->semester : true;
             $find->save();
 

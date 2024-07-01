@@ -71,10 +71,21 @@ class NilaiPerangkinganController extends Controller
 
     public function listNilaiPerangkingan(Request $request)
     {
+        // $columns = [
+        //     0 => 'id',
+        //     1 => 'nama_siswa',
+        //     2 => 'nilai_akhir',
+        //     3 => 'nama_jurusan',
+        //     4 => 'semester',
+        //     5 => 'tahun_ajar',
+        //     6 => 'tajar_id',
+        //     7 => 'siswa_id',
+        //     8 => 'jurusan_id',
+        // ];
+
         $columns = [
             0 => 'id',
-            1 => 'tajar_id',
-            2 => 'siswa_id',
+            1 => 'siswa_id',
             2 => 'nilai_akhir',
             3 => 'jurusan_id',
             4 => 'tajar_id',
@@ -82,34 +93,39 @@ class NilaiPerangkinganController extends Controller
 
         $start = $request->start;
         $limit = $request->length;
-        $orderColumnIndex = $columns[$request->input('order.0.column')];
+        $orderColumnIndex = $request->input('order.0.column');
         $orderColumn = isset($columns[$orderColumnIndex]) ? $columns[$orderColumnIndex] : 'id';
         $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
 
-        // Hitung total keseluruhan data tanpa paginasi dan pencarian 
-        $totalData = MasterSiswa::count();
+        // Hitung total data tanpa paginasi dan pencarian
+        $totalData = NilaiPerangkingan::count();
 
-        // Query untuk mendapatkan data siswa berdasarkan nilaiKeseluruhan
-        $query = MasterSiswa::query()
-        ->with(['nilaiKeseluruhan', 'jurusan', 'tajar'])
-        ->when($search, function ($query) use ($search) {
-            $query->where('name', 'LIKE', '%'.$search.'%')
-                ->orWhereHas('jurusan', function ($query) use ($search) {
-                    $query->where('name', 'LIKE', '%'.$search.'%');
+        // Query mendapatkan data nilai perangkingan berdasarkan pencarian dan paginasi
+        $query = NilaiPerangkingan::with(['siswa','tajar','jurusan'])
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('siswa', function ($q) use ($search) {
+                    $q->where('name','LIKE','%'.$search.'%');
                 })
-                ->orWhereHas('tajar', function ($query) use ($search) {
-                    $query->where('tahun', 'LIKE', '%'.$search.'%')
-                        ->orWhere('semester', 'LIKE', '%'.$search.'%');
-                });
-        })
-        ->orderby($orderColumn, $dir) // Ganti dengan kolom yang valid, misalnya 'id'
-        ->skip($start)
-        ->take($limit)
-        ->get();
-
-        // Hitung total keseluruhan data sesuai dengan pencarian
+                ->orWhereHas('tajar', function ($q) use ($search) {
+                    $q->where('periode','LIKE','%'.$search.'%')
+                    ->orWhere('semester','LIKE','%'.$search.'%');
+                })
+                ->orWhereHas('jurusan', function ($q) use ($search) {
+                    $q->where('name','LIKE','%'.$search.'%');
+                })
+                ->orWhere('nilai_akhir','LIKE','%'.$search.'%');
+            });
+        
+        // Hitung total filtered sesuai dengan pencarian
         $totalFiltered = $query->count();
+
+        // Ambil data nilai pernagkingan sesuai dengan paginasi dan urutan
+        $nilaiPerangkingan = $query
+            ->orderBy($orderColumn, $dir)
+            ->skip($start)
+            ->take($limit)
+            ->get();
 
         $normalisasi = [];
 
@@ -144,8 +160,6 @@ class NilaiPerangkinganController extends Controller
             }
         }
 
-        // dd($normalisasi)->toArray();
-
         // Hitung nilai akhir (hasil preferensi (V1) )
         $nilaiakhir = [];
         
@@ -162,21 +176,30 @@ class NilaiPerangkinganController extends Controller
             $nilaiakhir[$s->id] = $nilaiakhirsiswa;
         }
 
-        $data = [];
-        foreach ($siswa as $s)
+        $data = array();
+        foreach ($nilaiPerangkingan as $s)
         {
-            $data[] = [
-                'id' => $s->id,
-                'nama_siswa' => $s->name,
-                'nilai_akhir' => $nilaiakhir[$s->id],
-                'jurusan' => $s->jurusan->name,
-                'semester' => $s->tajar->semester,
-                'tahun_ajar' => $s->tajar->tahun,
-            ];
+            // $data[] = [
+            //     'id' => $s->id,
+            //     'nama_siswa' => $s->name,
+            //     'nilai_akhir' => $nilaiakhir[$s->id],
+            //     'jurusan' => $s->jurusan->name,
+            //     'semester' => $s->tajar->semester,
+            //     'tahun_ajar' => $s->tajar->periode,
+            // ];
+
+            $item['id'] = $s->id;
+            $item['nama_siswa'] = $s->siswa->name;
+            $item['nilai_akhir'] = $nilaiakhir[$s->id];
+            $item['jurusan'] = $s->jurusan->name;
+            $item['semester'] = $s->tajar->semester;
+            $item['tahun_ajar'] = $s->tajar->periode;
+
+            $data[] = $item;
 
             NilaiPerangkingan::updateOrCreate(
                 [
-                    'siswa_id' => $s->id,
+                    'siswa_id' => $s->siswa->id,
                     'tajar_id' => $s->tajar->id,
                     'jurusan_id' => $s->jurusan->id,
                 ],
@@ -186,6 +209,22 @@ class NilaiPerangkinganController extends Controller
             );
         }
 
+        // sortir data berdasarkan kolom yang diinginkan
+        if (isset($columns[$orderColumnIndex])) {
+            $orderColumn = $columns[$orderColumnIndex];
+    
+            usort($data, function ($a, $b) use ($orderColumn, $dir) {
+                if ($dir === 'asc') 
+                {
+                    return $a[$orderColumn] <=> $b[$orderColumn];
+                } 
+                else 
+                {
+                    return $b[$orderColumn] <=> $a[$orderColumn];
+                }
+            });
+        }
+        
         // Mengurutkan data berdasarkan nilai_akhir
         usort($data, function ($a, $b){
             return $b['nilai_akhir'] <=> $a['nilai_akhir'];
@@ -230,7 +269,7 @@ class NilaiPerangkinganController extends Controller
             $item['nilai_akhir'] = $r->nilai_akhir;
             $item['jurusan'] = $r->jurusan->name ?? '';
             $item['semester'] = $r->tajar->semester ?? '';
-            $item['tahun_ajar'] = $r->tajar->tahun ?? '';
+            $item['tahun_ajar'] = $r->tajar->periode ?? '';
             $data[] = $item;
         }
 

@@ -409,7 +409,7 @@ License: You must have a valid license purchased only from themeforest(the above
                 <!-- END: Top Bar -->
                 <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
                     <h2 class="text-lg font-medium mr-auto">
-                        List Data Tahun Ajar
+                        List Data Periode Tahun Ajar
                     </h2>
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
                         <button class="btn btn-primary shadow-md mr-2 btn-tambah">Tambah Data</button>
@@ -424,7 +424,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <th>ID</th>
                                     <th>Kode</th>
                                     <th>Nama</th>
-                                    <th>Tahun</th>
+                                    <th>Periode</th>
                                     <th>Semester</th>
                                     <th>Action</th>
                                 </tr>
@@ -461,7 +461,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Tahun Ajaran</label>
-                                <input type="number" class="form-control form-tahun" placeholder="2024" required>
+                                <input type="number" class="form-control form-periode" placeholder="2024" required>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-3" class="form-label">Semester</label>
@@ -522,11 +522,11 @@ License: You must have a valid license purchased only from themeforest(the above
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Nama</label>
-                                <input type="text" class="form-control update-nama" placeholder="Kurikulum 2013 Tahun Ajar 2024" required>
+                                <input type="text" class="form-control update-nama" placeholder="Kurikulum 2013 Periode 2023/2024" required>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Tahun Ajar</label>
-                                <input type="number" class="form-control update-tahun" placeholder="2024" required>
+                                <label for="modal-form-2" class="form-label">Periode</label>
+                                <input type="text" class="form-control update-periode" placeholder="Masukkan Periode Tahun Ajar" required>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-3" class="form-label">Semester</label>
@@ -678,13 +678,13 @@ License: You must have a valid license purchased only from themeforest(the above
                     // Get form data
                     var kode = jQuery(".form-kode").val();
                     var name = jQuery(".form-name").val();
-                    var tahun = jQuery(".form-tahun").val();
+                    var periode = jQuery(".form-periode").val();
                     var semester = jQuery(".form-semester").val();
 
                     var formData = new FormData();
                     formData.append('kode', kode);
                     formData.append('name', name);
-                    formData.append('tahun', tahun);
+                    formData.append('periode', periode);
                     formData.append('semester', semester);
 
                     // Kirim permintaan pembaruan produk ke API
@@ -768,7 +768,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 id: item[i].id,
                                 kode: item[i].kode,
                                 name: item[i].name,
-                                tahun: item[i].tahun,
+                                periode: item[i].periode,
                                 semester: item[i].semester,
                             };
 
@@ -790,14 +790,14 @@ License: You must have a valid license purchased only from themeforest(the above
                             { data: 'id', className: 'text-center' },
                             { data: 'kode', className: 'text-center' },
                             { data: 'name', className: 'text-center' },
-                            { data: 'tahun', className: 'text-center' },
+                            { data: 'periode', className: 'text-center' },
                             { data: 'semester', className: 'text-center' },
                             {
                                 data: null,
                                 render: function (data, type, row) {
 
                                     // Create action buttons
-                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-kode="' + data.kode + '" data-name="' + data.name + '" data-tahun="' + data.tahun + '" data-semester="' + data.semester + '"><i data-feather="edit" class="w-4 h-4"></i></button>';
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-kode="' + data.kode + '" data-name="' + data.name + '" data-periode="' + data.periode + '" data-semester="' + data.semester + '"><i data-feather="edit" class="w-4 h-4"></i></button>';
                                     var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4"></i></button>';
 
                                     // Combine the buttons
@@ -821,14 +821,14 @@ License: You must have a valid license purchased only from themeforest(the above
                         var id = jQuery(this).attr("data-id");
                         var kode = jQuery(this).attr("data-kode");
                         var name = jQuery(this).attr("data-name");
-                        var tahun = jQuery(this).attr("data-tahun");
+                        var periode = jQuery(this).attr("data-periode");
                         var semester = jQuery(this).attr("data-semester");
 
                         // Handle edit action
                         jQuery('.update-id').val(id);
                         jQuery('.update-kode').val(kode);
                         jQuery('.update-nama').val(name);
-                        jQuery('.update-tahun').val(tahun);
+                        jQuery('.update-periode').val(periode);
                         jQuery('.update-semester').val(semester);
                     });
 
@@ -838,7 +838,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         var id = jQuery('.update-id').val();
                         var kode = jQuery('.update-kode').val();
                         var name = jQuery('.update-nama').val();
-                        var tahun = jQuery('.update-tahun').val();
+                        var periode = jQuery('.update-periode').val();
                         var semester = jQuery('.update-semester').val();
 
                         // Kirim permintaan pembaruan produk ke API
@@ -851,7 +851,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             data: {
                                 kode: kode,
                                 name: name,
-                                tahun: tahun,
+                                periode: periode,
                                 semester: semester,
                             },
                             success: function(response) {

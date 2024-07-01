@@ -186,7 +186,7 @@ class PresensiSiswaController extends Controller
                     $q->where('name','LIKE','%'.$search.'%');
                 })
                 ->orWhereHas('tajar', function ($q) use ($search) {
-                    $q->where('tahun','LIKE','%'.$search.'%')
+                    $q->where('periode','LIKE','%'.$search.'%')
                     ->orWhere('semester','LIKE','%'.$search.'%');
                 })
                 ->orWhereHas('jurusan', function ($q) use ($search) {
@@ -280,7 +280,7 @@ class PresensiSiswaController extends Controller
             $item['nilai'] = $p->nilai;
             $item['jurusan'] = $p->jurusan->name ?? '';
             $item['semester'] = $p->tajar->semester ?? '';
-            $item['tahun_ajar'] = $p->tajar->tahun ?? '';
+            $item['tahun_ajar'] = $p->tajar->periode ?? '';
             $data[] = $item;
         }
         
@@ -302,7 +302,7 @@ class PresensiSiswaController extends Controller
             $item['id'] = $t->id;
             $item['name'] = $t->name;
             $item['semester'] = $t->semester;
-            $item['tahun'] = $t->tahun;
+            $item['periode'] = $t->periode;
             $data[] = $item;
         }
 
@@ -451,7 +451,7 @@ class PresensiSiswaController extends Controller
         foreach($presensi as $p)
         {
             $item['id'] = $p->id;
-            $item['tahun_ajar'] = $p->tajar->tahun ?? '';
+            $item['tahun_ajar'] = $p->tajar->periode ?? '';
             $item['jurusan'] = $p->jurusan->name ?? '';
             $item['nama_siswa'] = $p->siswa->name ?? '';
             $item['ket_ketidakhadiran'] = $p->ket_ketidakhadiran;

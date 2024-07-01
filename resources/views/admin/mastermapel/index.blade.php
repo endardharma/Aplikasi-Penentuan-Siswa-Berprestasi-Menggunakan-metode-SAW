@@ -430,6 +430,18 @@ License: You must have a valid license purchased only from themeforest(the above
                         </div>
                     </div>
                 </div>
+                <div class="intro-y flex flex-col sm:flex-row items-center mt-1">
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <button type="submit" class="btn btn-primary shadow-md mr-2 btn-cari" id="search-button">Cari</button>
+                    </div>
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <label for="jurusan" class="form-label"></label>
+                        <select class="form-select form-jurusan" name="jurusan" id="select-jurusan" required>
+                            <option disabled selected> -- Pilih Jurusan -- </option>
+                            <option value="-1">Semua Jurusan</option>
+                        </select>
+                    </div>
+                </div>
                 <!-- BEGIN: HTML Table Data -->
                 <div class="intro-y box p-5 mt-5">
                     <div class="overflow-x-auto scrollbar-hidden">
@@ -440,7 +452,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <th>Nama</th>
                                     <th>Kelompok</th>
                                     <th>Tipe Nilai</th>
-                                    <th>Kelas</th>
+                                    <th>Jurusan</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -488,9 +500,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </select>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Kelas</label>
-                                <select class="form-select form-kelas" required>
-                                    <option disabled selected> --- Pilih Kelas Mata Pelajaran ---</option>
+                                <label for="modal-form-2" class="form-label">Jurusan</label>
+                                <select class="form-select form-jurusan" required>
+                                    <option disabled selected> --- Pilih Jurusan Mata Pelajaran ---</option>
                                 </select>
                             </div>
                         </div>
@@ -560,9 +572,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </select>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Kelas</label>
-                                <select class="form-select update-kelas" required>
-                                    <option disabled selected> --- Pilih Kelas Mata Pelajaran ---</option>
+                                <label for="modal-form-2" class="form-label">Jurusan</label>
+                                <select class="form-select update-jurusan" required>
+                                    <option disabled selected> --- Pilih Jurusan Mata Pelajaran ---</option>
                                 </select>
                             </div>
                         </div>
@@ -762,15 +774,15 @@ License: You must have a valid license purchased only from themeforest(the above
                     }
                 }).then(response => response.json()).then(data => {
                     // Panggil element select
-                    var select = jQuery('.form-kelas');
-                    var selectUpdate = jQuery('.update-kelas');
+                    var select = jQuery('.form-jurusan');
+                    var selectUpdate = jQuery('.update-jurusan');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
                         for (let i = 0; i < item.length; i++) {
                             // Isi data dengan nilai dalam database
-                            select.append('<option value="' + item[i].id + '">' + item[i].kode + ' - ' + item[i].name + '</option>');
-                            selectUpdate.append('<option value="' + item[i].id + '">' + item[i].kode + ' - ' + item[i].name + '</option>');
+                            select.append('<option value="' + item[i].id + '">' + item[i].jurusan + '</option>');
+                            selectUpdate.append('<option value="' + item[i].id + '">' + item[i].jurusan + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -785,7 +797,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     var name = jQuery(".form-nama-pelajaran").val();
                     var kelompok = jQuery(".form-kelompok").val();
                     var type = jQuery(".form-type").val();
-                    var jurusan_id = jQuery(".form-kelas").val();
+                    var jurusan_id = jQuery(".form-jurusan").val();
 
                     var formData = new FormData();
                     formData.append('jurusan_id', jurusan_id);
@@ -845,40 +857,100 @@ License: You must have a valid license purchased only from themeforest(the above
                 })
 
                 // Datatable list Cabang
-                jQuery('#data-table').DataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": "http://127.0.0.1:8000/api/master-mapel/list",
-                        "dataType": "json",
-                        "type": "POST",
-                        "headers": {
-                            'Authorization': 'Bearer ' + token
-                        }
-                    },
-                    "columns": [
-                        { data: 'id', className: 'text-center' },
-                        { data: 'name', className: 'text-center' },
-                        { data: 'kelompok', className: 'text-center' },
-                        { data: 'type', className: 'text-center' },
-                        { data: 'kelas', className: 'text-center' },
-                        {
-                            data: null,
-                            render: function (data, type, row) {
+                // jQuery('#data-table').DataTable({
+                //     "processing": true,
+                //     "serverSide": true,
+                //     "ajax": {
+                //         "url": "http://127.0.0.1:8000/api/master-mapel/list",
+                //         "dataType": "json",
+                //         "type": "POST",
+                //         "headers": {
+                //             'Authorization': 'Bearer ' + token
+                //         },
+                //         "data": function (d) {
+                //             d.jurusan_id = jurusanId;
+                //         }
+                //     },
+                //     "columns": [
+                //         { data: 'id', className: 'text-center' },
+                //         { data: 'name', className: 'text-center' },
+                //         { data: 'kelompok', className: 'text-center' },
+                //         { data: 'type', className: 'text-center' },
+                //         { data: 'jurusan', className: 'text-center' },
+                //         {
+                //             data: null,
+                //             render: function (data, type, row) {
 
-                                // Create action buttons
-                                var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_kelas="' + data.id_kelas + '" data-name="' + data.name + '" data-kelompok="' + data.kelompok + '" data-type="' + data.type + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
-                                var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
+                //                 // Create action buttons
+                //                 var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_kelas="' + data.id_kelas + '" data-name="' + data.name + '" data-kelompok="' + data.kelompok + '" data-type="' + data.type + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                //                 var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
 
-                                // Combine the buttons
-                                var actions = editBtn + ' || ' + deleteBtn;
-                                return actions;
+                //                 // Combine the buttons
+                //                 var actions = editBtn + ' || ' + deleteBtn;
+                //                 return actions;
+                //             }
+                //         }
+                //     ],
+                //     "drawCallback": function(settings) {
+                //         feather.replace();
+                //     }
+                // });
+
+                function loadDataTable(jurusanId = '')
+                {
+                    jQuery('#data-table').DataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "destroy": true,
+                        "ajax": {
+                            "url": "http://127.0.0.1:8000/api/master-mapel/list",
+                            "dataType": "json",
+                            "type": "POST",
+                            "headers": {
+                                'Authorization': 'Bearer ' + token
+                            },
+                            "data": function (d) {
+                                // d.jurusan_id = jurusanId;
+                                if (jurusanId === '-1') 
+                                {
+                                    d.jurusan_id = ' ';
+                                }
+                                else
+                                {
+                                    d.jurusan_id = jurusanId;
+                                }
                             }
+                        },
+                        "columns": [
+                            { data: 'id', className: 'text-center' },
+                            { data: 'name', className: 'text-center' },
+                            { data: 'kelompok', className: 'text-center' },
+                            { data: 'type', className: 'text-center' },
+                            { data: 'jurusan', className: 'text-center' },
+                            {
+                                data: null,
+                                render: function (data, type, row) {
+
+                                    // Create action buttons
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_kelas="' + data.id_kelas + '" data-name="' + data.name + '" data-kelompok="' + data.kelompok + '" data-type="' + data.type + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                    var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
+
+                                    // Combine the buttons
+                                    var actions = editBtn + ' || ' + deleteBtn;
+                                    return actions;
+                                }
+                            }
+                        ],
+                        "drawCallback": function(settings) {
+                            feather.replace();
                         }
-                    ],
-                    "drawCallback": function(settings) {
-                        feather.replace();
-                    }
+                    })
+                }
+
+                loadDataTable();
+                jQuery('#search-button').on('click', function() {
+                    var jurusanId = $('#select-jurusan').val();
+                    loadDataTable(jurusanId);
                 });
 
                 // Passing data list row ke dalam modal update
@@ -899,7 +971,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     jQuery('.update-nama-pelajaran').val(name);
                     jQuery('.update-kelompok').val(kelompok);
                     jQuery('.update-type').val(type);
-                    jQuery('.update-kelas').val(id_kelas);
+                    jQuery('.update-jurusan').val(id_kelas);
                 });
 
                 // Fungsi button update data
@@ -909,7 +981,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     var name = jQuery('.update-nama-pelajaran').val();
                     var kelompok = jQuery('.update-kelompok').val();
                     var type = jQuery('.update-type').val();
-                    var jurusan_id = jQuery('.update-kelas').val();
+                    var jurusan_id = jQuery('.update-jurusan').val();
 
                     // Kirim permintaan pembaruan produk ke API
                     jQuery.ajax({

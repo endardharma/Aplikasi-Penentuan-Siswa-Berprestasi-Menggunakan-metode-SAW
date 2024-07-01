@@ -16,6 +16,16 @@ class MasterSiswa extends Model
         return $this->belongsTo(MasterJurusan::class, 'jurusan_id');
     }
 
+    public function kriteria()
+    {
+        return $this->belongsTo(MasterKriteria::class);
+    
+    }
+    public function siswa()
+    {
+        return $this->belongsTo(MasterSiswa::class);
+    }
+
     public function tajar()
     {
         return $this->belongsTo(TahunAjar::class, 'tajar_id');

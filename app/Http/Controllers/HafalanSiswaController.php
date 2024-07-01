@@ -45,7 +45,7 @@ class HafalanSiswaController extends Controller
         $query = HafalanSiswa::with(['tajar','siswa','jurusan'])
             ->when($search, function ($query) use ($search) {
                 $query->whereHas('tajar', function ($q) use ($search) {
-                    $q->where('tahun','LIKE','%'.$search.'%')
+                    $q->where('periode','LIKE','%'.$search.'%')
                     ->orWhere('semester','LIKE','%'.$search.'%');
                 })
                 ->orWhereHas('siswa', function ($q) use ($search) {
@@ -124,7 +124,7 @@ class HafalanSiswaController extends Controller
             $item['nilai'] = $h->nilai;
             $item['jurusan'] = $h->jurusan->name ?? '';
             $item['semester'] = $h->tajar->semester ?? '';
-            $item['tahun_ajar'] = $h->tajar->tahun ?? '';
+            $item['tahun_ajar'] = $h->tajar->periode ?? '';
             $data[] = $item; 
         }
 
@@ -262,7 +262,7 @@ class HafalanSiswaController extends Controller
             $item['nilai'] = $h->nilai;
             $item['jurusan'] = $h->jurusan->name ?? '';
             $item['semester'] = $h->tajar->semester ?? '';
-            $item['tahun_ajar'] = $h->tajar->tahun ?? '';
+            $item['tahun_ajar'] = $h->tajar->periode ?? '';
             $data[] = $item;
         }
         return Excel::download(new HafalanSiswaExport($data), 'Export-Hafalan-Siswa.xlsx');

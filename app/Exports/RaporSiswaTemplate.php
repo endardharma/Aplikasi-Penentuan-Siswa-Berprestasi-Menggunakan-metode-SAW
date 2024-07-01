@@ -40,11 +40,11 @@ class RaporSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
                     $item['nilai'] = 'Isi nilai dengan angka';
 
                     $jurusansiswa = MasterJurusan::find($s->jurusan_id);
-                    $item['jurusan'] = $jurusansiswa ? $jurusansiswa->name : 'Jurusan tidak ditemukan';
+                    $item['jurusan'] = $jurusansiswa ? $jurusansiswa->jurusan : 'Jurusan tidak ditemukan';
 
                     foreach ($tajar as $t) {
                         $item['semester'] = $t->semester;
-                        $item['tahun_ajar'] = $t->tahun;
+                        $item['tahun_ajar'] = $t->periode;
                     }
 
                     $data[] = $item;

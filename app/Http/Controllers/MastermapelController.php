@@ -15,7 +15,8 @@ class MastermapelController extends Controller
 {
     public function index()
     {
-        return view('admin.mastermapel.index');
+        $jurusans = MasterJurusan::all();
+        return view('admin.mastermapel.index', compact('jurusans'));
     }
 
     public function listMapel(Request $request)
@@ -33,22 +34,49 @@ class MastermapelController extends Controller
         $orderColumn = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
+        $jurusanId = $request->input('jurusan_id');
 
         // Hitunga keseluruhan
-        $hitung = MasterMapel::count();
+        // $hitung = MasterMapel::count();
 
-        $masgu = MasterMapel::where(function ($q) use ($search) {
-            if($search != null)
-            {
-                return $q->where('name','LIKE','%'.$search.'%')->orWhere('kelompok','LIKE','%'.$search.'%')->orWhere('type','LIKE','%'.$search.'%');
-            }
-        })->orderby($orderColumn,$dir)->skip($start)->take($limit)->get();
+        // $masgu = MasterMapel::where(function ($q) use ($search) {
+        //     if($search != null)
+        //     {
+        //         return $q->where('name','LIKE','%'.$search.'%')
+        //             ->orWhere('kelompok','LIKE','%'.$search.'%')
+        //             ->orWhere('type','LIKE','%'.$search.'%');
+        //     }
+        // })->orderby($orderColumn,$dir)
+        //     ->skip($start)
+        //     ->take($limit)->get();
+
+        $query = MasterMapel::with('jurusan')
+            ->when($jurusanId && $jurusanId != '-1', function ($q) use ($jurusanId){
+                $q->where('jurusan_id', $jurusanId);
+            })
+            ->when(empty($jurusanId) || $jurusanId == '-1', function ($q){
+            })
+            ->when($search, function ($q) use ($search){
+                $q->where(function ($query) use ($search) {
+                    $query->where('name','LIKE',"%{$search}%")
+                        ->orWhere('kelompok','LIKE',"%{$search}%")
+                        ->orWhere('type','LIKE',"%{$search}%");
+                });
+            });
+        
+        $hitung = $query->count();
+
+        $masgu = $query->orderby($orderColumn, $dir)
+            ->skip($start)
+            ->take($limit)
+            ->get();
+        
         $data = array();
         foreach($masgu as $m)
         {
             $item['id'] = $m->id;
             $item['id_kelas'] = $m->jurusan_id;
-            $item['kelas'] = $m->kelas->name ?? '';
+            $item['jurusan'] = $m->jurusan->jurusan ?? '';
             $item['name'] = $m->name;
             $item['kelompok'] = $m->kelompok;
             $item['type'] = $m->type;
@@ -72,6 +100,7 @@ class MastermapelController extends Controller
             $item['id'] = $k->id;
             $item['kode'] = $k->kode;
             $item['name'] = $k->name;
+            $item['jurusan'] = $k->jurusan;
             $data[] = $item;
         }
 
@@ -172,7 +201,7 @@ class MastermapelController extends Controller
         foreach($mapel as $m)
         {
             $item['id'] = $m->id;
-            $item['kelas'] = $m->kelas->name ?? '';
+            $item['kelas'] = $m->jurusan->jurusan ?? '';
             $item['name'] = $m->name;
             $item['kelompok'] = $m->kelompok;
             $item['type'] = $m->type;

@@ -45,7 +45,7 @@ class PrestasiSiswaController extends Controller
         $query = PrestasiSiswa::with(['tajar','siswa','jurusan'])
             ->when($search, function ($query) use ($search) {
                 $query->whereHas('tajar', function ($q) use ($search) {
-                    $q->where('tahun','LIKE','%'.$search.'%')
+                    $q->where('periode','LIKE','%'.$search.'%')
                     ->orWhere('semester','LIKE','%'.$search.'%');
                 })
                 ->orWhereHas('siswa', function ($q) use ($search) {
@@ -124,7 +124,7 @@ class PrestasiSiswaController extends Controller
             $item['nilai'] = $p->nilai;
             $item['jurusan'] = $p->jurusan->name ?? '';
             $item['semester'] = $p->tajar->semester ?? '';
-            $item['tahun_ajar'] = $p->tajar->tahun ?? '';
+            $item['tahun_ajar'] = $p->tajar->periode ?? '';
             $data[] = $item;
         }
 
@@ -291,7 +291,7 @@ class PrestasiSiswaController extends Controller
             $item['nilai'] = $p->nilai;
             $item['jurusan'] = $p->jurusan->name ?? '';
             $item['semester'] = $p->tajar->name ?? '';
-            $item['tahun_ajar'] = $p->tajar->tahun ?? '';
+            $item['tahun_ajar'] = $p->tajar->periode ?? '';
             $data[] = $item;
         }
 

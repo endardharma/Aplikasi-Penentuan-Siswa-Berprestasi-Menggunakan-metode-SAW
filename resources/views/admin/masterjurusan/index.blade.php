@@ -422,6 +422,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Jurusan</th>
                                     <th>Kode</th>
                                     <th>Name</th>
                                     <th>Jumlah Siswa</th>
@@ -452,12 +453,20 @@ License: You must have a valid license purchased only from themeforest(the above
                         <!-- BEGIN: Modal Body -->
                         <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
                             <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-3" class="form-label">Jurusan</label>
+                                <select class="form-select form-jurusan" required>
+                                    <option selected disabled> --- Pilih Jurusan --- </option>
+                                    <option value="MIPA">MIPA</option>
+                                    <option value="IIS">IIS</option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-1" class="form-label">Kode Kelas</label>
-                                <input type="text" class="form-control form-kode" placeholder="IPA010" required>
+                                <input type="text" class="form-control form-kode" placeholder="MIPA001" required>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Nama Kelas</label>
-                                <input type="text" class="form-control form-name" placeholder="IPA 10" required>
+                                <input type="text" class="form-control form-name" placeholder="MIPA 10" required>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-3" class="form-label">Status</label>
@@ -512,13 +521,21 @@ License: You must have a valid license purchased only from themeforest(the above
                         <!-- BEGIN: Modal Body -->
                         <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
                             <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-1" class="form-label">Kode Kelas</label>
+                                <label for="modal-form-1" class="form-label">Jurusan</label>
                                 <input type="hidden" class="form-control update-id">
-                                <input type="text" class="form-control update-kode" placeholder="IPA010" required>
+                                <select class="form-select update-jurusan" required>
+                                    <option selected disabled> --- Pilih Jurusan --- </option>
+                                    <option value="MIPA"> MIPA </option>
+                                    <option value="IIS"> IIS </option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-3" class="form-label">Kode Kelas</label>
+                                <input type="text" class="form-control update-kode" placeholder="MIPA010" required>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Nama Kelas</label>
-                                <input type="text" class="form-control update-nama" placeholder="IPA 10" required>
+                                <input type="text" class="form-control update-nama" placeholder="MIPA 10" required>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-3" class="form-label">Status</label>
@@ -668,11 +685,13 @@ License: You must have a valid license purchased only from themeforest(the above
                     event.preventDefault(); // Prevent default form submission
 
                     // Get form data
+                    var jurusan = jQuery(".form-jurusan").val();
                     var kode = jQuery(".form-kode").val();
                     var name = jQuery(".form-name").val();
                     var is_active = jQuery(".form-is_active").val();
 
                     var formData = new FormData();
+                    formData.append('jurusan', jurusan);
                     formData.append('kode', kode);
                     formData.append('name', name);
                     formData.append('is_active', is_active);
@@ -756,6 +775,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             // // Create an object with the desired properties
                             var rowData = {
                                 id: item[i].id,
+                                jurusan: item[i].jurusan,
                                 kode: item[i].kode,
                                 name: item[i].name,
                                 jumlah: item[i].jumlah,
@@ -779,6 +799,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         data: rowDataArray,
                         columns: [
                             { data: 'id', className: 'text-center' },
+                            { data: 'jurusan', className: 'text-center' },
                             { data: 'kode', className: 'text-center' },
                             { data: 'name', className: 'text-center' },
                             { data: 'jumlah', className: 'text-center' },
@@ -788,7 +809,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 render: function (data, type, row) {
 
                                     // Create action buttons
-                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-kode="' + data.kode + '" data-name="' + data.name + '" data-is_active="' + data.is_active + '"><i data-feather="edit" class="w-4 h-4"></i></button>';
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-jurusan="' + data.jurusan + '" data-kode="' + data.kode + '" data-name="' + data.name + '" data-is_active="' + data.is_active + '"><i data-feather="edit" class="w-4 h-4"></i></button>';
                                     var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4"></i></button>';
 
                                     // Combine the buttons
@@ -810,12 +831,14 @@ License: You must have a valid license purchased only from themeforest(the above
                         modal.show();
 
                         var id = jQuery(this).attr("data-id");
+                        var jurusan = jQuery(this).attr("data-jurusan");
                         var kode = jQuery(this).attr("data-kode");
                         var name = jQuery(this).attr("data-name");
                         var is_active = jQuery(this).attr("data-is_active");
 
                         // Handle edit action
                         jQuery('.update-id').val(id);
+                        jQuery('.update-jurusan').val(jurusan);
                         jQuery('.update-kode').val(kode);
                         jQuery('.update-nama').val(name);
                         jQuery('.update-status').val(is_active);
@@ -825,6 +848,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     jQuery(".btn-update").click(function() {
                         // Ajax update
                         var id = jQuery('.update-id').val();
+                        var jurusan = jQuery('.update-jurusan').val();
                         var kode = jQuery('.update-kode').val();
                         var name = jQuery('.update-nama').val();
                         var is_active = jQuery('.update-status').val();
@@ -837,6 +861,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 xhr.setRequestHeader('Authorization', 'Bearer ' + token);
                             },
                             data: {
+                                jurusan: jurusan,
                                 kode: kode,
                                 name: name,
                                 is_active: is_active,

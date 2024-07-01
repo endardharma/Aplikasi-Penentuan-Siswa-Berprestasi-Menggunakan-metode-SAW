@@ -44,7 +44,7 @@ class SikapSiswaController extends Controller
         $query = SikapSiswa::with(['tajar','siswa','jurusan'])
             ->when($search, function ($query) use ($search) {
                 $query->whereHas('tajar', function ($q) use ($search) {
-                    $q->where('tahun','LIKE','%'.$search.'%')
+                    $q->where('periode','LIKE','%'.$search.'%')
                     ->orWhere('semester','LIKE','%'.$search.'%');
                 })
                 ->orWhereHas('siswa', function ($q) use ($search) {
@@ -124,7 +124,7 @@ class SikapSiswaController extends Controller
             $item['nilai'] = $s->nilai;
             $item['jurusan'] = $s->siswa->name ?? '';
             $item['semester'] = $s->tajar->semester ?? '';
-            $item['tahun_ajar'] = $s->tajar->tahun ?? '';
+            $item['tahun_ajar'] = $s->tajar->periode ?? '';
             $data[] = $item;
         }
 
@@ -224,6 +224,7 @@ class SikapSiswaController extends Controller
         {
             $item['id'] = $t->id;
             $item['name'] = $t->name;
+            $item['periode'] = $t->periode;
             $data[] = $item;
         }
 
@@ -285,7 +286,7 @@ class SikapSiswaController extends Controller
             $item['nilai'] = $s->nilai;
             $item['jurusan'] = $s->jurusan->name ?? '';
             $item['semester'] = $s->tajar->semester ?? '';
-            $item['tahun_ajar'] = $s->tajar->tahun ?? '';
+            $item['tahun_ajar'] = $s->tajar->periode ?? '';
             $data[] = $item;
         }
 

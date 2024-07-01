@@ -671,8 +671,19 @@ class NilaiKeseluruhanController extends Controller
     // Eloquent ORM Di Pakai
     public function listNilaiKeseluruhan(Request $request)
     {
+        $columns = [
+            0 => 'id',
+            1 => 'tajar_id',
+            2 => 'siswa_id',
+            3 => 'kriteria_id',
+            4 => 'nilai',
+        ];
+        
         $start = $request->start;
         $limit = $request->length;
+        $orderColumnIndex = $request->input('order.0.column');
+        $orderColumn = isset($columns[$orderColumnIndex]) ? $columns [$orderColumnIndex] : 'id';
+        $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
     
         // Hitung total keseluruhan data tanpa paginasi dan pencarian
@@ -686,7 +697,7 @@ class NilaiKeseluruhanController extends Controller
                         $q->where('name', 'LIKE', "%{$search}%");
                     })
                     ->orWhereHas('tajar', function ($q) use ($search) {
-                        $q->where('tahun', 'LIKE', "%{$search}%")
+                        $q->where('periode', 'LIKE', "%{$search}%")
                           ->orWhere('semester', 'LIKE', "%{$search}%");
                     });
             })
@@ -696,7 +707,11 @@ class NilaiKeseluruhanController extends Controller
         $totalFiltered = $query->count();
     
         // Pagination
-        $siswaList = $query->skip($start)->take($limit)->get();
+        $siswaList = $query
+        ->orderBy($orderColumn, $dir)
+        ->skip($start)
+        ->take($limit)
+        ->get();
     
         $data = $siswaList->flatMap(function ($siswa) {
             $nilaiKriteria = [];
@@ -912,7 +927,7 @@ class NilaiKeseluruhanController extends Controller
                         $q->where('name', 'LIKE', "%{$search}%");
                     })
                     ->orWhereHas('tajar', function ($q) use ($search) {
-                        $q->where('tahun', 'LIKE', "%{$search}%")
+                        $q->where('periode', 'LIKE', "%{$search}%")
                             ->orWhere('semester', 'LIKE', "%{$search}%");
                     });
             })
@@ -963,7 +978,7 @@ class NilaiKeseluruhanController extends Controller
                     'nilai' => $nilai,
                     'jurusan' => $siswa->jurusan->name,
                     'semester' => $siswa->tajar->semester,
-                    'tahun_ajar' => $siswa->tajar->tahun,
+                    'tahun_ajar' => $siswa->tajar->periode,
                 ];
 
                 NilaiKeseluruhan::updateOrCreate(
@@ -1002,7 +1017,7 @@ class NilaiKeseluruhanController extends Controller
             $item['nilai'] = $n->nilai;
             $item['jurusan'] = $n->jurusan->name ?? '';
             $item['semester'] = $n->tajar->semester ?? '';
-            $item['tahun_ajar'] = $n->tajar->tahun ?? '';
+            $item['tahun_ajar'] = $n->tajar->periode ?? '';
             $data[] = $item;
         }
 

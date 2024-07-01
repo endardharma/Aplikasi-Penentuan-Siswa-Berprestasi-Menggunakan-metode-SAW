@@ -21,7 +21,7 @@ class TemplatemapelExport implements FromArray, WithHeadings, ShouldAutoSize, Wi
 
             foreach ($master as $m)
             {
-                $item['kelas'] = $m->kelas->name ?? '';
+                $item['kelas'] = 'MIPA / IIS';
                 $item['name'] = $m->name;
                 $item['kelompok'] = 'Kelompok A/Kelompok B/Kelompok C';
                 $item['type'] = 'Nilai Pengetahuan/Nilai Keterampilan';
@@ -67,7 +67,7 @@ class TemplatemapelExport implements FromArray, WithHeadings, ShouldAutoSize, Wi
     public function headings(): array
     {
         return [
-            'Kelas',
+            'Jurusan',
             'Nama Mapel',
             'Kelompok',
             'Tipe Nilai',

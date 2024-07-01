@@ -50,7 +50,7 @@ class HafalanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, W
                         $item['jurusan'] = $jurusansiswa ? $jurusansiswa->name : 'Jurusan tidak ditemukan';
 
                         $item['semester'] = $t->semester;
-                        $item['tahun_ajar'] = $t->tahun;
+                        $item['tahun_ajar'] = $t->periode;
 
                         $data[] = $item;
                     }

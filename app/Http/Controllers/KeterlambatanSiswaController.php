@@ -45,7 +45,7 @@ class KeterlambatanSiswaController extends Controller
         $query = KeterlambatanSiswa::with(['tajar','siswa','jurusan'])
             ->when($search, function ($query) use ($search) {
                 $query->whereHas('tajar', function ($q) use ($search) {
-                    $q->where('tahun','LIKE','%'.$search.'%')
+                    $q->where('periode','LIKE','%'.$search.'%')
                     ->orWhere('semester','LIKE','%'.$search.'%');
                 })
                 ->orWhereHas('siswa', function ($q) use ($search) {
@@ -124,7 +124,7 @@ class KeterlambatanSiswaController extends Controller
             $item['nilai'] = $k -> nilai;
             $item['jurusan'] = $k->jurusan->name ?? '';
             $item['semester'] = $k->tajar->semester ?? '';
-            $item['tahun_ajar'] = $k->tajar->tahun ?? '';
+            $item['tahun_ajar'] = $k->tajar->periode ?? '';
             $data[] = $item;
         }
 
@@ -285,7 +285,7 @@ class KeterlambatanSiswaController extends Controller
             $item['nilai'] = $k->nilai;
             $item['jurusan'] = $k->jurusan->name ?? '';
             $item['semester'] = $k->tajar->semester ?? '';
-            $item['tahun_ajar'] = $k->tajar->tahun ?? '';
+            $item['tahun_ajar'] = $k->tajar->periode ?? '';
             $data[] = $item;
         }
 

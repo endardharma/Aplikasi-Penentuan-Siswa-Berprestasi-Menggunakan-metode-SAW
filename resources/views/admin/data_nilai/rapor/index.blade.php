@@ -442,10 +442,9 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nama Siswa </th>
-                                    <th>Nama Mapel</th>
-                                    <th>Kelompok</th>
-                                    <th>Type</th>
-                                    <th>Nilai</th>
+                                    <th>Jurusan</th>
+                                    <th>Semester</th>
+                                    <th>Tahun Ajar</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -479,10 +478,7 @@
                                                     <th>Kelompok</th>
                                                     <th>Type</th>
                                                     <th>Nilai</th>
-                                                    <th>Jurusan</th>
-                                                    <th>Semester</th>
-                                                    <th>Tahun Ajar</th>
-                                                    {{-- <th>Action</th> --}}
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -760,20 +756,20 @@
                     "columns": [
                         { data: 'id', className: 'text-center' },
                         { data: 'nama_siswa', className: 'text-center' },
-                        { data: 'nama_mapel', className: 'text-center' },
-                        { data: 'kelompok', className: 'text-center' },
-                        { data: 'type', className: 'text-center' },
-                        { data: 'nilai', className: 'text-center' },
+                        { data: 'jurusan', className: 'text-center' },
+                        { data: 'semester', className: 'text-center' },
+                        { data: 'tahun_ajar', className: 'text-center' },
+                        // { data: 'nilai', className: 'text-center' },
                         {
                             data: null,
                             render: function (data, type, row) {
 
                                 // Create action buttons
-                                var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-id_mapel_nama="' + data.id_mapel_nama + '" data-id_mapel_kelompok="' + data.id_mapel_kelompok + '" data-id_mapel_type="' + data.id_mapel_type + '" data-nilai="' + data.nilai + '" ><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
                                 var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
-
+                                var detailBtn = '<button class="btn btn-warning btn-detail" data-id="' + data.id + '"><i data-feather="align-justify" class="w-4 h-4 mr-1"></i></button>';
+                                
                                 // Combine the buttons
-                                var actions = editBtn + ' || ' + deleteBtn;
+                                var actions = detailBtn + ' || ' + deleteBtn ;
                                 return actions;
                             }
                         }
@@ -784,46 +780,42 @@
                 })
 
                 // Datatable list rapor
-                jQuery('#data-table-detail').DataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": "http://127.0.0.1:8000/api/data-nilai/rapor-siswa/list-detail",
-                        "dataType": "json",
-                        "type": "POST",
-                        "headers": {
-                            'Authorization': 'Bearer ' + token
-                        }
-                    },
-                    "columns": [
-                        { data: 'id', className: 'text-center' },
-                        { data: 'nama_siswa', className: 'text-center' },
-                        { data: 'nama_mapel', className: 'text-center' },
-                        { data: 'kelompok', className: 'text-center' },
-                        { data: 'type', className: 'text-center' },
-                        { data: 'nilai', className: 'text-center' },
-                        { data: 'jurusan', className: 'text-center' },
-                        { data: 'semester', className: 'text-center' },
-                        { data: 'tahun_ajar', className: 'text-center' },
-                        // {
-                        //     data: null,
-                        //     render: function (data, type, row) {
+                // jQuery('#data-table-detail').DataTable({
+                //     "processing": true,
+                //     "serverSide": true,
+                //     "ajax": {
+                //         "url": "http://127.0.0.1:8000/api/data-nilai/rapor-siswa/list-detail",
+                //         "dataType": "json",
+                //         "type": "POST",
+                //         "headers": {
+                //             'Authorization': 'Bearer ' + token
+                //         }
+                //     },
+                //     "columns": [
+                //         { data: 'id', className: 'text-center' },
+                //         { data: 'nama_siswa', className: 'text-center' },
+                //         { data: 'nama_mapel', className: 'text-center' },
+                //         { data: 'kelompok', className: 'text-center' },
+                //         { data: 'type', className: 'text-center' },
+                //         { data: 'nilai', className: 'text-center' },
+                //         {
+                //             data: null,
+                //             render: function (data, type, row) {
 
-                        //         // Create action buttons
-                        //         // var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-id_mapel_nama="' + data.id_mapel_nama + '" data-id_mapel_kelompok="' + data.id_mapel_kelompok + '" data-id_mapel_type="' + data.id_mapel_type + '" data-nilai="' + data.nilai + '" data-id_jurusan_nama="' + data.id_jurusan_nama + '" data-id_tajar_semester="' + data.id_tajar_semester + '" data-id_tajar_tahun="' + data.id_tajar_tahun + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
-                        //         var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-id_mapel_nama="' + data.id_mapel_nama + '" data-id_mapel_kelompok="' + data.id_mapel_kelompok + '" data-id_mapel_type="' + data.id_mapel_type + '" data-nilai="' + data.nilai + '" data-id_jurusan_nama="' + data.id_jurusan_nama + '" data-id_tajar_semester="' + data.id_tajar_semester + '" data-id_tajar_tahun="' + data.id_tajar_tahun + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
-                        //         var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
-
-                        //         // Combine the buttons
-                        //         var actions = editBtn + ' || ' + deleteBtn;
-                        //         return actions;
-                        //     }
-                        // }
-                    ],
-                    "drawCallback": function(settings) {
-                        feather.replace();
-                    }
-                })
+                //                 // Create action buttons
+                //                 var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-id_mapel_nama="' + data.id_mapel_nama + '" data-id_mapel_kelompok="' + data.id_mapel_kelompok + '" data-id_mapel_type="' + data.id_mapel_type + '" data-nilai="' + data.nilai + '" ><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                //                 var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
+                                
+                //                 // Combine the buttons
+                //                 var actions = editBtn + ' || ' + deleteBtn ;
+                //                 return actions;
+                //             }
+                //         }
+                //     ],
+                //     "drawCallback": function(settings) {
+                //         feather.replace();
+                //     }
+                // })
 
                 // Menampilkan modal detail nilai
                 jQuery('.modal-detail').click(function() {
@@ -865,7 +857,6 @@
                 }).then(response => response.json()).then(data => {
                     // Panggil element select
                     var selectSupportTajar = jQuery('.tahun-ajar');
-                    var selectUpdateTahun = jQuery('.update-tahun-ajar');
                     var selectUpdateSemester = jQuery('.update-semester');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
@@ -873,7 +864,6 @@
                         for (let i = 0; i < item.length; i++) {
                             // Isi data dengan nilai dalam database
                             selectSupportTajar.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
-                            selectUpdateTahun.append('<option value="' + item[i].id + '">' + item[i].tahun + '</option>');
                             selectUpdateSemester.append('<option value="' + item[i].id + '">' + item[i].semester + '</option>');
                         }
                     });
@@ -1079,8 +1069,53 @@
                     }); 
                 })
 
+                jQuery('#data-table').on('click', '.btn-detail', function() {
+                    var siswaId = jQuery(this).attr("data-id"); 
+
+                    // Inisialisasi atau reset DataTable di dalam modal
+                    var table = jQuery('#data-table-detail').DataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "destroy": true, // Hapus DataTable yang sudah ada untuk menghindari duplikasi
+                        "ajax": {
+                            url: "http://127.0.0.1:8000/api/data-nilai/rapor-siswa/list-detail",
+                            type: "POST",
+                            data: {
+                                siswa_id: siswaId // Mengirimkan siswa_id ke server
+                            },
+                            headers: {
+                                'Authorization': 'Bearer ' + token
+                            }
+                        },
+                        columns: [
+                            { data: 'id', className: 'text-center' },
+                            { data: 'nama_siswa', className: 'text-center' },
+                            { data: 'nama_mapel', className: 'text-center' },
+                            { data: 'kelompok', className: 'text-center' },
+                            { data: 'type', className: 'text-center' },
+                            { data: 'nilai', className: 'text-center' },
+                            {
+                                data: null,
+                                render: function (data, type, row) {
+                                    // var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.nama_siswa + '" data-id_mapel_nama="' + data.nama_mapel + '" data-id_mapel_kelompok="' + data.kelompok + '" data-id_mapel_type="' + data.type + '" data-nilai="' + data.nilai + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-id_mapel_nama="' + data.id_mapel_nama + '" data-id_mapel_kelompok="' + data.id_mapel_kelompok + '" data-id_mapel_type="' + data.id_mapel_type + '" data-nilai="' + data.nilai + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                    return editBtn;
+                                }
+                            }
+                        ],
+                        drawCallback: function(settings) {
+                            feather.replace();
+                        }
+                    });
+
+                    // Tampilkan modal
+                    const el = document.querySelector('#header-detail-footer-modal-preview');
+                    const modal = tailwind.Modal.getOrCreateInstance(el);
+                    modal.show();
+                });
+
                 // button update
-                jQuery('#data-table').on('click', '.btn-edit', function() {
+                jQuery('#data-table-detail').on('click', '.btn-edit', function() {
                     // show the modal
                     const el = document.querySelector('#header-update-footer-modal-preview');
                     const modal = tailwind.Modal.getOrCreateInstance(el);

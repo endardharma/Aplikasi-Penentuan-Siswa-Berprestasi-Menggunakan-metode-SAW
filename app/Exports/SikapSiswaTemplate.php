@@ -49,7 +49,7 @@ class SikapSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
                 foreach($tajar as $t)
                 {
                     $item['semester'] = $t->semester;
-                    $item['tahun_ajaran'] = $t->tahun;
+                    $item['tahun_ajaran'] = $t->periode;
                     $data[] = $item;
                 }
             }

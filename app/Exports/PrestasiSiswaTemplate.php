@@ -49,7 +49,7 @@ class PrestasiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
                 foreach ($tajar as $t)
                 {
                     $item['semester'] = $t->semester;
-                    $item['tahun_ajar'] = $t->tahun;
+                    $item['tahun_ajar'] = $t->periode;
                     $data[] = $item;   
                 }
                 
