@@ -127,6 +127,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post("/list", [PresensiSiswaController::class, 'listPresensi']);
             Route::post("/list-detail", [PresensiSiswaController::class, 'listDetailPresensi']);
             Route::get("/data-support/tajar", [PresensiSiswaController::class, 'supportTajar']);
+            Route::get("/data-support/jurusan", [PresensiSiswaController::class, 'supportJurusan']);
             Route::get("/export-data/download-template", [PresensiSiswaController::class, 'template']);
             Route::post("/import-data/import-xls", [PresensiSiswaController::class, 'importData']);
             Route::get("/export-data/export-xls", [PresensiSiswaController::class, 'exportData']);
@@ -138,12 +139,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::prefix('sikap-siswa')->group(function() {
            Route::get("/data-support/tajar", [SikapSiswaController::class, 'supportTajar']);
+           Route::get("/data-support/siswa", [SikapSiswaController::class, 'supportSiswa']);
+           Route::get("/data-support/jurusan", [SikapSiswaController::class, 'supportJurusan']);
            Route::post("/list", [SikapSiswaController::class, 'listSikap']); 
            Route::post("/list-detail", [SikapSiswaController::class, 'listDetailSikap']); 
            Route::get("/export-data/download-template", [SikapSiswaController::class, 'template']);
            Route::post("/import-data/import-xls", [SikapSiswaController::class, 'importData']);
            Route::get("/export-data/export-xls", [SikapSiswaController::class, 'exportData']);
-           Route::get("/data-support/siswa", [SikapSiswaController::class, 'supportSiswa']);
            Route::put("/update-data/{id}", [SikapSiswaController::class, 'updateData']);
            Route::delete("/hapus-data/{id}", [SikapSiswaController::class, 'deleteData']);
            Route::post("/get-nilai", [SikapSiswaController::class, 'getNilai']);

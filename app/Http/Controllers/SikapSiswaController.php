@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\SikapSiswaExport;
 use App\Exports\SikapSiswaTemplate;
 use App\Imports\SikapSiswaImport;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\SikapSiswa;
 use App\Models\TahunAjar;
@@ -36,12 +37,21 @@ class SikapSiswaController extends Controller
         $orderColumn = isset($columns[$orderColumnIndex]) ? $columns [$orderColumnIndex] : 'id';
         $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
+        $jurusanId = $request->input('jurusan_id');
 
         // Hitung total keseluruhan data tanpa paginasi dan pencarian
         $totalData = SikapSiswa::count();
 
         // Query mendapatkan data sikap siswa berdasarkan pencarian dan paginasi
         $query = SikapSiswa::with(['tajar','siswa','jurusan'])
+            ->when($jurusanId && $jurusanId != '-1', function ($q) use ($jurusanId) {
+                $q->whereHas('jurusan', function ($query) use ($jurusanId) {
+                    $query->where('jurusan_id', $jurusanId);
+                });
+            })
+            ->when(empty($jurusanId) || $jurusanId == '-1', function ($q) {
+
+            })
             ->when($search, function ($query) use ($search) {
                 $query->whereHas('tajar', function ($q) use ($search) {
                     $q->where('periode','LIKE','%'.$search.'%')
@@ -75,6 +85,12 @@ class SikapSiswaController extends Controller
             $item['nama_siswa'] = $s->siswa->name ?? '';
             $item['ket_sikap'] = $s->ket_sikap;
             $item['nilai'] = $s->nilai;
+            $item['id_jurusan_nama'] = $s->jurusan_id;
+            $item['jurusan'] = $s->jurusan->name ?? '';
+            $item['id_tajar_semester'] = $s->tajar_id;
+            $item['semester'] = $s->tajar->semester ?? '';
+            $item['id_tajar_periode'] = $s->tajar_id;
+            $item['tahun_ajar'] = $s->tajar->periode ?? '';
             $data[] = $item;
         }
 
@@ -152,6 +168,9 @@ class SikapSiswaController extends Controller
             $request->siswa_id != null ? $find->siswa_id = $request->siswa_id : true;
             $request->ket_sikap != null ? $find->ket_sikap = $request->ket_sikap : true;
             $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnSikap($request->ket_sikap) : true; // Nilai otomatis berdasarkan keterangan sikap
+            $request->jurusan_id != null ? $find->jurusan_id = $request->jurusan_id : true;
+            $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
+            $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
             $find->save();
 
             return response()->json([
@@ -250,6 +269,23 @@ class SikapSiswaController extends Controller
         ], 200);
     }
 
+    public function supportJurusan()
+    {
+        $jurusan = MasterJurusanSiswa::all();
+        $data = array();
+
+        foreach ($jurusan as $j)
+        {
+            $item['id'] = $j->id;
+            $item['name'] = $j->name;
+            $data[] = $item;
+        }
+        return response()->json([
+            'data' => $data,
+        ], 201);
+
+    }
+
     public function template(Request $request)
     {
         return Excel::download(new SikapSiswaTemplate($request->tajar), 'Template-Sikap-Siswa.xlsx');
@@ -264,8 +300,9 @@ class SikapSiswaController extends Controller
 
         // Proses Data import
         $file = $request->file('excel');
+        $selectedTahunAjar = $request->input('selected_tahun_ajar');
 
-        Excel::import(new SikapSiswaImport, $file);
+        Excel::import(new SikapSiswaImport($selectedTahunAjar), $file);
 
         return response()->json([
             'success' => true,

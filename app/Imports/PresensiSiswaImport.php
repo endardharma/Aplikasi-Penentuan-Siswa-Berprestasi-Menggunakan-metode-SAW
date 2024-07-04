@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\MasterJurusan;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\PresensiSiswa;
 use App\Models\TahunAjar;
@@ -32,18 +33,25 @@ class PresensiSiswaImport implements ToCollection, WithHeadingRow
         ];
     }
 
+    protected $selectedTahunAjar;
+    public function __construct($selectedTahunAjar)
+    {
+        $this->selectedTahunAjar = $selectedTahunAjar;
+    }
+
     public function collection(Collection $rows)
     {
         // dd($rows)->toArray();
         foreach($rows as $row)
         {
-            $tajar = TahunAjar::where('name','LIKE','%'.$row['tahun_ajar'].'%')->first();
-            $jurusan = MasterJurusan::where('name','LIKE','%'.$row['jurusan'].'%')->first();
+            // $tajar = TahunAjar::where('name','LIKE','%'.$row['tahun_ajar'].'%')->first();
+            $jurusan = MasterJurusanSiswa::where('name','LIKE','%'.$row['jurusan'].'%')->first();
             $siswa = MasterSiswa::where('name','LIKE','%'.$row['nama_siswa'].'%')->first();
+            $tajar = TahunAjar::find($this->selectedTahunAjar);
 
             if($tajar && $jurusan && $siswa)
             {
-                $presensi = PresensiSiswa::updateOrCreate([
+                PresensiSiswa::updateOrCreate([
                     'tajar_id' => $tajar->id,
                     'siswa_id' => $siswa->id,
                     'jurusan_id' => $jurusan->id,
@@ -58,7 +66,8 @@ class PresensiSiswaImport implements ToCollection, WithHeadingRow
                     'nilai' => $row['nilai'],
                     'jurusan' => $row['jurusan'],
                     'semester' => $row['semester'],
-                    'tahun_ajar' => $row['tahun_ajar'],
+                    // 'tahun_ajar' => $row['tahun_ajar'],
+                    'tahun_ajar' => $tajar->name,
                 ]);
             }
         }

@@ -403,7 +403,7 @@
                     <h2 class="text-lg font-medium mr-auto">
                         List Data Nilai Prestasi Siswa
                     </h2>
-                    <div class="w-full sm:w-10 flex mt-4 sm:mt-0">
+                    {{-- <div class="w-full sm:w-10 flex mt-4 sm:mt-0">
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
                                 <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-lucide="list"></i> </span>
@@ -416,7 +416,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
@@ -445,6 +445,9 @@
                                     <th>Nama Siswa</th>
                                     <th>Keterangan Prestasi</th>
                                     <th>Nilai</th>
+                                    <th>Jurusan</th>
+                                    <th>Semester</th>
+                                    <th>Tahun Ajar</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -737,11 +740,14 @@
                         { data: 'nama_siswa', className: 'text-center' },
                         { data: 'ket_prestasi', className: 'text-center' },
                         { data: 'nilai', className: 'text-center' },
+                        { data: 'jurusan', className: 'text-center' },
+                        { data: 'semester', className: 'text-center' },
+                        { data: 'tahun_ajar', className: 'text-center' },
                         {
                             data: null,
                             render: function(data, type, row){
                                 // Create Action Buttons
-                                var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-ket_prestasi="' + data.ket_prestasi + '" data-nilai="' + data.nilai + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-ket_prestasi="' + data.ket_prestasi + '" data-nilai="' + data.nilai + '" data-id_jurusan_nama="' + data.id_jurusan_nama + '" data-id_tajar_semester="' + data.id_tajar_semester + '" data-id_tajar_periode="' + data.id_tajar_periode + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
                                 var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
 
                                 // Combine the Buttons

@@ -74,6 +74,12 @@ class PrestasiSiswaController extends Controller
             $item['id_siswa_nama'] = $p->siswa_id;
             $item['nama_siswa'] = $p->siswa->name ?? '';
             $item['ket_prestasi'] = $p->ket_prestasi;
+            $item['id_jurusan_nama'] = $p->jurusan_id;
+            $item['jurusan'] = $p->jurusan->name ?? '';
+            $item['id_tajar_semester'] = $p->tajar_id;
+            $item['semester'] = $p->tajar->semester ?? '';
+            $item['id_tajar_tahun'] = $p->tajar_id;
+            $item['tahun_ajar'] = $p->tajar->periode ?? '';
             $item['nilai'] = $p->nilai;
             $data[] = $item; 
         }

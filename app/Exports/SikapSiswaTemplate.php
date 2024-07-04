@@ -23,34 +23,27 @@ class SikapSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
     public function array(): array
     {
         // Fungsi Template Export dan Detail Sikap Siswa
-        $siswa = MasterSiswa::all();
+        $siswa = MasterSiswa::with('kelas.jurusan')->get();
         $tajar = TahunAjar::all();
-        $jurusan = MasterJurusan::first();
 
         $data = array();
         if($siswa->isNotEmpty())
         {
             foreach($siswa as $s)
             {
-                $item['nama_siswa'] = $s->name;
-                $item['ket_sikap'] = 'Isi dengan pilihan yang sesuai (Sangat Baik, Baik, Cukup, Tidak Baik, Sangat Tidak Baik)';
-                $item['nilai'] = 'Isi dengan angka yang sesuai (5, 4, 3, 2, 1)';
-
-                $jurusansiswa = $jurusan->firstWhere('id', $s->jurusan_id);
-                if ($jurusansiswa)
+                $jurusan_id = $s->kelas->jurusan->id ?? null;
+                if ($jurusan_id)
                 {
-                    $item['jurusan'] = $jurusansiswa->name;
-                }
-                else
-                {
-                    $item['jurusan'] = 'Jurusan tidak ditemukan';
-                }
-                
-                foreach($tajar as $t)
-                {
-                    $item['semester'] = $t->semester;
-                    $item['tahun_ajaran'] = $t->periode;
-                    $data[] = $item;
+                    foreach($tajar as $t)
+                    {
+                        $item = [];
+                        $item['nama_siswa'] = $s->name;
+                        $item['ket_sikap'] = 'Isi dengan pilihan yang sesuai (Sangat Baik, Baik, Cukup, Tidak Baik, Sangat Tidak Baik)';
+                        $item['nilai'] = 'Isi dengan angka yang sesuai (5, 4, 3, 2, 1)';
+                        $item['jurusan'] = $s->jurusan ? $s->jurusan->name : 'Jurusan tidak ditemukan';
+                        $item['semester'] = $t->semester;
+                        $data[] = $item;
+                    }
                 }
             }
         }
@@ -61,7 +54,7 @@ class SikapSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:F1'; // All headers
+                $cellRange = 'A1:G1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -94,7 +87,6 @@ class SikapSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
             'Nilai',
             'Jurusan',
             'Semester',
-            'Tahun Ajar',
         ];
     }
 }

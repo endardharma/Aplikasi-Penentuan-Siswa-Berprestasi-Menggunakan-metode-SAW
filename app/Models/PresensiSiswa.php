@@ -29,6 +29,8 @@ class PresensiSiswa extends Model
 
     public function jurusan(): BelongsTo
     {
-        return $this->belongsTo(MasterJurusan::class, 'jurusan_id');
+        return $this->belongsTo(MasterJurusanSiswa::class, 'jurusan_id');
     }
+
+    
 }

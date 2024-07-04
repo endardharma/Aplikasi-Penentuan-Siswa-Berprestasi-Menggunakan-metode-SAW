@@ -6,6 +6,7 @@ use App\Exports\PresensiSiswaExport;
 use App\Exports\PresensiSiswaTemplate;
 use App\Imports\PresensiSiswaImport;
 use App\Models\MasterJurusan;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\PresensiSiswa;
 use App\Models\TahunAjar;
@@ -175,12 +176,20 @@ class PresensiSiswaController extends Controller
         $orderColumn = isset($columns[$orderColumnIndex]) ? $columns [$orderColumnIndex] : 'id';
         $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
+        $jurusanId = $request->input('jurusan_id');
 
         // Hitung total keseluruhan data tnapa paginasi dan pencarian
         $totalData = PresensiSiswa::count();
         
         // Query mendapatkan data presensi siswa berdasarkan pencarian dan paginasi
         $query = PresensiSiswa::with(['siswa','tajar','jurusan'])
+            ->when($jurusanId && $jurusanId != '-1', function ($q) use ($jurusanId) {
+                $q->whereHas('jurusan', function ($query) use ($jurusanId){
+                    $query->where('jurusan_id', $jurusanId);
+                });
+            })
+            ->when(empty($jurusanid) || $jurusanId == '-1', function ($q) {
+            })    
             ->when($search, function ($query) use ($search) {
                 $query->whereHas('siswa', function ($q) use ($search) {
                     $q->where('name','LIKE','%'.$search.'%');
@@ -221,6 +230,16 @@ class PresensiSiswaController extends Controller
             $item['jumlah_hari'] = $p->jumlah_hari;
             $item['jumlah_hari_lainnya'] = $p->jumlah_hari_lainnya;
             $item['nilai'] = $p->nilai;
+
+            $item['id_jurusan_nama'] = $p->jurusan_id;
+            $item['jurusan'] = $p->jurusan->name ?? '';
+
+            $item['id_tajar_semester'] = $p->tajar_id;
+            $item['semester'] = $p->tajar->semester ?? '';
+
+            $item['id_tajar_periode'] = $p->tajar_id;
+            $item['tahun_ajar'] = $p->tajar->periode ?? '';
+
             $data[] = $item;
             
         }
@@ -274,10 +293,10 @@ class PresensiSiswaController extends Controller
             $item['id_siswa_nama'] = $p->siswa_id;
             $item['nama_siswa'] = $p->siswa->name ?? '';
             
-            $item['ket_ketidakhadiran'] = $p->ket_ketidakhadiran;
-            $item['jumlah_hari'] = $p->jumlah_hari;
-            $item['jumlah_hari_lainnya'] = $p->jumlah_hari_lainnya;
-            $item['nilai'] = $p->nilai;
+            // $item['ket_ketidakhadiran'] = $p->ket_ketidakhadiran;
+            // $item['jumlah_hari'] = $p->jumlah_hari;
+            // $item['jumlah_hari_lainnya'] = $p->jumlah_hari_lainnya;
+            // $item['nilai'] = $p->nilai;
             $item['jurusan'] = $p->jurusan->name ?? '';
             $item['semester'] = $p->tajar->semester ?? '';
             $item['tahun_ajar'] = $p->tajar->periode ?? '';
@@ -328,6 +347,23 @@ class PresensiSiswaController extends Controller
         ], 201);
     }
 
+    public function supportJurusan()
+    {
+        $jurusan = MasterJurusanSiswa::all();
+        $data = array();
+
+        foreach ($jurusan as $j)
+        {
+            $item['id'] = $j->id;
+            $item['name'] = $j->name;
+            $data[] = $item;
+        }
+
+        return response()->json([
+            'data' => $data,
+        ], 201);
+    }
+
     public function template(Request $request)
     {
         return Excel::download(new PresensiSiswaTemplate($request->tajar), 'Template-Presensi-Siswa.xlsx');
@@ -342,8 +378,9 @@ class PresensiSiswaController extends Controller
 
         // Proses data import
         $file = $request->file('excel');
+        $selectedTahunAjar = $request->input('selected_tahun_ajar');
 
-        Excel::import(new PresensiSiswaImport, $file);
+        Excel::import(new PresensiSiswaImport($selectedTahunAjar), $file);
 
         return response()->json([
             'success' => true,
@@ -372,16 +409,21 @@ class PresensiSiswaController extends Controller
             
             if ($request->jumlah_hari !== 'lainnya')
             {
-                $request->jumlah_hari_lainnya != null ? $find->jumlah_hari_lainnya = $request->jumlah_hari_lainnya : true;
-                $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari_lainnya) : true; // nilai otomatis berdasarkan jumlah hari
+                $request->jumlah_hari != null ? $find->jumlah_hari = $request->jumlah_hari : true;
+                $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari) : true; // nilai otomatis berdasarkan jumlah hari
             }
             else
             {
-                $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari) : true; // nilai otomatis berdasarkan jumlah hari
+                $request->jumlah_hari_lainnya != null ? $find->jumlah_hari_lainnya = $request->jumlah_hari_lainnya : true;
+                $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari_lainnya) : true; // nilai otomatis berdasarkan jumlah hari
             }
      
+            $request->jurusan_id != null ? $find->jurusan_id = $request->jurusan_id : true;
+            $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
+            $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
 
             $find->save();
+            // dd($find)->toArray();
 
             return response()->json([
                 'success' => true,

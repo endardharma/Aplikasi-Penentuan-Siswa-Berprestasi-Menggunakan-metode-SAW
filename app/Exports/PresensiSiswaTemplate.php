@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\MasterJurusan;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\PresensiSiswa;
 use App\Models\TahunAjar;
@@ -27,9 +28,9 @@ class PresensiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
     function array(): array
     {
         // Fungsi template export dan detail rapor siswa
-        $siswa = MasterSiswa::all();
+        $siswa = MasterSiswa::with('kelas.jurusan')->get();
         $tajar = TahunAjar::all();
-        $jurusan = MasterJurusan::first();
+        // $jurusan = MasterJurusanSiswa::first();
         
         $data = array();
 
@@ -37,29 +38,22 @@ class PresensiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
         {
             foreach($siswa as $s)
             {
-                $item['nama_siswa'] = $s->name;
-                $item['ket_ketidakhadira'] = 'Isi dengan Tidak Ada/Sakit/Izin/Tanpa Keterangan';
-                $item['jumlah_hari'] = 'Isi dengan angka berapa hari tidak masuk';
-                $item['jumlah_hari_lainnya'] = 'Isi dengan angka berapa hari tidak masuk yang melebihi 4 hari';
-                $item['nilai'] = 'Isi nilai dengan angka(0 - 5) sesuai dengan jumlah hari';
-
-                $jurusansiswa = $jurusan->firstWhere('id', $s->jurusan_id);
-                if($jurusansiswa)
+                $jurusan_id = $s->kelas->jurusan->id ?? null;
+                if ($jurusan_id)
                 {
-                    $item['jurusan'] = $jurusansiswa->name;
+                    foreach($tajar as $t)
+                    {
+                        $item = [];
+                        $item['nama_siswa'] = $s->name;
+                        $item['ket_ketidakhadira'] = 'Isi dengan Tidak Ada/Sakit/Izin/Tanpa Keterangan';
+                        $item['jumlah_hari'] = 'Isi dengan angka berapa hari tidak masuk';
+                        $item['jumlah_hari_lainnya'] = 'Isi dengan angka berapa hari tidak masuk yang melebihi 4 hari';
+                        $item['nilai'] = 'Isi nilai dengan angka(0 - 5) sesuai dengan jumlah hari';
+                        $item['jurusan'] = $s->jurusan ? $s->jurusan->name : 'Jurusan tidak ditemukan';
+                        $item['semester'] = $t->semester;
+                        $data[] = $item;
+                    }
                 }
-                else
-                {
-                    $item['jurusan'] = 'Jurusan tidak ditemukan';
-                }
-
-                foreach($tajar as $t)
-                {
-                    $item['semester'] = $t->semester;
-                    $item['tahun_ajar'] = $t->periode;
-                    $data[] = $item;
-                }
-
             }
         }
         return $data;
@@ -69,7 +63,7 @@ class PresensiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:H1'; // All headers
+                $cellRange = 'A1:G1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -105,7 +99,7 @@ class PresensiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
             'Nilai',
             'Jurusan',
             'Semester',
-            'Tahun Ajar',
+            // 'Tahun Ajar',
         ];
     }
 }
