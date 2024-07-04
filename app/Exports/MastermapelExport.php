@@ -15,7 +15,7 @@ class MastermapelExport implements FromView
 
     public function view(): View
     {
-        dd($this->data)->toArray();
+        // dd($this->data)->toArray();
         return view('export.mastermapel', [
             'data' => $this->data,
         ]);

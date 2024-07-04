@@ -6,6 +6,7 @@ use App\Exports\TemplatemapelExport;
 use App\Exports\MastermapelExport;
 use App\Imports\MasterMapelImport;
 use App\Models\MasterJurusan;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterMapel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -26,7 +27,7 @@ class MastermapelController extends Controller
             1 => 'name',
             2 => 'kelompok',
             3 => 'type',
-            4 => 'kelas',
+            4 => 'jurusan_id',
         ];
 
         $start = $request->start;
@@ -75,8 +76,8 @@ class MastermapelController extends Controller
         foreach($masgu as $m)
         {
             $item['id'] = $m->id;
-            $item['id_kelas'] = $m->jurusan_id;
-            $item['jurusan'] = $m->jurusan->jurusan ?? '';
+            $item['jurusan_id'] = $m->jurusan_id;
+            $item['jurusan_name'] = $m->jurusan->name ?? '';
             $item['name'] = $m->name;
             $item['kelompok'] = $m->kelompok;
             $item['type'] = $m->type;
@@ -91,16 +92,14 @@ class MastermapelController extends Controller
         ],200);
     }
 
-    public function kelasSupport()
+    public function jurusanSupport()
     {
-        $kelas = MasterJurusan::all();
+        $jurusan = MasterJurusanSiswa::all();
         $data = array();
-        foreach($kelas as $k)
+        foreach($jurusan as $j)
         {
-            $item['id'] = $k->id;
-            $item['kode'] = $k->kode;
-            $item['name'] = $k->name;
-            $item['jurusan'] = $k->jurusan;
+            $item['id'] = $j->id;
+            $item['name'] = $j->name;
             $data[] = $item;
         }
 
@@ -201,7 +200,7 @@ class MastermapelController extends Controller
         foreach($mapel as $m)
         {
             $item['id'] = $m->id;
-            $item['kelas'] = $m->jurusan->jurusan ?? '';
+            $item['jurusan'] = $m->jurusan->name ?? '';
             $item['name'] = $m->name;
             $item['kelompok'] = $m->kelompok;
             $item['type'] = $m->type;

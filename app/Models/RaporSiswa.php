@@ -31,9 +31,14 @@ class RaporSiswa extends Model
         return $this->belongsTo(MasterSiswa::class,'siswa_id');
     }
 
-    public function jurusan()
+    public function kelas()
     {
         return $this->belongsTo(MasterJurusan::class,'jurusan_id');
+    }
+
+    public function jurusan()
+    {
+        return $this->belongsTo(MasterJurusanSiswa::class, 'jurusan_id');
     }
 
 }

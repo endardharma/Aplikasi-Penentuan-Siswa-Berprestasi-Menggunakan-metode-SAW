@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MasterJurusan;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -21,7 +22,8 @@ class JurusanController extends Controller
         foreach($jurusan as $j)
         {
             $item['id'] = $j->id;
-            $item['jurusan'] = $j->jurusan;
+            $item['jurusan_id'] = $j->jurusan_id;
+            $item['jurusan_name'] = $j->jurusan->name ?? '';
             $item['kode'] = $j->kode;
             $item['name'] = $j->name;
             $item['status'] = $j->is_active == 1 ? 'Aktif' : 'Non Aktif';
@@ -39,6 +41,7 @@ class JurusanController extends Controller
     {
         //set validation
         $validator = Validator::make($request->all(), [
+            'jurusan_id' => 'required',
             'kode' => 'required',
             'name' => 'required',
             'is_active' => 'required',
@@ -49,12 +52,12 @@ class JurusanController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        $jurusan = new MasterJurusan();
-        $jurusan->jurusan = $request->jurusan;
-        $jurusan->kode = $request->kode;
-        $jurusan->name = $request->name;
-        $jurusan->is_active = $request->is_active;
-        $jurusan->save();
+        $kelas = new MasterJurusan();
+        $kelas->jurusan_id = $request->jurusan_id;
+        $kelas->kode = $request->kode;
+        $kelas->name = $request->name;
+        $kelas->is_active = $request->is_active;
+        $kelas->save();
 
         return response()->json([
             'success' => true,
@@ -72,7 +75,7 @@ class JurusanController extends Controller
                 'message' => 'Update data gagal, data jurusan tidak ditemukan',
             ],400);
         }else{
-            $find->jurusan = $request->jurusan;
+            $find->jurusan_id = $request->jurusan_id;
             $find->kode = $request->kode;
             $find->name = $request->name;
             $find->is_active = $request->is_active;
@@ -103,5 +106,21 @@ class JurusanController extends Controller
                 'message' => 'Berhasil menghapus data jurusan',
             ],201);
         }
+    }
+
+    public function supportJurusan()
+    {
+        $jurusan = MasterJurusanSiswa::all();
+        $data = [];
+        foreach ($jurusan as $j)
+        {
+            $item['id'] = $j->id;
+            $item['name'] = $j->name;
+            $data[] = $item;
+        }
+
+        return response()->json([
+            'data' => $data,
+        ], 201);
     }
 }

@@ -62,12 +62,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post("/tambah-data", [JurusanController::class, 'addJurusan']);
         Route::put("/update-data/{id}", [JurusanController::class, 'update']);
         Route::delete("/hapus-data/{id}", [JurusanController::class, 'hapus']);
+        Route::get("/data-support/jurusan", [JurusanController::class, 'supportJurusan']);
     });
 
     Route::prefix('master-siswa')->group(function() {
         Route::post("/list", [MastersiswaController::class, 'listSiswa']);
         Route::post("/tambah-data", [MastersiswaController::class, 'createUser']);
-        Route::get("/data-support/jurusan", [MastersiswaController::class, 'listJurusan']);
+        Route::get("/data-support/kelas", [MastersiswaController::class, 'listKelas']);
         Route::get("/data-support/tajar", [MastersiswaController::class, 'listTajar']);
         Route::put("/update-data/{id}", [MastersiswaController::class, 'updateData']);
         Route::delete("/hapus-data/{id}", [MastersiswaController::class, 'hapus']);
@@ -78,7 +79,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('master-mapel')->group(function () {
         Route::post("/list", [MastermapelController::class, 'listMapel']);
-        Route::get("/data-support/kelas", [MastermapelController::class, 'kelasSupport']);
+        Route::get("/data-support/jurusan", [MastermapelController::class, 'jurusanSupport']);
         Route::post("/tambah-data", [MastermapelController::class, 'addMapel']);
         Route::put("/update-data/{id}", [MastermapelController::class, 'updateData']);
         Route::delete("/hapus-data/{id}", [MastermapelController::class, 'deleteData']);

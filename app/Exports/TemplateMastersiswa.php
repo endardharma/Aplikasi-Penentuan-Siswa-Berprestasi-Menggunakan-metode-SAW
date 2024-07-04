@@ -24,7 +24,7 @@ class TemplateMastersiswa implements FromArray, WithHeadings, ShouldAutoSize, Wi
                 $item['nis'] = $m->nis;
                 $item['nama'] = $m->name;
                 $item['email'] = 'user@mail.com';
-                $item['kelas'] = $m->jurusan->name ?? '';
+                $item['kelas'] = $m->kelas->name ?? '';
                 $item['jenkel'] = 'laki-laki/perempuan';
                 $item['telpon'] = '62821********';
                 $item['periode'] = $m->periode;

@@ -434,6 +434,20 @@
                         </div>
                     </div>
                 </div>
+                <!-- BEGIN : SortBy Jurusan -->
+                <div class="intro-y flex flex-col sm:flex-row items-center mt-1">
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <button type="submit" class="btn btn-primary shadow-md mr-2 btn-cari" id="search-button">Cari</button>
+                    </div>
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <label for="jurusan" class="form-label"></label>
+                        <select class="form-select form-jurusan" name="jurusan" id="select-jurusan" required>
+                            <option disabled selected> -- Pilih Jurusan -- </option>
+                            <option value="-1">Semua Jurusan</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- END : SortBy Jurusan -->
                 <!-- BEGIN: HTML Table Data -->
                 <div class="intro-y box p-5 mt-5">
                     <div class="overflow-x-auto scrollbar-hidden">
@@ -651,10 +665,11 @@
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-6" class="form-label">Pilih Tahun Ajar</label>
-                                    <select id="modal-form-6" class="form-select tahun-ajar">
+                                    <select id="modal-form-6" class="form-select tahun-ajar" name="tahun_ajar">
                                         <option selected disabled> --- Pilih Tahun Ajar --- </option>
                                     </select>
-                                </div>
+                            </div>
+                            <input type="hidden" id="selected-tahun-ajar" name="selected_tahun_ajar">
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="fileInput" class="form-label">File Excel</label>
                                 <input type="file" class="form-control" id="fileInput1" required>
@@ -742,42 +757,56 @@
                 });
 
                 // Datatable list rapor
-                jQuery('#data-table').DataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": "http://127.0.0.1:8000/api/data-nilai/rapor-siswa/list",
-                        "dataType": "json",
-                        "type": "POST",
-                        "headers": {
-                            'Authorization': 'Bearer ' + token
-                        }
-                    },
-                    "columns": [
-                        { data: 'id', className: 'text-center' },
-                        { data: 'nama_siswa', className: 'text-center' },
-                        { data: 'jurusan', className: 'text-center' },
-                        { data: 'semester', className: 'text-center' },
-                        { data: 'tahun_ajar', className: 'text-center' },
-                        // { data: 'nilai', className: 'text-center' },
-                        {
-                            data: null,
-                            render: function (data, type, row) {
-
-                                // Create action buttons
-                                var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
-                                var detailBtn = '<button class="btn btn-warning btn-detail" data-id="' + data.id + '"><i data-feather="align-justify" class="w-4 h-4 mr-1"></i></button>';
-                                
-                                // Combine the buttons
-                                var actions = detailBtn + ' || ' + deleteBtn ;
-                                return actions;
+                function loadDataTable (jurusanId = '')
+                {
+                    jQuery('#data-table').DataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "destroy": true,
+                        "ajax": {
+                            "url": "http://127.0.0.1:8000/api/data-nilai/rapor-siswa/list",
+                            "dataType": "json",
+                            "type": "POST",
+                            "headers": {
+                                'Authorization': 'Bearer ' + token
+                            },
+                            "data": function (d) {
+                                if (jurusanId === '-1')
+                                {
+                                    d.jurusan_id = ' ';
+                                }
+                                else
+                                {
+                                    d.jurusan_id = jurusanId;
+                                }
                             }
+                        },
+                        "columns": [
+                            { data: 'id', className: 'text-center' },
+                            { data: 'nama_siswa', className: 'text-center' },
+                            { data: 'jurusan', className: 'text-center' },
+                            { data: 'semester', className: 'text-center' },
+                            { data: 'tahun_ajar', className: 'text-center' },
+                            // { data: 'nilai', className: 'text-center' },
+                            {
+                                data: null,
+                                render: function (data, type, row) {
+
+                                    // Create action buttons
+                                    var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
+                                    var detailBtn = '<button class="btn btn-warning btn-detail" data-id="' + data.id + '"><i data-feather="align-justify" class="w-4 h-4 mr-1"></i></button>';
+                                    
+                                    // Combine the buttons
+                                    var actions = detailBtn + ' || ' + deleteBtn ;
+                                    return actions;
+                                }
+                            }
+                        ],
+                        "drawCallback": function(settings) {
+                            feather.replace();
                         }
-                    ],
-                    "drawCallback": function(settings) {
-                        feather.replace();
-                    }
-                })
+                    })
+                }
 
                 // Datatable list rapor
                 // jQuery('#data-table-detail').DataTable({
@@ -847,6 +876,13 @@
                     jQuery('.btn-import').show();
                 })
 
+                //SortBy
+                loadDataTable();
+                jQuery('#search-button').on('click', function() {
+                    var jurusanId = $('#select-jurusan').val();
+                    loadDataTable(jurusanId);
+                })
+
                 // Data Support Tajar
                 var url = 'http://127.0.0.1:8000/api/data-nilai/rapor-siswa/data-support/tajar';
                 fetch(url, {
@@ -857,14 +893,12 @@
                 }).then(response => response.json()).then(data => {
                     // Panggil element select
                     var selectSupportTajar = jQuery('.tahun-ajar');
-                    var selectUpdateSemester = jQuery('.update-semester');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
                         for (let i = 0; i < item.length; i++) {
                             // Isi data dengan nilai dalam database
-                            selectSupportTajar.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
-                            selectUpdateSemester.append('<option value="' + item[i].id + '">' + item[i].semester + '</option>');
+                            selectSupportTajar.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -906,6 +940,7 @@
                     }
                 }).then(response => response.json()).then(data => {
                     // Panggil element select
+                    var selectJurusan = jQuery('.form-jurusan');
                     var selectUpdateNama = jQuery('.update-jurusan');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
@@ -913,6 +948,7 @@
                         for (let i = 0; i < item.length; i++) {
                             // Isi data dengan nilai dalam database
                             selectUpdateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selectJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -980,9 +1016,11 @@
                     // Get form data
                     var inp = jQuery('#fileInput1')[0];
                     var foto = inp.files[0];
+                    var selectedTahunAjar = jQuery('#modal-form-6').val();
 
                     var formData = new FormData();
                     formData.append('excel', foto);
+                    formData.append('selected_tahun_ajar', selectedTahunAjar);
 
                     // Kirim permintaan pembaruan produk ke API
                     jQuery.ajax({
@@ -1260,7 +1298,7 @@
                                 }).showToast();
 
                                 setTimeout(function() {
-                                    location.reload();
+                                    // location.reload();
                                 }, 5000); // 3000 milliseconds = 3 seconds
                             }
                         })

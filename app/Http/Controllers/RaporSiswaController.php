@@ -6,6 +6,7 @@ use App\Exports\RaporSiswaExport;
 use App\Exports\RaporSiswaTemplate;
 use App\Imports\RaporSiswaImport;
 use App\Models\MasterJurusan;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterMapel;
 use App\Models\MasterSiswa;
 use App\Models\RaporSiswa;
@@ -37,12 +38,21 @@ class RaporSiswaController extends Controller
         $orderColumn = isset($columns[$orderColumnIndex]) ? $columns [$orderColumnIndex] : 'id';
         $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
+        $jurusanId = $request->input('jurusan_id');
+        $kelasId = $request->input('kelas_id');
 
         // Hitung total keseluruhan data tanpa paginasi dan pencarian
         $totalData = MasterSiswa::count();
 
         // Query mendapatkan data rapor siswa berdasarkan pencarian dan paginasi
         $query = MasterSiswa::with(['tajar','jurusan'])
+            ->when($jurusanId && $jurusanId != '-1', function ($q) use ($jurusanId) {
+                $q->whereHas('jurusan', function ($query) use ($jurusanId){
+                    $query->where('jurusan_id', $jurusanId);
+                });
+            })
+            ->when(empty($jurusanid) || $jurusanId == '-1', function ($q) {
+            })    
             ->when($search, function ($query) use ($search) {
                 $query->whereHas('jurusan', function ($q) use ($search) {
                     $q->where('name','LIKE','%'.$search.'%');
@@ -51,10 +61,9 @@ class RaporSiswaController extends Controller
                     $q->where('periode','LIKE','%'.$search.'%')
                     ->orWhere('semester','LIKE','%'.$search.'%');
                 });
-                // ->orWhereHas('jurusan', function ($q) use ($search) {
-                //     $q->where('name','LIKE','%'.$search.'%');
-                // });
-                // ->orWhere('nilai', 'LIKE', '%'.$search.'%');
+            })
+            ->when($kelasId, function ($q) use ($kelasId) {
+                $q->where('kelas_id', $kelasId);
             });
         
         // Hitung total filtered sesuai dengan pencarian
@@ -86,8 +95,8 @@ class RaporSiswaController extends Controller
             
             // $item['nilai'] = $r->nilai;
 
-            $item['id_jurusan_nama'] = $s->jurusan_id;
-            $item['jurusan'] = $s->jurusan->jurusan ?? '';
+            // $item['id_jurusan_nama'] = $s->jurusan_id;
+            $item['jurusan'] = $s->jurusan->name ?? '';
 
             $item['id_tajar_semester'] = $s->tajar_id;
             $item['semester'] = $s->tajar->semester ?? '';
@@ -228,6 +237,7 @@ class RaporSiswaController extends Controller
         {
             $item['id'] = $t->id;
             $item['name'] = $t->name;
+            $item['periode'] = $t->periode;
             $item['semester'] = $t->semester;
             $item['tahun_ajar'] = $t->tahun_ajar;
             $data[] = $item;
@@ -258,7 +268,7 @@ class RaporSiswaController extends Controller
 
     public function supportJurusan()
     {
-        $jurusan = MasterJurusan::all();
+        $jurusan = MasterJurusanSiswa::all();
         $data = array();
         foreach($jurusan as $j)
         {
@@ -302,8 +312,9 @@ class RaporSiswaController extends Controller
 
         // Proses data impor
         $file = $request->file('excel');
-
-        Excel::import(new RaporSiswaImport, $file);
+        $selectedTahunAjar = $request->input('selected_tahun_ajar');
+        
+        Excel::import(new RaporSiswaImport($selectedTahunAjar), $file);
 
         return response()->json([
             'success' => true,
@@ -340,8 +351,9 @@ class RaporSiswaController extends Controller
 
     public function deleteData($id)
     {
-        $find = RaporSiswa::where('id',$id)->first();
+        $find = MasterSiswa::find($id);
 
+        // dd($find);
         if (!$find)
         {
             return response()->json([
@@ -351,7 +363,7 @@ class RaporSiswaController extends Controller
         }
         else
         {
-            $hapus = RaporSiswa::where('id',$id)->delete();
+            $hapus = RaporSiswa::where('siswa_id', $find->id)->delete();
 
             if ($hapus)
             {

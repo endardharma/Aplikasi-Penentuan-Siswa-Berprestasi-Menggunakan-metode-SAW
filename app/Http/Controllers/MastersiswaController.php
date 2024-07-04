@@ -25,7 +25,7 @@ class MastersiswaController extends Controller
             0 => 'nis',
             1 => 'name',
             2 => 'jenkel',
-            3 => 'jurusan_id',
+            3 => 'kelas_id',
             4 => 'email',
             5 => 'tajar_id',
             6 => 'telpon',
@@ -53,8 +53,8 @@ class MastersiswaController extends Controller
             $item['nis'] = $s->nis;
             $item['name'] = $s->name;
             $item['email'] = $s->email;
-            $item['jurusan_id'] = $s->jurusan_id;
-            $item['jurusan_name'] = $s->jurusan->name ?? '';
+            $item['kelas_id'] = $s->kelas_id;
+            $item['kelas_name'] = $s->kelas->name ?? '';
             $item['jenkel'] = $s->jenkel;
             $item['telpon'] = $s->telpon;
             $item['tajar_id'] = $s->tajar_id;
@@ -77,7 +77,7 @@ class MastersiswaController extends Controller
             'name' => 'required',
             'email' => 'required|string|email|max:255|unique:master_siswas',
             'nis' => 'required',
-            'jurusan_id' => 'required',
+            'kelas_id' => 'required',
             'jenkel' => 'required',
             'telpon' => 'required',
             'periode' => 'required',
@@ -92,7 +92,7 @@ class MastersiswaController extends Controller
         $siswa->nis = $request->nis;
         $siswa->name = $request->name;
         $siswa->email = $request->email;
-        $siswa->jurusan_id = $request->jurusan_id;
+        $siswa->kelas_id = $request->kelas_id;
         $siswa->jenkel = $request->jenkel;
         $siswa->telpon = $request->telpon;
         $siswa->tajar_id = $request->tajar_id;
@@ -104,7 +104,7 @@ class MastersiswaController extends Controller
         ],201);
     }
 
-    public function listJurusan()
+    public function listKelas()
     {
         $kelas = MasterJurusan::all();
         $data = array();
@@ -145,7 +145,7 @@ class MastersiswaController extends Controller
             $request->nis != null ? $find->nis = $request->nis : true;
             $request->name != null ? $find->name = $request->name : true;
             $request->email != null ? $find->email = $request->email : true;
-            $request->jurusan_id != null ? $find->jurusan_id = $request->jurusan_id : true;
+            $request->kelas_id != null ? $find->kelas_id = $request->kelas_id : true;
             $request->jenkel != null ? $find->jenkel = $request->jenkel : true;
             $request->telpon != null ? $find->telpon = $request->telpon : true;
             $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
@@ -190,7 +190,7 @@ class MastersiswaController extends Controller
             $item['nis'] = $m->nis;
             $item['name'] = $m->name;
             $item['email'] = $m->email;
-            $item['kelas'] = $m->jurusan->name ?? '';
+            $item['kelas'] = $m->kelas->name ?? '';
             $item['jenkel'] = $m->jenkel;
             $item['telpon'] = $m->telpon;
             $item['periode'] = $m->tajar->name ?? '';

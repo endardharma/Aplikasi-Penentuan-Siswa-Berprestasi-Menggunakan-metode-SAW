@@ -430,6 +430,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         </div>
                     </div>
                 </div>
+                <!-- BEGIN : SortBy Jurusan -->
                 <div class="intro-y flex flex-col sm:flex-row items-center mt-1">
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
                         <button type="submit" class="btn btn-primary shadow-md mr-2 btn-cari" id="search-button">Cari</button>
@@ -442,6 +443,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         </select>
                     </div>
                 </div>
+                <!-- END : SortBy Jurusan -->
                 <!-- BEGIN: HTML Table Data -->
                 <div class="intro-y box p-5 mt-5">
                     <div class="overflow-x-auto scrollbar-hidden">
@@ -766,7 +768,7 @@ License: You must have a valid license purchased only from themeforest(the above
                 });
 
                 // Panggil data support role
-                var url = 'http://127.0.0.1:8000/api/master-mapel/data-support/kelas';
+                var url = 'http://127.0.0.1:8000/api/master-mapel/data-support/jurusan';
                 fetch(url, {
                     method: 'GET',
                     headers: {
@@ -781,8 +783,8 @@ License: You must have a valid license purchased only from themeforest(the above
                     jQuery.each(data, function(index, item) {
                         for (let i = 0; i < item.length; i++) {
                             // Isi data dengan nilai dalam database
-                            select.append('<option value="' + item[i].id + '">' + item[i].jurusan + '</option>');
-                            selectUpdate.append('<option value="' + item[i].id + '">' + item[i].jurusan + '</option>');
+                            select.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selectUpdate.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -926,13 +928,13 @@ License: You must have a valid license purchased only from themeforest(the above
                             { data: 'name', className: 'text-center' },
                             { data: 'kelompok', className: 'text-center' },
                             { data: 'type', className: 'text-center' },
-                            { data: 'jurusan', className: 'text-center' },
+                            { data: 'jurusan_name', className: 'text-center' },
                             {
                                 data: null,
                                 render: function (data, type, row) {
 
                                     // Create action buttons
-                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_kelas="' + data.id_kelas + '" data-name="' + data.name + '" data-kelompok="' + data.kelompok + '" data-type="' + data.type + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-jurusan_id="' + data.jurusan_id + '" data-name="' + data.name + '" data-kelompok="' + data.kelompok + '" data-type="' + data.type + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
                                     var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
 
                                     // Combine the buttons
@@ -961,7 +963,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     modal.show();
 
                     var id = jQuery(this).attr("data-id");
-                    var id_kelas = jQuery(this).attr("data-id_kelas");
+                    var jurusan_id = jQuery(this).attr("data-jurusan_id");
                     var name = jQuery(this).attr("data-name");
                     var kelompok = jQuery(this).attr("data-kelompok");
                     var type = jQuery(this).attr("data-type");
@@ -971,7 +973,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     jQuery('.update-nama-pelajaran').val(name);
                     jQuery('.update-kelompok').val(kelompok);
                     jQuery('.update-type').val(type);
-                    jQuery('.update-jurusan').val(id_kelas);
+                    jQuery('.update-jurusan').val(jurusan_id);
                 });
 
                 // Fungsi button update data

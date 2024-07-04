@@ -456,8 +456,8 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <label for="modal-form-3" class="form-label">Jurusan</label>
                                 <select class="form-select form-jurusan" required>
                                     <option selected disabled> --- Pilih Jurusan --- </option>
-                                    <option value="MIPA">MIPA</option>
-                                    <option value="IIS">IIS</option>
+                                    {{-- <option value="MIPA">MIPA</option>
+                                    <option value="IIS">IIS</option> --}}
                                 </select>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
@@ -525,8 +525,8 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <input type="hidden" class="form-control update-id">
                                 <select class="form-select update-jurusan" required>
                                     <option selected disabled> --- Pilih Jurusan --- </option>
-                                    <option value="MIPA"> MIPA </option>
-                                    <option value="IIS"> IIS </option>
+                                    {{-- <option value="MIPA"> MIPA </option>
+                                    <option value="IIS"> IIS </option> --}}
                                 </select>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
@@ -673,6 +673,29 @@ License: You must have a valid license purchased only from themeforest(the above
                     console.error('Error:', error);
                 });
 
+                // data support jurusan
+                var url = 'http://127.0.0.1:8000/api/master-jurusan/data-support/jurusan';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }).then(response => response.json()).then(data => {
+                    
+                    var selectCreate = jQuery('.form-jurusan');
+                    var selectUpdate = jQuery('.update-jurusan');
+
+                    jQuery.each(data, function(index, item) {
+                        for (let i = 0; i < item.length; i++)
+                        {
+                            selectCreate.append('<option value ="' + item[i].id + '">' + item[i].name + '</option>' );
+                            selectUpdate.append('<option value ="' + item[i].id + '">' + item[i].name + '</option>' );
+                        }
+                    });
+                }).catch(error => {
+                    console.error ('Error: ', error);
+                });
+                
                 jQuery('.btn-tambah').click(function() {
                     // Show Modal
                     const el = document.querySelector("#header-footer-modal-preview");
@@ -685,13 +708,13 @@ License: You must have a valid license purchased only from themeforest(the above
                     event.preventDefault(); // Prevent default form submission
 
                     // Get form data
-                    var jurusan = jQuery(".form-jurusan").val();
+                    var jurusan_id = jQuery(".form-jurusan").val();
                     var kode = jQuery(".form-kode").val();
                     var name = jQuery(".form-name").val();
                     var is_active = jQuery(".form-is_active").val();
 
                     var formData = new FormData();
-                    formData.append('jurusan', jurusan);
+                    formData.append('jurusan_id', jurusan_id);
                     formData.append('kode', kode);
                     formData.append('name', name);
                     formData.append('is_active', is_active);
@@ -741,7 +764,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             }).showToast();
 
                             setTimeout(function() {
-                                location.reload();
+                                // location.reload();
                             }, 5000); // 3000 milliseconds = 3 seconds
                         }
                     });
@@ -775,7 +798,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             // // Create an object with the desired properties
                             var rowData = {
                                 id: item[i].id,
-                                jurusan: item[i].jurusan,
+                                jurusan_name: item[i].jurusan_name,
                                 kode: item[i].kode,
                                 name: item[i].name,
                                 jumlah: item[i].jumlah,
@@ -799,7 +822,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         data: rowDataArray,
                         columns: [
                             { data: 'id', className: 'text-center' },
-                            { data: 'jurusan', className: 'text-center' },
+                            { data: 'jurusan_name', className: 'text-center' },
                             { data: 'kode', className: 'text-center' },
                             { data: 'name', className: 'text-center' },
                             { data: 'jumlah', className: 'text-center' },
@@ -809,7 +832,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 render: function (data, type, row) {
 
                                     // Create action buttons
-                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-jurusan="' + data.jurusan + '" data-kode="' + data.kode + '" data-name="' + data.name + '" data-is_active="' + data.is_active + '"><i data-feather="edit" class="w-4 h-4"></i></button>';
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-jurusan_id="' + data.jurusan_id + '" data-kode="' + data.kode + '" data-name="' + data.name + '" data-is_active="' + data.is_active + '"><i data-feather="edit" class="w-4 h-4"></i></button>';
                                     var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4"></i></button>';
 
                                     // Combine the buttons
@@ -831,14 +854,14 @@ License: You must have a valid license purchased only from themeforest(the above
                         modal.show();
 
                         var id = jQuery(this).attr("data-id");
-                        var jurusan = jQuery(this).attr("data-jurusan");
+                        var jurusan_id = jQuery(this).attr("data-jurusan_id");
                         var kode = jQuery(this).attr("data-kode");
                         var name = jQuery(this).attr("data-name");
                         var is_active = jQuery(this).attr("data-is_active");
 
                         // Handle edit action
                         jQuery('.update-id').val(id);
-                        jQuery('.update-jurusan').val(jurusan);
+                        jQuery('.update-jurusan').val(jurusan_id);
                         jQuery('.update-kode').val(kode);
                         jQuery('.update-nama').val(name);
                         jQuery('.update-status').val(is_active);
@@ -848,7 +871,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     jQuery(".btn-update").click(function() {
                         // Ajax update
                         var id = jQuery('.update-id').val();
-                        var jurusan = jQuery('.update-jurusan').val();
+                        var jurusan_id = jQuery('.update-jurusan').val();
                         var kode = jQuery('.update-kode').val();
                         var name = jQuery('.update-nama').val();
                         var is_active = jQuery('.update-status').val();
@@ -861,7 +884,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 xhr.setRequestHeader('Authorization', 'Bearer ' + token);
                             },
                             data: {
-                                jurusan: jurusan,
+                                jurusan_id: jurusan_id,
                                 kode: kode,
                                 name: name,
                                 is_active: is_active,

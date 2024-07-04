@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\MasterJurusan;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterMapel;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
@@ -18,7 +19,7 @@ class MasterMapelImport implements ToCollection, WithHeadingRow
     public function rules(): array
     {
         return [
-            'kelas' => 'required',
+            'jurusan' => 'required',
             'nama_mapel' => 'required',
             'kelompok' => 'required',
             'tipe_nilai' => 'required',
@@ -28,16 +29,17 @@ class MasterMapelImport implements ToCollection, WithHeadingRow
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
-            $kelas = MasterJurusan::where('name','LIKE','%'.$row['kelas'].'%')->where('is_active',1)->first();
-            if($kelas)
+            // $jurusan = MasterJurusanSiswa::where('name','LIKE','%'.$row['jurusan_id'].'%')->where('is_active',1)->first();
+            $jurusan = MasterJurusanSiswa::where('name','LIKE','%'.$row['jurusan'].'%')->first();
+            if($jurusan)
             {
                 $mapel = MasterMapel::updateOrCreate([
-                    'jurusan_id' => $kelas->id,
+                    'jurusan_id' => $jurusan->id,
                     'name' => $row['nama_mapel'],
                     'kelompok' => $row['kelompok'],
                     'type' => $row['tipe_nilai'],
                 ],[
-                    'jurusan_id' => $kelas->id,
+                    'jurusan_id' => $jurusan->id,
                     'name' => $row['nama_mapel'],
                     'kelompok' => $row['kelompok'],
                     'type' => $row['tipe_nilai'],

@@ -490,7 +490,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-6" class="form-label">Kelas Siswa</label>
-                                <select class="form-select form-jurusan" required>
+                                <select class="form-select form-kelas" required>
                                     <option selected disabled> --- Pilih Kelas Siswa --- </option>
                                 </select>
                             </div>
@@ -571,7 +571,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-6" class="form-label">Kelas Siswa</label>
-                                <select class="form-select update-jurusan" required>
+                                <select class="form-select update-kelas" required>
                                     <option selected disabled> --- Pilih Kelas Siswa --- </option>
                                 </select>
                             </div>
@@ -774,15 +774,15 @@ License: You must have a valid license purchased only from themeforest(the above
                 });
 
                 // Panggil data support jurusan (kelas)
-                var url = 'http://127.0.0.1:8000/api/master-siswa/data-support/jurusan';
+                var url = 'http://127.0.0.1:8000/api/master-siswa/data-support/kelas';
                 fetch(url, {
                     method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
                 }).then(response => response.json()).then(data => {
-                    var select = jQuery('.form-jurusan');
-                    var selectUpdate = jQuery('.update-jurusan');
+                    var select = jQuery('.form-kelas');
+                    var selectUpdate = jQuery('.update-kelas');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
@@ -826,7 +826,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     var name = jQuery(".form-nama").val();
                     var email = jQuery(".form-email").val();
                     var jenkel = jQuery(".form-jenkel").val();
-                    var jurusan_id = jQuery(".form-jurusan").val();
+                    var kelas_id = jQuery(".form-kelas").val();
                     var telpon = jQuery(".form-telpon").val();
                     var periode = jQuery(".form-periode").val();
 
@@ -835,7 +835,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     formData.append('name', name);
                     formData.append('email', email);
                     formData.append('jenkel', jenkel);
-                    formData.append('jurusan_id', jurusan_id);
+                    formData.append('kelas_id', kelas_id);
                     formData.append('telpon', telpon);
                     formData.append('periode', periode);
 
@@ -906,7 +906,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         { data: 'nis', className: 'text-center' },
                         { data: 'name', className: 'text-center' },
                         { data: 'jenkel', className: 'text-center' },
-                        { data: 'jurusan_name', className: 'text-center' },
+                        { data: 'kelas_name', className: 'text-center' },
                         { data: 'email', className: 'text-center' },
                         { data: 'telpon', className: 'text-center' },
                         { data: 'tajar_name', className: 'text-center' },
@@ -915,7 +915,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             render: function (data, type, row) {
 
                                 // Create action buttons
-                                var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-nis="' + data.nis + '" data-name="' + data.name + '" data-jenkel="' + data.jenkel + '" data-jurusan_id="' + data.jurusan_id + '" data-email="' + data.email + '" data-telpon="' + data.telpon + '" data-tajar_id="' + data.tajar_id + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-nis="' + data.nis + '" data-name="' + data.name + '" data-jenkel="' + data.jenkel + '" data-kelas_id="' + data.kelas_id + '" data-email="' + data.email + '" data-telpon="' + data.telpon + '" data-tajar_id="' + data.tajar_id + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
                                 var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
 
                                 // Combine the buttons
@@ -940,7 +940,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     var name = jQuery(this).attr("data-name");
                     var nis = jQuery(this).attr("data-nis");
                     var jenkel = jQuery(this).attr("data-jenkel");
-                    var jurusan_id = jQuery(this).attr("data-jurusan_id");
+                    var kelas_id = jQuery(this).attr("data-kelas_id");
                     var email = jQuery(this).attr("data-email");
                     var telpon = jQuery(this).attr("data-telpon");
                     var tajar_id = jQuery(this).attr("data-tajar_id");
@@ -950,7 +950,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     jQuery('.update-nis').val(nis);
                     jQuery('.update-nama').val(name);
                     jQuery('.update-email').val(email);
-                    jQuery('.update-jurusan').val(jurusan_id);
+                    jQuery('.update-kelas').val(kelas_id);
                     jQuery('.update-jenkel').val(jenkel);
                     jQuery('.update-telpon').val(telpon);
                     jQuery('.update-tajar').val(tajar_id);
@@ -964,7 +964,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     var nis = jQuery('.update-nis').val();
                     var email = jQuery('.update-email').val();
                     var jenkel = jQuery('.update-jenkel').val();
-                    var jurusan_id = jQuery('.update-jurusan').val();
+                    var kelas_id = jQuery('.update-kelas').val();
                     var telpon = jQuery('.update-telpon').val();
                     var tajar_id = jQuery('.update-tajar').val();
 
@@ -980,7 +980,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             nis: nis,
                             email: email,
                             jenkel: jenkel,
-                            jurusan_id: jurusan_id,
+                            kelas_id: kelas_id,
                             telpon: telpon,
                             tajar_id: tajar_id,
                         },

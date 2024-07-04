@@ -12,7 +12,7 @@ class MasterJurusan extends Model
 
     public function hitung()
     {
-        return $this->hasMany(MasterSiswa::class,'jurusan_id')->count();
+        return $this->hasMany(MasterSiswa::class,'kelas_id')->count();
     }
 
     public function mapel()
@@ -49,6 +49,11 @@ class MasterJurusan extends Model
     public function hafalan()
     {
         return $this->hasMany(HafalanSiswa::class, 'jurusan_id')->orderby('id','asc');
+    
+    }
+    public function jurusan()
+    {
+        return $this->belongsTo(MasterJurusanSiswa::class, 'jurusan_id');
     }
 
 }

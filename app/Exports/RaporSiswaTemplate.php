@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\MasterJurusan;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\TahunAjar;
 use App\Models\MasterMapel;
@@ -21,39 +22,102 @@ class RaporSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
         $this->data = $data;
     }
 
+    // public function array(): array
+    // {
+    //     // Fungsi Template Export dan detail rapor siswa
+    //     $siswa = MasterSiswa::all();
+    //     $tajar = TahunAjar::all();
+    //     // $mapel = MasterMapel::all(); // Mendapatkan semua mata pelajaran
+
+    //     $data = [];
+    //     if ($siswa->isNotEmpty() ) 
+    //     {
+    //         foreach ($siswa as $s) 
+    //         {
+    //             $mapel = MasterMapel::where('jurusan_id', $s->kelas_id)->get();
+    //             if ($mapel->isNotEmpty())
+    //             {
+    //                 foreach ($mapel as $m) 
+    //                 {
+    //                     if ($tajar->isNotEmpty())
+    //                     {
+    //                         foreach ($tajar as $t)
+    //                         {
+    //                             $item = [];
+    //                             $item['nama_siswa'] = $s->name;
+    //                             $item['nama_mapel'] = $m->name;
+    //                             $item['kelompok'] = $m->kelompok;
+    //                             $item['type'] = $m->type;
+
+    //                             // $jurusansiswa = MasterJurusan::find($m->jurusan_id);
+    //                             // $item['jurusan'] = $jurusansiswa ? $jurusansiswa->jurusan : 'Jurusan tidak ditemukan';
+    //                             $item['jurusan'] = $m->jurusan;
+
+    //                             $item['nilai'] = 'Isi nilai dengan angka';
+            
+            
+    //                             $item['semester'] = $t->semester;
+    //                             $item['tahun_ajar'] = $t->periode;
+            
+    //                             $data[] = $item;
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     return $data;
+    // }
+
     public function array(): array
     {
         // Fungsi Template Export dan detail rapor siswa
-        $siswa = MasterSiswa::all();
+        $siswa = MasterSiswa::with('kelas.jurusan')->get();
         $tajar = TahunAjar::all();
-        $mapel = MasterMapel::all(); // Mendapatkan semua mata pelajaran
-
+    
         $data = [];
-        if ($siswa->isNotEmpty() && $mapel->isNotEmpty()) {
-            foreach ($siswa as $s) {
-                foreach ($mapel as $m) {
-                    $item = [];
-                    $item['nama_siswa'] = $s->name;
-                    $item['nama_mapel'] = $m->name;
-                    $item['kelompok'] = $m->kelompok;
-                    $item['type'] = $m->type;
-                    $item['nilai'] = 'Isi nilai dengan angka';
-
-                    $jurusansiswa = MasterJurusan::find($s->jurusan_id);
-                    $item['jurusan'] = $jurusansiswa ? $jurusansiswa->jurusan : 'Jurusan tidak ditemukan';
-
-                    foreach ($tajar as $t) {
-                        $item['semester'] = $t->semester;
-                        $item['tahun_ajar'] = $t->periode;
+        if ($siswa->isNotEmpty()) 
+        {
+            foreach ($siswa as $s) 
+            {
+                $jurusan_id = $s->kelas->jurusan->id ?? null;
+                if ($jurusan_id) 
+                {
+                    $mapel = MasterMapel::where('jurusan_id', $jurusan_id)->get();
+                    if ($mapel->isNotEmpty())
+                    {
+                        foreach ($mapel as $m) 
+                        {
+                            if ($tajar->isNotEmpty())
+                            {
+                                foreach ($tajar as $t)
+                                {
+                                    $item = [];
+                                    $item['nama_siswa'] = $s->name;
+                                    $item['nama_mapel'] = $m->name;
+                                    $item['kelompok'] = $m->kelompok;
+                                    $item['type'] = $m->type;
+                                    $item['nilai'] = 'Isi nilai dengan angka';
+    
+                                    $jurusansiswa = MasterJurusanSiswa::find($m->jurusan_id);
+                                    $item['jurusan'] = $jurusansiswa ? $jurusansiswa->name : 'Jurusan tidak ditemukan';
+    
+                                    $item['semester'] = $t->semester;
+                                    // $item['tahun_ajar'] = $t->periode;
+    
+                                    $data[] = $item;
+                                }
+                            }
+                        }
                     }
-
-                    $data[] = $item;
                 }
             }
         }
-
+    
         return $data;
     }
+    
 
     public function registerEvents(): array
     {

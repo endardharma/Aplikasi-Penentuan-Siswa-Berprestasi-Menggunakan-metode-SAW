@@ -34,14 +34,14 @@ class MastersiswaImport implements ToCollection, WithHeadingRow
             if($kelas)
             {
                 $siswa = MasterSiswa::updateOrCreate([
-                    'jurusan_id' => $kelas->id,
+                    'kelas_id' => $kelas->id,
                     'name' => $row['name'],
                     'email' => $row['email'],
                 ],[
                     'nis' => $row['nis'],
                     'name' => $row['nama_siswa'],
                     'email' => $row['email'],
-                    'jurusan_id' => $kelas->id,
+                    'kelas_id' => $kelas->id,
                     'jenkel' => $row['jenkel'],
                     'telpon' => $row['telpon'],
                     'periode' => $row['periode'],

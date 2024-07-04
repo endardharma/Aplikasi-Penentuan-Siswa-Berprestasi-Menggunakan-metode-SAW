@@ -9,11 +9,16 @@ class MasterSiswa extends Model
 {
     use HasFactory;
     protected $table = 'master_siswas';
-    protected $fillable = ['jurusan_id','name','kelompok','type','tajar_id'];
+    protected $fillable = ['kelas_id','name','kelompok','type','tajar_id'];
+
+    public function kelas()
+    {
+        return $this->belongsTo(MasterJurusan::class, 'kelas_id');
+    }
 
     public function jurusan()
     {
-        return $this->belongsTo(MasterJurusan::class, 'jurusan_id');
+        return $this->hasOneThrough(MasterJurusanSiswa::class, MasterJurusan::class, 'id', 'id', 'kelas_id', 'jurusan_id');
     }
 
     public function kriteria()

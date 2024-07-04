@@ -12,7 +12,7 @@ class MasterMapel extends Model
 
     public function jurusan()
     {
-        return $this->belongsTo(MasterJurusan::class,'jurusan_id');
+        return $this->belongsTo(MasterJurusanSiswa::class,'jurusan_id');
     }
     
     public function rapor()
