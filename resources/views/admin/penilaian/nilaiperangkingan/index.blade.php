@@ -399,9 +399,9 @@
                 <!-- END: Top Bar -->
                 <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
                     <h2 class="text-lg font-medium mr-auto">
-                        List Nilai Perangkingan
+                        List Nilai Perangkingan Jurusan MIPA
                     </h2>
-                    <div class="w-full sm:w-10 flex mt-4 sm:mt-0">
+                    {{-- <div class="w-full sm:w-10 flex mt-4 sm:mt-0">
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
                                 <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-lucide="list"></i> </span>
@@ -414,7 +414,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
@@ -436,7 +436,63 @@
                 <!-- BEGIN: HTML Table Data -->
                 <div class="intro-y box p-5 mt-5">
                     <div class="overflow-x-auto scrollbar-hidden">
-                        <table id="data-table" class="table table-striped" style="width: 100%">
+                        <table id="data-table-mipa" class="table table-striped" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nama Siswa</th>
+                                    <th>Nilai Akhir</th>
+                                    <th>Jurusan</th>
+                                    <th>Semester</th>
+                                    <th>Tahun Ajar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- END: HTML Table Data -->
+                <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
+                    <h2 class="text-lg font-medium mr-auto">
+                        List Nilai Perangkingan Jurusan IIS
+                    </h2>
+                    {{-- <div class="w-full sm:w-10 flex mt-4 sm:mt-0">
+                        <div class="dropdown ml-auto sm:ml-0">
+                            <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
+                                <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-lucide="list"></i> </span>
+                            </button>
+                            <div class="dropdown-menu w-40">
+                                <ul class="dropdown-content">
+                                    <li>
+                                        <a href="#" class="dropdown-item modal-detail"> <i data-lucide="table" class="w-4 h-4 mr-2"></i> Detail Nilai </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div> --}}
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <div class="dropdown ml-auto sm:ml-0">
+                            <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
+                                <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-lucide="plus"></i> </span>
+                            </button>
+                            <div class="dropdown-menu w-40">
+                                <ul class="dropdown-content">
+                                    {{-- <li>
+                                        <a href="#" class="dropdown-item modal-import"> <i data-lucide="file-plus" class="w-4 h-4 mr-2"></i> Import Data </a>
+                                    </li> --}}
+                                    <li>
+                                        <a href="#" class="dropdown-item btn-export"> <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export Excel </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- BEGIN: HTML Table Data -->
+                <div class="intro-y box p-5 mt-5">
+                    <div class="overflow-x-auto scrollbar-hidden">
+                        <table id="data-table-iis" class="table table-striped" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -512,12 +568,37 @@
                     console.error('Error: ', error);
                 });
 
-                // Data table list nilai perangkingan
-                jQuery('#data-table').dataTable({
+                // Data table list nilai perangkingan MIPA
+                jQuery('#data-table-mipa').dataTable({
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        "url": "http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/list",
+                        "url": "http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/listMipa",
+                        "dataType": "json",
+                        "type": "POST",
+                        "headers": {
+                            'Authorization': 'Bearer ' + token
+                        },
+                    },
+                    "columns": [
+                        { data: 'id', className: 'text-center' },
+                        { data: 'nama_siswa', className: 'text-center' },
+                        { data: 'nilai_akhir', className: 'text-center' },
+                        { data: 'jurusan', className: 'text-center' },
+                        { data: 'semester', className: 'text-center' },
+                        { data: 'tahun_ajar', className: 'text-center' },
+                    ],
+                    "drawCallback": function (settings) {
+                        feather.replace(); // Asumsikan feather adalah plugin ikon yang digunakan
+                    }
+                });
+
+                // Data table list nilai perangkingan IIS
+                jQuery('#data-table-iis').dataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": "http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/listIis",
                         "dataType": "json",
                         "type": "POST",
                         "headers": {

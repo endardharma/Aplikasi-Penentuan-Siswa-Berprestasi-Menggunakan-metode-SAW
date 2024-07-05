@@ -155,6 +155,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::prefix('prestasi-siswa')->group(function() {
             Route::get("/data-support/tajar", [PrestasiSiswaController::class, 'supportTajar']);
             Route::get("/data-support/siswa", [PrestasiSiswaController::class, 'supportSiswa']);
+            Route::get("/data-support/jurusan", [PrestasiSiswaController::class, 'supportJurusan']);
             Route::post("list", [PrestasiSiswaController::class, 'listPrestasi']);
             Route::post("list-detail", [PrestasiSiswaController::class, 'listDetailPrestasi']);
             Route::get("/export-data/download-template", [PrestasiSiswaController::class, 'template']);
@@ -171,6 +172,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post("list-detail", [KeterlambatanSiswaController::class, 'listDetailKeterlambatan']);
             Route::get("/data-support/tajar", [KeterlambatanSiswaController::class, 'supportTajar']);
             Route::get("/data-support/siswa", [KeterlambatanSiswaController::class, 'supportSiswa']);
+            Route::get("/data-support/jurusan", [KeterlambatanSiswaController::class, 'supportJurusan']);
             Route::get("/export-data/download-template", [KeterlambatanSiswaController::class, 'template']);
             Route::post("/import-data/import-xls", [KeterlambatanSiswaController::class, 'importData']);
             Route::get("/export-data/export-xls", [KeterlambatanSiswaController::class, 'exportData']);
@@ -184,6 +186,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post("list-detail", [HafalanSiswaController::class, 'listDetailHafalan']);
             Route::get("/data-support/tajar", [HafalanSiswaController::class, 'supportTajar']);
             Route::get("/data-support/siswa", [HafalanSiswaController::class, 'supportSiswa']);
+            Route::get("/data-support/jurusan", [HafalanSiswaController::class, 'supportJurusan']);
             Route::get("/export-data/download-template", [HafalanSiswaController::class, 'template']);
             Route::get("/export-data/export-xls", [HafalanSiswaController::class, 'exportData']);
             Route::post("/import-data/import-xls", [HafalanSiswaController::class, 'importData']);
@@ -197,10 +200,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post("list", [NilaiKeseluruhanController::class, 'listNilaiKeseluruhan']);
             Route::post("list-detail", [NilaiKeseluruhanController::class, 'listDetailNilaiKeseluruhan']);
             Route::get("/export-data/export-xls", [NilaiKeseluruhanController::class, 'exportData']);
+            Route::get("/data-support/jurusan", [NilaiKeseluruhanController::class, 'supportJurusan']);
         });
 
         Route::prefix('nilai-perangkingan')->group(function(){
-            Route::post("list", [NilaiPerangkinganController::class, 'listNilaiPerangkingan']);
+            Route::post("listMipa", [NilaiPerangkinganController::class, 'listNilaiPerangkinganMipa']);
+            Route::post("listIis", [NilaiPerangkinganController::class, 'listNilaiPerangkinganIis']);
             Route::post("list-detail", [NilaiPerangkinganController::class, 'listDetailNilaiPerangkingan']);
             Route::get("/export-data/export-xls", [NilaiPerangkinganController::class, 'exportData']);
         });

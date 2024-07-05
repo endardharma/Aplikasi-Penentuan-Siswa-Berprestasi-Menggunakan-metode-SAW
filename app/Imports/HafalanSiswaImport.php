@@ -25,18 +25,21 @@ class HafalanSiswaImport implements ToCollection, WithHeadingRow
             'nilai' => 'required',
             'jurusan' => 'required',
             'semester' => 'required',
-            'tahun_ajar' => 'required',
         ];
+    }
+
+    protected $selectedTahunAjar;
+
+    public function __construct($selectedTahunAjar)
+    {
+        $this->selectedTahunAjar = $selectedTahunAjar;
     }
     
     public function collection(Collection $rows)
     {
-
-        // dd($rows)->toArray();
-
         foreach($rows as $row)
         {
-            $tajar = TahunAjar::where('name','LIKE','%'.$row['tahun_ajar'].'%')->first();
+            $tajar = TahunAjar::find($this->selectedTahunAjar);
             $siswa = MasterSiswa::where('name','LIKE','%'.$row['nama_siswa'].'%')->first();
             $jurusan = MasterJurusan::where('name','LIKE','%'.$row['jurusan'].'%')->first();
 
@@ -47,13 +50,14 @@ class HafalanSiswaImport implements ToCollection, WithHeadingRow
                     'siswa_id' => $siswa->id,
                     'jurusan_id' => $jurusan->id,
                     'ket_hafalan' => $row['keterangan_hafalan'],
+                    'ket_hafalan' => $row['nilai'],
                 ],[
                     'nama_siswa' => $row['nama_siswa'],
                     'ket_hafalan' => $row['keterangan_hafalan'],
                     'nilai' => $row['nilai'],
                     'jurusan' => $row['jurusan'],
                     'semester' => $row['semester'],
-                    'tahun_ajar' => $row['tahun_ajar'],
+                    'tahun_ajar' => $tajar->name,
                 ]);
             }
         }

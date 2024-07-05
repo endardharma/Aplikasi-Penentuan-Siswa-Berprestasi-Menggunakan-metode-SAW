@@ -6,6 +6,7 @@ use App\Exports\KeterlambatanSiswaExport;
 use App\Exports\KeterlambatanSiswaTemplate;
 use App\Imports\KeterlambatanSiswaImport;
 use App\Models\KeterlambatanSiswa;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\TahunAjar;
 use Illuminate\Http\Request;
@@ -37,12 +38,21 @@ class KeterlambatanSiswaController extends Controller
         $orderColumn = isset($columns [$orderColumnIndex]) ? $columns [$orderColumnIndex] : 'id';
         $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
+        $jurusanId = $request->input('jurusan_id');
+
 
         // Hitung total keterlambatan berdasarkan pencarian dan paginasi
         $totalData = KeterlambatanSiswa::count();
 
         // Query mendapatkan data keterlambatan berdasarkan pencarian dan paginasi
         $query = KeterlambatanSiswa::with(['tajar','siswa','jurusan'])
+            ->when($jurusanId && $jurusanId != '-1', function ($q) use ($jurusanId) {
+                $q->whereHas('jurusan', function ($query) use ($jurusanId){
+                    $query->where('jurusan_id', $jurusanId);
+                });
+            })
+            ->when(empty($jurusanid) || $jurusanId == '-1', function ($q) {
+            }) 
             ->when($search, function ($query) use ($search) {
                 $query->whereHas('tajar', function ($q) use ($search) {
                     $q->where('periode','LIKE','%'.$search.'%')
@@ -72,9 +82,21 @@ class KeterlambatanSiswaController extends Controller
         {
             $item['id'] = $k->id;
             $item['id_siswa_nama'] = $k->siswa_id;
+
             $item['nama_siswa'] = $k->siswa->name ?? '';
             $item['jumlah_keterlambatan'] = $k->jumlah_keterlambatan;
+            
             $item['nilai'] = $k -> nilai;
+            
+            $item['id_jurusan_nama'] = $k->jurusan_id;
+            $item['jurusan'] = $k->jurusan->name ?? '';
+            
+            $item['id_tajar_semester'] = $k->tajar_id;
+            $item['semester'] = $k->tajar->semester ?? '';
+            
+            $item['id_tajar_periode'] = $k->tajar_id;
+            $item['tahun_ajar'] = $k->tajar->periode ?? '';
+
             $data[] = $item;
         }
 
@@ -86,55 +108,55 @@ class KeterlambatanSiswaController extends Controller
         ], 200);
     }
 
-    public function listDetailKeterlambatan(Request $request)
-    {
-        // Data/Funtion Dummy
-        $columns = [
-            0 => 'id',
-            1 => 'nama_siswa',
-            2 => 'jumlah_keterlambatan',
-            3 => 'nilai',
-            4 => 'jurusan',
-            5 => 'semester',
-            6 => 'tahun_ajar',
-        ];
+    // public function listDetailKeterlambatan(Request $request)
+    // {
+    //     // Data/Funtion Dummy
+    //     $columns = [
+    //         0 => 'id',
+    //         1 => 'nama_siswa',
+    //         2 => 'jumlah_keterlambatan',
+    //         3 => 'nilai',
+    //         4 => 'jurusan',
+    //         5 => 'semester',
+    //         6 => 'tahun_ajar',
+    //     ];
 
-        $start = $request->start;
-        $limit = $request->length;
-        $orderColumn = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
-        $search = $request->input('search')['value'];
+    //     $start = $request->start;
+    //     $limit = $request->length;
+    //     $orderColumn = $columns[$request->input('order.0.column')];
+    //     $dir = $request->input('order.0.dir');
+    //     $search = $request->input('search')['value'];
 
-        // HitungKeseluruhan
-        $hitung = KeterlambatanSiswa::count();
+    //     // HitungKeseluruhan
+    //     $hitung = KeterlambatanSiswa::count();
 
-        $keterlambatan = KeterlambatanSiswa::where(function ($q) use ($search) {
-            if($search != null)
-            {
-                return $q->where('tajar_id','LIKE','%'.$search.'%')->orWhere('siswa_id','LIKE','%'.$search.'%')->orWhere('jurusan_id','LIKE','%'.$search.'%');
-            }
-        })->orderby($orderColumn, $dir)->skip($start)->take($limit)->get();
+    //     $keterlambatan = KeterlambatanSiswa::where(function ($q) use ($search) {
+    //         if($search != null)
+    //         {
+    //             return $q->where('tajar_id','LIKE','%'.$search.'%')->orWhere('siswa_id','LIKE','%'.$search.'%')->orWhere('jurusan_id','LIKE','%'.$search.'%');
+    //         }
+    //     })->orderby($orderColumn, $dir)->skip($start)->take($limit)->get();
 
-        $data = array();
-        foreach($keterlambatan as $k)
-        {
-            $item['id'] = $k->id;
-            $item['nama_siswa'] = $k->siswa->name ?? '';
-            $item['jumlah_keterlambatan'] = $k->jumlah_keterlambatan;
-            $item['nilai'] = $k -> nilai;
-            $item['jurusan'] = $k->jurusan->name ?? '';
-            $item['semester'] = $k->tajar->semester ?? '';
-            $item['tahun_ajar'] = $k->tajar->periode ?? '';
-            $data[] = $item;
-        }
+    //     $data = array();
+    //     foreach($keterlambatan as $k)
+    //     {
+    //         $item['id'] = $k->id;
+    //         $item['nama_siswa'] = $k->siswa->name ?? '';
+    //         $item['jumlah_keterlambatan'] = $k->jumlah_keterlambatan;
+    //         $item['nilai'] = $k -> nilai;
+    //         $item['jurusan'] = $k->jurusan->name ?? '';
+    //         $item['semester'] = $k->tajar->semester ?? '';
+    //         $item['tahun_ajar'] = $k->tajar->periode ?? '';
+    //         $data[] = $item;
+    //     }
 
-        return response()->json([
-            'draw' => $request->draw,
-            'recordsTotal' => $hitung,
-            'recordsFiltered' => $hitung,
-            'data' => $data,
-        ], 200);
-    }
+    //     return response()->json([
+    //         'draw' => $request->draw,
+    //         'recordsTotal' => $hitung,
+    //         'recordsFiltered' => $hitung,
+    //         'data' => $data,
+    //     ], 200);
+    // }
 
     public function supportTajar()
     {
@@ -144,7 +166,8 @@ class KeterlambatanSiswaController extends Controller
         foreach($tajar as $t)
         {
             $item['id'] = $t->id;
-            $item['name'] = $t->name;
+            $item['semester'] = $t->semester;
+            $item['periode'] = $t->periode;
             $data[] = $item;
         }
 
@@ -170,6 +193,23 @@ class KeterlambatanSiswaController extends Controller
         ], 200);
     }
 
+    public function supportJurusan()
+    {
+        $jurusan = MasterJurusanSiswa::all();
+        $data = array();
+
+        foreach ($jurusan as $j)
+        {
+            $item['id'] = $j->id;
+            $item['name'] = $j->name;
+            $data[] = $item;
+        }
+
+        return response()->json([
+            'data' => $data,
+        ], 201);
+    }
+
     public function updateData(Request $request, $id)
     {
         $find = KeterlambatanSiswa::where('id', $id)->first();
@@ -186,6 +226,9 @@ class KeterlambatanSiswaController extends Controller
             $request->siswa_id != null ? $find->siswa_id = $request->siswa_id :  true;
             $request->jumlah_keterlambatan != null ? $find->jumlah_keterlambatan = $request->jumlah_keterlambatan : true;
             $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnKeterlambatan($request->jumlah_keterlambatan) : true; // Nilai otomatis berdasarkan jumlah keterlambatan
+            $request->jurusan_id != null ? $find->jurusan_id = $request->jurusan_id : true;
+            $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
+            $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
             $find->save();
 
             return response()->json([
@@ -264,8 +307,9 @@ class KeterlambatanSiswaController extends Controller
 
         // Proses Import Data
         $file = $request->file('excel');
+        $selectedTahunAjar = $request->input('selected_tahun_ajar');
         
-        Excel::import(new KeterlambatanSiswaImport, $file);
+        Excel::import(new KeterlambatanSiswaImport($selectedTahunAjar), $file);
 
         return response()->json([
             'success' => true,

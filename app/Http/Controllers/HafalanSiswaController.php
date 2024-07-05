@@ -6,6 +6,7 @@ use App\Exports\HafalanSiswaExport;
 use App\Exports\HafalanSiswaTemplate;
 use App\Imports\HafalanSiswaImport;
 use App\Models\HafalanSiswa;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\TahunAjar;
 use Illuminate\Http\Request;
@@ -37,32 +38,40 @@ class HafalanSiswaController extends Controller
         $orderColumn = isset($columns[$orderColumnIndex]) ? $columns [$orderColumnIndex] : 'id';
         $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
+        $jurusanId = $request->input('jurusan_id');
+        $kelasId = $request->input('kelas_id');
 
         // Hitung total keseluruhan data tanpa paginasi dan pencarian
-        $totalData = HafalanSiswa::count();
+        $totalData = MasterSiswa::count();
 
-        // Query mendapatkan data keterlambatan berdasarkan pencarian dan paginasi
-        $query = HafalanSiswa::with(['tajar','siswa','jurusan'])
+        // Query mendapatkan data rapor siswa berdasarkan pencarian dan paginasi
+        $query = MasterSiswa::with(['tajar','jurusan'])
+            ->when($jurusanId && $jurusanId != '-1', function ($q) use ($jurusanId) {
+                $q->whereHas('jurusan', function ($query) use ($jurusanId){
+                    $query->where('jurusan_id', $jurusanId);
+                });
+            })
+            ->when(empty($jurusanid) || $jurusanId == '-1', function ($q) {
+            })    
             ->when($search, function ($query) use ($search) {
-                $query->whereHas('tajar', function ($q) use ($search) {
+                $query->whereHas('jurusan', function ($q) use ($search) {
+                    $q->where('name','LIKE','%'.$search.'%');
+                })
+                ->orWhereHas('tajar', function ($q) use ($search) {
                     $q->where('periode','LIKE','%'.$search.'%')
                     ->orWhere('semester','LIKE','%'.$search.'%');
-                })
-                ->orWhereHas('siswa', function ($q) use ($search) {
-                    $q->where('name','LIKE','%'.$search.'%');
-                })
-                ->orWhereHas('jurusan', function ($q) use ($search) {
-                    $q->where('name','LIKE','%'.$search.'%');
-                })
-                ->orWhere('ket_hafalan','LIKE','%'.$search.'%')
-                ->orWhere('nilai','LIKE','%'.$search.'%');
+                });
+            })
+            ->when($kelasId, function ($q) use ($kelasId) {
+                $q->where('kelas_id', $kelasId);
             });
         
         // Hitung total filtered sesuai dengan pencarian
         $totalFiltered = $query->count();
 
-        // Ambil data hafalan sesuai dengan paginasi dan urutan
-        $hafalan = $query->orderBy($orderColumn, $dir)
+        // Ambil data rapor sesuai dengan paginasi dan urutan
+        $hafalan = $query
+            ->orderBy($orderColumn, $dir)
             ->skip($start)
             ->take($limit)
             ->get();
@@ -71,10 +80,10 @@ class HafalanSiswaController extends Controller
         foreach($hafalan as $h)
         {
             $item['id'] = $h->id;
-            $item['id_siswa_nama'] = $h->siswa_id;
-            $item['nama_siswa'] = $h->siswa->name ?? '';
-            $item['ket_hafalan'] = $h->ket_hafalan;
-            $item['nilai'] = $h->nilai;
+            $item['nama_siswa'] = $h->name ?? '';
+            $item['jurusan'] = $h->jurusan->name ?? '';
+            $item['semester'] = $h->tajar->semester ?? '';
+            $item['tahun_ajar'] = $h->tajar->periode ?? '';
             $data[] = $item;
         }
 
@@ -88,15 +97,15 @@ class HafalanSiswaController extends Controller
 
     public function listDetailHafalan(Request $request)
     {
+        $siswaId = $request->input('siswa_id');
+
         // Data Dummy
         $columns = [
             0 => 'id',
             1 => 'nama_siswa',
-            2 => 'ket_hafalan',
-            3 => 'nilai',
-            4 => 'jurusan',
-            5 => 'semester',
-            6 => 'tahun_ajar',
+            2 => 'siswa_id',
+            3 => 'ket_hafalan',
+            4 => 'nilai',
         ];
 
         $start = $request->start;
@@ -106,30 +115,32 @@ class HafalanSiswaController extends Controller
         $search = $request->input('search')['value'];
 
         // Hitung Keseluruhan
-        $hitung = HafalanSiswa::count();
+        $hitung = HafalanSiswa::where('siswa_id', $siswaId)->count();
 
-        $hafalan = HafalanSiswa::where(function ($q) use ($search) {
-            if($search != null)
-            {
-                return $q->where('tajar_id','LIKE','%'.$search.'%')->where('siswa_id','LIKE','%'.$search.'%')->where('jurusan_id','LIKE','%'.$search.'%')->where('ket_hafalan','LIKE','%'.$search.'%');
-            }
-        })->orderby($orderColumn, $dir)->skip($start)->take($limit)->get();
+        $hafalan = Hafalansiswa::with(['siswa'])
+            ->where('siswa_id', $siswaId)
+            ->when($search, function ($query, $search) {
+                return $query->where('ket_hafalan','LIKE','%'.$search.'%')
+                        ->orWhere('nilai','LIKE','%'.$search.'%');
+            })
+            ->orderBy($orderColumn, $dir)
+            ->skip($start)
+            ->take($limit)
+            ->get();
 
         $data = array();
         foreach($hafalan as $h)
         {
             $item['id'] = $h->id;
+            $item['id_siswa_nama'] = $h->siswa_id;
             $item['nama_siswa'] = $h->siswa->name ?? '';
             $item['ket_hafalan'] = $h->ket_hafalan;
             $item['nilai'] = $h->nilai;
-            $item['jurusan'] = $h->jurusan->name ?? '';
-            $item['semester'] = $h->tajar->semester ?? '';
-            $item['tahun_ajar'] = $h->tajar->periode ?? '';
             $data[] = $item; 
         }
 
         return response()->json([
-            'draw' => $request->draw,
+            'draw' => intval($request->draw),
             'recordsTotal' => $hitung,
             'recordsFiltered' => $hitung,
             'data' => $data,
@@ -143,7 +154,8 @@ class HafalanSiswaController extends Controller
         foreach($tajar as $t)
         {
             $item['id'] = $t->id;
-            $item['name'] = $t->name;
+            $item['semester'] = $t->semester;
+            $item['periode'] = $t->periode;
             $data[] = $item;
         }
 
@@ -167,6 +179,23 @@ class HafalanSiswaController extends Controller
         return response()->json([
             'data' => $data
         ], 200);
+    }
+
+    public function supportJurusan()
+    {
+        $jurusan = MasterJurusanSiswa::all();
+        $data = array();
+
+        foreach ($jurusan as $j)
+        {
+            $item['id'] = $j->id;
+            $item['name'] = $j->name;
+            $data[] = $item;
+        }
+
+        return response()->json([
+            'data' => $data,
+        ], 201);
     }
 
     public function updateData(Request $request, $id)
@@ -196,7 +225,7 @@ class HafalanSiswaController extends Controller
 
     public function deleteData($id)
     {
-        $find = HafalanSiswa::where('id', $id)->first();
+        $find = HafalanSiswa::find($id);
 
         if(!$find)
         {
@@ -207,7 +236,7 @@ class HafalanSiswaController extends Controller
         }
         else
         {
-            $hapus = HafalanSiswa::where('id', $id)->delete();
+            $hapus = HafalanSiswa::where('siswa_id', $find->id)->delete();
 
             if($hapus)
             {
@@ -240,8 +269,9 @@ class HafalanSiswaController extends Controller
 
         // proses import data
         $file = $request->file('excel');
+        $selectedTahunAjar = $request->input('selected_tahun_ajar');
 
-        Excel::import(new HafalanSiswaImport, $file);
+        Excel::import(new HafalanSiswaImport($selectedTahunAjar), $file);
 
         return response()->json([
             'success' => true,

@@ -403,7 +403,7 @@
                     <h2 class="text-lg font-medium mr-auto">
                         List Nilai Keseluruhan
                     </h2>
-                    <div class="w-full sm:w-10 flex mt-4 sm:mt-0">
+                    {{-- <div class="w-full sm:w-10 flex mt-4 sm:mt-0">
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
                                 <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-lucide="list"></i> </span>
@@ -416,7 +416,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
@@ -435,6 +435,20 @@
                         </div>
                     </div>
                 </div>
+                <!-- BEGIN : SortBy Jurusan -->
+                <div class="intro-y flex flex-col sm:flex-row items-center mt-1">
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <button type="submit" class="btn btn-primary shadow-md mr-2 btn-cari" id="search-button">Cari</button>
+                    </div>
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <label for="jurusan" class="form-label"></label>
+                        <select class="form-select form-jurusan" name="jurusan" id="select-jurusan" required>
+                            <option disabled selected> -- Pilih Jurusan -- </option>
+                            <option value="-1">Semua Jurusan</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- END : SortBy Jurusan -->
                 <!-- BEGIN: HTML Table Data -->
                 <div class="intro-y box p-5 mt-5">
                     <div class="overflow-x-auto scrollbar-hidden">
@@ -443,8 +457,10 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nama Siswa</th>
-                                    <th>Nama Kriteria</th>
-                                    <th>Nilai</th>
+                                    <th>Jurusan</th>
+                                    <th>Semester</th>
+                                    <th>Tahun Ajar</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -473,10 +489,8 @@
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Nama Siswa</th>
+                                                <th>Nama Kriteria</th>
                                                 <th>Nilai</th>
-                                                <th>Jurusan</th>
-                                                <th>Semester</th>
-                                                <th>Tahun Ajar</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -578,54 +592,92 @@
                 // })
 
                 // Data table list nilai keseluruhan
-                jQuery('#data-table').dataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": "http://127.0.0.1:8000/api/data-penilaian/nilai-keseluruhan/list",
-                        "dataType": "json",
-                        "type": "POST",
-                        "headers": {
-                            'Authorization': 'Bearer ' + token
+                function loadDataTable (jurusanId = '')
+                {
+                    jQuery('#data-table').dataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "destroy": true,
+                        "ajax": {
+                            "url": "http://127.0.0.1:8000/api/data-penilaian/nilai-keseluruhan/list",
+                            "dataType": "json",
+                            "type": "POST",
+                            "headers": {
+                                'Authorization': 'Bearer ' + token
+                            },
+                            "data": function (d) {
+                                if (jurusanId === '-1')
+                                {
+                                    d.jurusan_id = ' ';
+                                } else
+                                {
+                                    d.jurusan_id = jurusanId;
+                                }
+                            }
                         },
-                    },
-                    "columns": [
-                        { data: 'id', className: 'text-center' },
-                        { data: 'nama_siswa', className: 'text-center' },
-                        { data: 'nama_kriteria', className: 'text-center' },
-                        { data: 'nilai', className: 'text-center' },
-                    ],
-                    "drawCallback": function (settings) {
-                        feather.replace(); // Asumsikan feather adalah plugin ikon yang digunakan
-                    }
-                });
+                        "columns": [
+                            { data: 'id', className: 'text-center' },
+                            { data: 'nama_siswa', className: 'text-center' },
+                            { data: 'jurusan', className: 'text-center' },
+                            { data: 'semester', className: 'text-center' },
+                            { data: 'tahun_ajar', className: 'text-center' },
+                            {
+                                    data: null,
+                                    render: function (data, type, row) {
+
+                                        // Create action buttons
+                                        // var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
+                                        var detailBtn = '<button class="btn btn-warning btn-detail" data-id="' + data.id + '"><i data-feather="align-justify" class="w-4 h-4 mr-1"></i></button>';
+                                        
+                                        // Combine the buttons
+                                        var actions = detailBtn;
+                                        return actions;
+                                    }
+                                },
+                        ],
+                        "drawCallback": function (settings) {
+                            feather.replace(); // Asumsikan feather adalah plugin ikon yang digunakan
+                        }
+                    });
+                }
 
                 
                 // Data table list detail nilai keseluruhan
-                jQuery('#data-table-detail').dataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": "http://127.0.0.1:8000/api/data-penilaian/nilai-keseluruhan/list-detail",
-                        "dataType": "json",
-                        "type": "POST",
-                        "headers": {
-                            'Authorization': 'Bearer ' + token,
-                        }
-                    },
-                    "columns": [
-                        { data: 'id', className: 'text-center' },
-                        { data: 'nama_siswa', className: 'text-center' },
-                        { data: 'nilai', className: 'text-center' },
-                        { data: 'jurusan', className: 'text-center' },
-                        { data: 'semester', className: 'text-center' },
-                        { data: 'tahun_ajar', className: 'text-center' },
-                    ],
-                    "drawCallback": function(settings) {
-                        feather.replace();
-                    }
-                })
+                jQuery('#data-table').on('click', '.btn-detail', function() {
+                    var siswaId = jQuery(this).attr("data-id"); 
 
+                    // Inisialisasi atau reset DataTable di dalam modal
+                    var table = jQuery('#data-table-detail').DataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "destroy": true, // Hapus DataTable yang sudah ada untuk menghindari duplikasi
+                        "ajax": {
+                            url: "http://127.0.0.1:8000/api/data-penilaian/nilai-keseluruhan/list-detail",
+                            type: "POST",
+                            data: {
+                                siswa_id: siswaId // Mengirimkan siswa_id ke server
+                            },
+                            headers: {
+                                'Authorization': 'Bearer ' + token
+                            }
+                        },
+                        columns: [
+                            { data: 'id', className: 'text-center' },
+                            { data: 'nama_siswa', className: 'text-center' },
+                            { data: 'nama_kriteria', className: 'text-center' },
+                            { data: 'nilai', className: 'text-center' },
+                        ],
+                        drawCallback: function(settings) {
+                            feather.replace();
+                        }
+                    });
+
+                    // Tampilkan modal
+                    const el = document.querySelector('#header-detail-footer-modal-preview');
+                    const modal = tailwind.Modal.getOrCreateInstance(el);
+                    modal.show();
+                });
+                
                 // Show modal detail
                 jQuery('.modal-detail').click(function(){
                     // show the modal
@@ -633,6 +685,33 @@
                     const modal = tailwind.Modal.getOrCreateInstance(el);
                     modal.show();
                 })
+
+                // Fungsi button sortBy
+                loadDataTable();
+                jQuery('#search-button').on('click', function() {
+                    var jurusanId = $('#select-jurusan').val();
+                    loadDataTable(jurusanId);
+                })
+
+                // Data Support Jurusan
+                var url = 'http://127.0.0.1:8000/api/data-penilaian/nilai-keseluruhan/data-support/jurusan';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }).then(response => response.json()).then(data => {
+                    var selectSortByJurusan = jQuery('.form-jurusan');
+
+                    jQuery.each(data, function (index, item) {
+                        for (let i = 0; i < item.length; i++)
+                        {
+                            selectSortByJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                        }
+                    });
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
                 
                 jQuery('.btn-export').click(function() {
                     // Akses URL Export data
@@ -650,7 +729,7 @@
 
                             var disposition = xhr.getResponseHeader('content-disposition');
                             var matches = /"([^"]*)"/.exec(disposition);
-                            var filename = (matches != null && matches[1] ? matches[1] : 'Export-Rapor-Siswa.xlsx');
+                            var filename = (matches != null && matches[1] ? matches[1] : 'Export-Nilai-Keseluruhan-Siswa.xlsx');
 
                             // The actual download
                             var blob = new Blob([result], {

@@ -402,7 +402,7 @@
                     <h2 class="text-lg font-medium mr-auto">
                         List Data Nilai Keterlambatan Siswa
                     </h2>
-                    <div class="w-full sm:w-10 flex mt-4 sm:mt-0">
+                    {{-- <div class="w-full sm:w-10 flex mt-4 sm:mt-0">
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
                                 <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-lucide="list"></i> </span>
@@ -415,7 +415,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
@@ -434,6 +434,20 @@
                         </div>
                     </div>
                 </div>
+                <!-- BEGIN : SortBy Jurusan -->
+                <div class="intro-y flex flex-col sm:flex-row items-center mt-1">
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <button type="submit" class="btn btn-primary shadow-md mr-2 btn-cari" id="search-button">Cari</button>
+                    </div>
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <label for="jurusan" class="form-label"></label>
+                        <select class="form-select form-jurusan" name="jurusan" id="select-jurusan" required>
+                            <option disabled selected> -- Pilih Jurusan -- </option>
+                            <option value="-1">Semua Jurusan</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- END : SortBy Jurusan -->
                 <!-- BEGIN: HTML Table Data -->
                 <div class="intro-y box p-5 mt-5">
                     <div class="overflow-x-auto scrollbar-hidden">
@@ -444,6 +458,9 @@
                                     <th>Nama Siswa</th>
                                     <th>Jumlah Keterlambatan</th>
                                     <th>Nilai</th>
+                                    <th>Jurusan</th>
+                                    <th>Semester</th>
+                                    <th>Tahun Ajar</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -528,6 +545,25 @@
                                 <label for="modal-form-2" class="form-label">Nilai</label>
                                 <input type="number" class="form-control update-nilai" placeholder="Masukkan Nilai Keterlambatan Siswa" required readonly>
                             </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Jurusan</label>
+                                <select class="form-select update-jurusan" required>
+                                    <option disabled selected> --- Pilih Jurusan --- </option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Semester</label>
+                                <select class="form-select update-semester" required>
+                                    <option disabled selected> --- Pilih Semester --- </option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Tahun Ajar</label>
+                                <select class="form-select update-tahun-ajar" required>
+                                    <option disabled selected> --- Pilih Tahun Ajar --- </option>
+                                </select>
+                            </div>
+                            
                         </div>
                         <!-- END: Modal Body -->
                         <!-- BEGIN: Modal Footer -->
@@ -624,6 +660,7 @@
                                     <option selected disabled> --- Pilih Tahun Ajar --- </option>
                                 </select>
                             </div>
+                            <input type="hidden" id="selected-tahun-ajar" name="selected_tahun_ajar">
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="fileInput" class="form-label">File Excel</label>
                                 <input type="file" class="form-control" id="fileInput1" required>
@@ -713,64 +750,88 @@
                 });
                 
                 // Datatable List Keterlambatan Siswa
-                jQuery('#data-table').DataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": "http://127.0.0.1:8000/api/data-nilai/keterlambatan-siswa/list",
-                        "dataType": "json",
-                        "type": "POST",
-                        "headers": {
-                            'Authorization': 'Bearer ' + token
-                        }
-                    },
-                    "columns": [
-                        { data: 'id', className: 'text-center' },
-                        { data: 'nama_siswa', className: 'text-center' },
-                        { data: 'jumlah_keterlambatan', className: 'text-center' },
-                        { data: 'nilai', className: 'text-center' },
-                        {
-                            data: null,
-                            render: function(data, type, row){
-                                // Create action buttons
-                                var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-jumlah_keterlambatan="' + data.jumlah_keterlambatan + '" data-nilai="' + data.nilai + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
-                                var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
-
-                                // Combine the buttons
-                                var action = editBtn + ' || ' + deleteBtn;
-                                return action;
+                function loadDataTable (jurusanId = '')
+                {
+                    jQuery('#data-table').DataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "destroy": true,
+                        "ajax": {
+                            "url": "http://127.0.0.1:8000/api/data-nilai/keterlambatan-siswa/list",
+                            "dataType": "json",
+                            "type": "POST",
+                            "headers": {
+                                'Authorization': 'Bearer ' + token
+                            },
+                            "data": function (d) {
+                                if (jurusanId === '-1')
+                                {
+                                    d.jurusan_id = ' ';   
+                                }
+                                else
+                                {
+                                    d.jurusan_id = jurusanId;
+                                }
                             }
+                        },
+                        "columns": [
+                            { data: 'id', className: 'text-center' },
+                            { data: 'nama_siswa', className: 'text-center' },
+                            { data: 'jumlah_keterlambatan', className: 'text-center' },
+                            { data: 'nilai', className: 'text-center' },
+                            { data: 'jurusan', className: 'text-center' },
+                            { data: 'semester', className: 'text-center' },
+                            { data: 'tahun_ajar', className: 'text-center' },
+                            {
+                                data: null,
+                                render: function(data, type, row){
+                                    // Create action buttons
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-jumlah_keterlambatan="' + data.jumlah_keterlambatan + '" data-nilai="' + data.nilai + '" data-id_jurusan_nama="' + data.id_jurusan_nama + '" data-id_tajar_semester="' + data.id_tajar_semester + '" data-id_tajar_periode="' + data.id_tajar_periode +'"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                    var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
+
+                                    // Combine the buttons
+                                    var action = editBtn + ' || ' + deleteBtn;
+                                    return action;
+                                }
+                            }
+                        ],
+                        "drawCallback": function(settings){
+                            feather.replace();
                         }
-                    ],
-                    "drawCallback": function(settings){
-                        feather.replace();
-                    }
-                });
+                    });
+                }
 
                 // Datatable List Detail Keterlambatan Siswa
-                jQuery('#data-table-detail').DataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": "http://127.0.0.1:8000/api/data-nilai/keterlambatan-siswa/list-detail",
-                        "dataType": "json",
-                        "type": "POST",
-                        "headers": {
-                            'Authorization': 'Bearer ' + token
-                        }
-                    },
-                    "columns": [
-                        { data: 'id', className: 'text-centern' },
-                        { data: 'nama_siswa', className: 'text-centern' },
-                        { data: 'jumlah_keterlambatan', className: 'text-centern' },
-                        { data: 'nilai', className: 'text-centern' },
-                        { data: 'jurusan', className: 'text-centern' },
-                        { data: 'semester', className: 'text-centern' },
-                        { data: 'tahun_ajar', className: 'text-centern' },
-                    ],
-                    "drawCallback": function(settings){
-                        feather.replace();
-                    }
+                // jQuery('#data-table-detail').DataTable({
+                //     "processing": true,
+                //     "serverSide": true,
+                //     "ajax": {
+                //         "url": "http://127.0.0.1:8000/api/data-nilai/keterlambatan-siswa/list-detail",
+                //         "dataType": "json",
+                //         "type": "POST",
+                //         "headers": {
+                //             'Authorization': 'Bearer ' + token
+                //         }
+                //     },
+                //     "columns": [
+                //         { data: 'id', className: 'text-centern' },
+                //         { data: 'nama_siswa', className: 'text-centern' },
+                //         { data: 'jumlah_keterlambatan', className: 'text-centern' },
+                //         { data: 'nilai', className: 'text-centern' },
+                //         { data: 'jurusan', className: 'text-centern' },
+                //         { data: 'semester', className: 'text-centern' },
+                //         { data: 'tahun_ajar', className: 'text-centern' },
+                //     ],
+                //     "drawCallback": function(settings){
+                //         feather.replace();
+                //     }
+                // });
+
+                //SortBy Button
+                loadDataTable();
+                jQuery('#search-button').on('click', function() {
+                    var jurusanId = $('#select-jurusan').val();
+                    loadDataTable(jurusanId);
                 });
 
                 // Show the modal
@@ -805,12 +866,17 @@
                     }
                 }).then(response => response.json()).then(data => {
                     var select = jQuery('.tahun-ajar');
+                    var selectUpdateSemester = jQuery('.update-semester');
+                    var selectUpdatePeriode = jQuery('.update-tahun-ajar');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
                         for(let i = 0; i < item.length; i++)
                         {
-                            select.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            select.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
+                            selectUpdateSemester.append('<option value="' + item[i].id + '">' + item[i].semester + '</option>');
+                            selectUpdatePeriode.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
+                            
                         }
                     });
                 }).catch(error => {
@@ -838,6 +904,30 @@
                 }).catch(error => {
                     console.error('Error: ', error);
                 });
+
+                // Data Support jurusan
+                var url = 'http://127.0.0.1:8000/api/data-nilai/keterlambatan-siswa/data-support/jurusan';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }).then(response => response.json()).then(data => {
+                    // Panggil element select
+                    var selectJurusan = jQuery('.form-jurusan');
+                    var selectUpdateNama = jQuery('.update-jurusan');
+
+                    // Iterasi melalui data dan membuat objek untuk setiap entri
+                    jQuery.each(data, function(index, item) {
+                        for (let i = 0; i < item.length; i++) {
+                            // Isi data dengan nilai dalam database
+                            selectUpdateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selectJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                        }
+                    });
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
                 
                 // Fungsi Button Update (1)
                 jQuery('#data-table').on('click', '.btn-edit', function(){
@@ -850,11 +940,18 @@
                     var id_siswa_nama = jQuery(this).attr("data-id_siswa_nama");
                     var jumlah_keterlambatan = jQuery(this).attr("data-jumlah_keterlambatan");
                     var nilai = jQuery(this).attr("data-nilai");
+                    var id_jurusan_nama = jQuery(this).attr("data-id_jurusan_nama");
+                    var id_tajar_semester = jQuery(this).attr("data-id_tajar_semester");
+                    var id_tajar_periode = jQuery(this).attr("data-id_tajar_periode");
 
                     jQuery('.update-id').val(id);
                     jQuery('.update-nama-siswa').val(id_siswa_nama);
                     jQuery('.update-jumlah-keterlambatan').val(jumlah_keterlambatan);
                     jQuery('.update-nilai').val(nilai);
+                    jQuery('.update-jurusan').val(id_jurusan_nama);
+                    jQuery('.update-semester').val(id_tajar_semester);
+                    jQuery('.update-tahun-ajar').val(id_tajar_periode);
+                    
                 })
 
                 jQuery('.update-jumlah-keterlambatan').change(function(){
@@ -885,6 +982,9 @@
                     var nama_siswa_id = jQuery('.update-nama-siswa').val();
                     var jumlah_keterlambatan = jQuery('.update-jumlah-keterlambatan').val();
                     var nilai = jQuery('.update-nilai').val();
+                    var nama_jurusan_id = jQuery('.update-jurusan').val();
+                    var semester_tajar_id = jQuery('.update-semester').val();
+                    var periode_tajar_id = jQuery('.update-tahun-ajar').val();
 
                     // kirim permintaan pembaturan produk ke API
                     jQuery.ajax({
@@ -897,6 +997,9 @@
                             siswa_id: nama_siswa_id,
                             jumlah_keterlambatan: jumlah_keterlambatan,
                             nilai: nilai,
+                            jurusan_id: nama_jurusan_id,
+                            tajar_id: semester_tajar_id,
+                            tajar_id: periode_tajar_id,
                         },
                         success: function(response) {
                             // show the modal
@@ -1040,9 +1143,12 @@
                     // Get Form Data
                     var inp = jQuery('#fileInput1')[0];
                     var foto = inp.files[0];
+                    var selectedTahunAjar = jQuery('#modal-form-6').val();
 
                     var formData = new FormData();
                     formData.append('excel', foto);
+                    formData.append('selected_tahun_ajar', selectedTahunAjar);
+
 
                     // Kirim permintaan pembaruan produk ke API
                     jQuery.ajax({

@@ -26,13 +26,20 @@ class PrestasiSiswaImport implements ToCollection, WithHeadingRow
         ];
     }
     
+    protected $selectedTahunAjar;
+
+    public function __construct($selectedTahunAjar)
+    {
+        $this->selectedTahunAjar = $selectedTahunAjar;
+    }
+
     public function collection(Collection $rows)
     {
         // dd($rows)->toArray();
 
         foreach($rows as $row)
         {
-            $tajar = TahunAjar::where('name','LIKE','%'.$row['tahun_ajar'].'%')->first();
+            $tajar = TahunAjar::find($this->selectedTahunAjar);
             $siswa = MasterSiswa::where('name','LIKE','%'.$row['nama_siswa'].'%')->first();
             $jurusan = MasterJurusan::where('name','LIKE','%'.$row['jurusan'].'%')->first();
 
@@ -51,7 +58,8 @@ class PrestasiSiswaImport implements ToCollection, WithHeadingRow
                     'nilai' => $row['nilai'],
                     'jurusan' => $row['jurusan'],
                     'semester' => $row['semester'],
-                    'tahun_ajar' => $row['tahun_ajar'],     
+                    'tahun_ajar' => $tajar->name,
+
                 ]);
             }
         }

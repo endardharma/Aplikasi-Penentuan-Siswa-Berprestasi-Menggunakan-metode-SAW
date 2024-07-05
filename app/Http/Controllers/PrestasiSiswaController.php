@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\PrestasiSiswaExport;
 use App\Exports\PrestasiSiswaTemplate;
 use App\Imports\PrestasiSiswaImport;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\PrestasiSiswa;
 use App\Models\TahunAjar;
@@ -37,12 +38,20 @@ class PrestasiSiswaController extends Controller
         $orderColumn = isset($columns[$orderColumnIndex]) ? $columns [$orderColumnIndex] : 'id';
         $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
+        $jurusanId = $request->input('jurusan_id');
 
         // Hitung Keseluruhan tanpa paginasi
         $totalData = PrestasiSiswa::count();
 
         // Query search and paginasi
         $query = PrestasiSiswa::with(['tajar','siswa','jurusan'])
+            ->when($jurusanId && $jurusanId != '-1', function ($q) use ($jurusanId) {
+                $q->whereHas('jurusan', function ($query) use ($jurusanId){
+                    $query->where('jurusan_id', $jurusanId);
+                });
+            })
+            ->when(empty($jurusanid) || $jurusanId == '-1', function ($q) {
+            })  
             ->when($search, function ($query) use ($search) {
                 $query->whereHas('tajar', function ($q) use ($search) {
                     $q->where('periode','LIKE','%'.$search.'%')
@@ -78,7 +87,7 @@ class PrestasiSiswaController extends Controller
             $item['jurusan'] = $p->jurusan->name ?? '';
             $item['id_tajar_semester'] = $p->tajar_id;
             $item['semester'] = $p->tajar->semester ?? '';
-            $item['id_tajar_tahun'] = $p->tajar_id;
+            $item['id_tajar_periode'] = $p->tajar_id;
             $item['tahun_ajar'] = $p->tajar->periode ?? '';
             $item['nilai'] = $p->nilai;
             $data[] = $item; 
@@ -92,55 +101,55 @@ class PrestasiSiswaController extends Controller
         ], 200);
     }
 
-    public function listDetailPrestasi(Request $request)
-    {
-        // Data / Function Dummy
-        $columns = [
-            0 => 'id',
-            1 => 'nama_siswa',
-            2 => 'ket_prestasi',
-            3 => 'nilai',
-            4 => 'jurusan',
-            5 => 'semester',
-            6 => 'tahun_ajar',
-        ];
+    // public function listDetailPrestasi(Request $request)
+    // {
+    //     // Data / Function Dummy
+    //     $columns = [
+    //         0 => 'id',
+    //         1 => 'nama_siswa',
+    //         2 => 'ket_prestasi',
+    //         3 => 'nilai',
+    //         4 => 'jurusan',
+    //         5 => 'semester',
+    //         6 => 'tahun_ajar',
+    //     ];
 
-        $start = $request->start;
-        $limit = $request->length;
-        $orderColumn = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
-        $search = $request->input('search')['value'];
+    //     $start = $request->start;
+    //     $limit = $request->length;
+    //     $orderColumn = $columns[$request->input('order.0.column')];
+    //     $dir = $request->input('order.0.dir');
+    //     $search = $request->input('search')['value'];
 
-        // Hitung Keseluruhan
-        $hitung = PrestasiSiswa::count();
+    //     // Hitung Keseluruhan
+    //     $hitung = PrestasiSiswa::count();
 
-        $prestasi = PrestasiSiswa::where(function ($q) use ($search) {
-            if ($search != null)
-            {
-                return $q->where('tajar_id','LIKE','%'.$search.'%')->orWhere('siswa_id','LIKE','%'.$search.'%')->orWhere('jurusan_id','LIKE','%'.$search.'%')->orWhere('ket_prestasi',$search);
-            }
-        })->orderby($orderColumn, $dir)->skip($start)->take($limit)->get();
+    //     $prestasi = PrestasiSiswa::where(function ($q) use ($search) {
+    //         if ($search != null)
+    //         {
+    //             return $q->where('tajar_id','LIKE','%'.$search.'%')->orWhere('siswa_id','LIKE','%'.$search.'%')->orWhere('jurusan_id','LIKE','%'.$search.'%')->orWhere('ket_prestasi',$search);
+    //         }
+    //     })->orderby($orderColumn, $dir)->skip($start)->take($limit)->get();
 
-        $data = array();
-        foreach ($prestasi as $p)
-        {
-            $item['id'] = $p->id;
-            $item['nama_siswa'] = $p->siswa->name ?? '';
-            $item['ket_prestasi'] = $p->ket_prestasi;
-            $item['nilai'] = $p->nilai;
-            $item['jurusan'] = $p->jurusan->name ?? '';
-            $item['semester'] = $p->tajar->semester ?? '';
-            $item['tahun_ajar'] = $p->tajar->periode ?? '';
-            $data[] = $item;
-        }
+    //     $data = array();
+    //     foreach ($prestasi as $p)
+    //     {
+    //         $item['id'] = $p->id;
+    //         $item['nama_siswa'] = $p->siswa->name ?? '';
+    //         $item['ket_prestasi'] = $p->ket_prestasi;
+    //         $item['nilai'] = $p->nilai;
+    //         $item['jurusan'] = $p->jurusan->name ?? '';
+    //         $item['semester'] = $p->tajar->semester ?? '';
+    //         $item['tahun_ajar'] = $p->tajar->periode ?? '';
+    //         $data[] = $item;
+    //     }
 
-        return response()->json([
-            'draw' => $request->draw,
-            'recordsTotal' => $hitung,
-            'recordsFiltered' => $hitung,
-            'data' => $data,
-        ], 200);
-    }
+    //     return response()->json([
+    //         'draw' => $request->draw,
+    //         'recordsTotal' => $hitung,
+    //         'recordsFiltered' => $hitung,
+    //         'data' => $data,
+    //     ], 200);
+    // }
 
     public function updateData(Request $request, $id)
     {
@@ -158,6 +167,9 @@ class PrestasiSiswaController extends Controller
             $request->siswa_id != null ? $find->siswa_id = $request->siswa_id : true;
             $request->ket_prestasi != null ? $find->ket_prestasi = $request->ket_prestasi : true;
             $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnPrestasi($request->ket_prestasi) : true; // Nilai Otomatis berdasarkan keterangan prestaasi (getNilai)
+            $request->jurusan_id != null ? $find->jurusan_id = $request->jurusan_id : true;
+            $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
+            $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
             $find->save();
 
             return response()->json([
@@ -237,6 +249,8 @@ class PrestasiSiswaController extends Controller
         {
             $item['id'] = $t->id;
             $item['name'] = $t->name;
+            $item['semester'] = $t->semester;
+            $item['periode'] = $t->periode;
             $data[] = $item;
         }
 
@@ -262,6 +276,23 @@ class PrestasiSiswaController extends Controller
         ]);
     }
 
+    public function supportJurusan()
+    {
+        $jurusan = MasterJurusanSiswa::all();
+        $data = array();
+
+        foreach ($jurusan as $j)
+        {
+            $item['id'] = $j->id;
+            $item['name'] = $j->name;
+            $data[] = $item;
+        }
+
+        return response()->json([
+            'data' => $data,
+        ], 201);
+    }
+
     public function template(Request $request)
     {
         return Excel::download(new PrestasiSiswaTemplate($request->tajar), 'Template-Prestasi-Siswa.xlsx');
@@ -276,8 +307,9 @@ class PrestasiSiswaController extends Controller
 
         // Proses Import Data
         $file = $request->file('excel');
+        $selectedTahunAjar = $request->input('selected_tahun_ajar');
 
-        Excel::import(new PrestasiSiswaImport, $file);
+        Excel::import(new PrestasiSiswaImport($selectedTahunAjar), $file);
 
         return response()->json([
             'success' => true,

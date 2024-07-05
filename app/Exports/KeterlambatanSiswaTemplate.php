@@ -22,9 +22,8 @@ class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoS
 
     public function array(): array
     {
-        $siswa = MasterSiswa::all();
+        $siswa = MasterSiswa::with('kelas.jurusan')->get();
         $tajar = TahunAjar::all();
-        $jurusan = MasterJurusan::first();
 
         $data = array();
 
@@ -32,25 +31,19 @@ class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoS
         {
             foreach($siswa as $s)
             {
-                $item['nama_siswa'] = $s->name;
-                $item['jumlah_keterlambatan'] = 'Masukkan jumlah keterlambatan siswa masuk sekolah(0 Kali, 1-2 Kali, 3-4 Kali, 5-6 Kali, > 7 Kali)';
-                $item['nilai'] = 'Isi nilai dengan angka';
-                
-                $jurusansiswa = $jurusan->firstWhere('id', $s->jurusan_id);
-                if ($jurusansiswa)
+                $jurusan_id = $s->kelas->jurusan->id ??  null;
+                if ($jurusan_id)
                 {
-                    $item['jurusan'] = $jurusansiswa->name;
-                }
-                else
-                {
-                    $item['jurusan'] = 'Jurusan tidak ditemukan';
-                }
-
-                foreach($tajar as $t)
-                {
-                    $item['semester'] = $t->semester;
-                    $item['tahun_ajar'] = $t->periode;
-                    $data[] = $item;
+                    foreach($tajar as $t)
+                    {
+                        $item = [];
+                        $item['nama_siswa'] = $s->name;
+                        $item['jumlah_keterlambatan'] = 'Masukkan jumlah keterlambatan siswa masuk sekolah(0 Kali, 1-2 Kali, 3-4 Kali, 5-6 Kali, > 7 Kali)';
+                        $item['nilai'] = 'Isi nilai dengan angka';
+                        $item['jurusan'] = $s->jurusan ? $s->jurusan->name : 'Jurusan tidak di temukan';
+                        $item['semester'] = $t->semester;
+                        $data[] = $item;
+                    }
                 }
             }
         }
@@ -61,7 +54,7 @@ class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoS
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:F1'; // All headers
+                $cellRange = 'A1:E1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -94,7 +87,6 @@ class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoS
             'Nilai',
             'Jurusan',
             'Semester',
-            'Tahun Ajar',
         ];
     }
     

@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\MasterJurusan;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\TahunAjar;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -22,9 +23,8 @@ class HafalanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, W
 
     public function array(): array
     {
-        $siswa = MasterSiswa::all();
+        $siswa = MasterSiswa::with('kelas.jurusan')->get();
         $tajar = TahunAjar::all();
-        $jurusan = MasterJurusan::first();
 
         // Daftar tetap keterangan hafalan
         $ket_hafalan_list = [
@@ -39,20 +39,22 @@ class HafalanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, W
 
         if ($siswa->isNotEmpty()) {
             foreach ($siswa as $s) {
-                foreach ($ket_hafalan_list as $ket_hafalan) {
-                    foreach ($tajar as $t) {
-                        $item = [];
-                        $item['nama_siswa'] = $s->name;
-                        $item['ket_hafalan'] = $ket_hafalan;
-                        $item['nilai'] = 'Isi nilai dengan angka';
-
-                        $jurusansiswa = $jurusan->firstWhere('id', $s->jurusan_id);
-                        $item['jurusan'] = $jurusansiswa ? $jurusansiswa->name : 'Jurusan tidak ditemukan';
-
-                        $item['semester'] = $t->semester;
-                        $item['tahun_ajar'] = $t->periode;
-
-                        $data[] = $item;
+                $jurusan_id = $s->kelas->jurusan->id  ?? null;
+                if ($jurusan_id)
+                {
+                    foreach ($ket_hafalan_list as $ket_hafalan) {
+                        foreach ($tajar as $t) {
+                            $item = [];
+                            $item['nama_siswa'] = $s->name;
+                            $item['ket_hafalan'] = $ket_hafalan;
+                            $item['nilai'] = 'Isi nilai dengan angka';
+    
+                            $item['jurusan'] = $s->jurusan ? $s->jurusan->name : 'Jurusan tidak ditemukan';
+    
+                            $item['semester'] = $t->semester;
+    
+                            $data[] = $item;
+                        }
                     }
                 }
             }
@@ -65,7 +67,7 @@ class HafalanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, W
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:H1'; // All headers
+                $cellRange = 'A1:G1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -97,7 +99,6 @@ class HafalanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, W
             'Nilai',
             'Jurusan',
             'Semester',
-            'Tahun Ajar',
         ];
     }
 }

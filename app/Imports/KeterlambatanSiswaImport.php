@@ -25,32 +25,35 @@ class KeterlambatanSiswaImport implements ToCollection, WithHeadingRow
         ];
     }
 
+    protected $selectedTahunAjar;
+    public function __construct($selectedTahunAjar)
+    {
+        $this->selectedTahunAjar = $selectedTahunAjar;
+    }
+
     public function collection(Collection $rows)
     {
         // dd($rows)->toArray();
 
         foreach($rows as $row)
         {
-            $tajar = TahunAjar::where('name','LIKE','%'.$row['tahun_ajar'].'%')->first();
             $siswa = MasterSiswa::where('name','LIKE','%'.$row['nama_siswa'].'%')->first();
             $jurusan = MasterJurusan::where('name','LIKE','%'.$row['jurusan'].'%')->first();
+            $tajar = TahunAjar::find($this->selectedTahunAjar);
 
             if($tajar && $siswa && $jurusan)
             {
-                $keterlambatan = KeterlambatanSiswa::updateOrCreate([
+                    KeterlambatanSiswa::updateOrCreate([
                     'tajar_id' => $tajar->id,
                     'siswa_id' => $siswa->id,
                     'jurusan_id' => $jurusan->id,
                 ], [
-                    'tajar_id' => $tajar->id,
-                    'siswa_id' => $siswa->id,
-                    'jurusan_id' => $jurusan->id,
                     'nama_siswa' => $row['nama_siswa'],
                     'jumlah_keterlambatan' => $row['jumlah_keterlambatan'],
                     'nilai' => $row['nilai'],
                     'jurusan' => $row['jurusan'],
                     'semester' => $row['semester'],
-                    'tahun_ajar' => $row['tahun_ajar'],
+                    'tahun_ajar' => $tajar->name,
                 ]);
             }
         }

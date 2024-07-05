@@ -402,7 +402,7 @@
                     <h2 class="text-lg font-medium mr-auto">
                         List Data Nilai Hafalan Siswa
                     </h2>
-                    <div class="w-full sm:w-10 flex mt-4 sm:mt-0">
+                    {{-- <div class="w-full sm:w-10 flex mt-4 sm:mt-0">
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
                                 <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-lucide="list"></i> </span>
@@ -415,7 +415,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
@@ -434,6 +434,20 @@
                         </div>
                     </div>
                 </div>
+                <!-- BEGIN : SortBy Jurusan -->
+                <div class="intro-y flex flex-col sm:flex-row items-center mt-1">
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <button type="submit" class="btn btn-primary shadow-md mr-2 btn-cari" id="search-button">Cari</button>
+                    </div>
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <label for="jurusan" class="form-label"></label>
+                        <select class="form-select form-jurusan" name="jurusan" id="select-jurusan" required>
+                            <option disabled selected> -- Pilih Jurusan -- </option>
+                            <option value="-1">Semua Jurusan</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- END : SortBy Jurusan -->
                 <!-- BEGIN: HTML Table Data -->
                 <div class="intro-y box p-5 mt-5">
                     <div class="overflow-x-auto scrollbar-hidden">
@@ -442,8 +456,9 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nama Siswa</th>
-                                    <th>Keterangan Hafalan</th>
-                                    <th>Nilai</th>
+                                    <th>Jurusan</th>
+                                    <th>Semester</th>
+                                    <th>Tahun Ajar</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -475,9 +490,7 @@
                                                     <th>Nama Siswa</th>
                                                     <th>Keterangan Hafalan</th>
                                                     <th>Nilai</th>
-                                                    <th>Jurusan</th>
-                                                    <th>Semester</th>
-                                                    <th>Tahun Ajar</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -521,7 +534,6 @@
                                 <label for="modal-form-1" class="form-label">Nilai</label>
                                 <input type="number" class="form-control update-nilai" placeholder="Masukkan Nilai Hafalan" required>
                             </div>
-                            
                         </div>
                         <!-- END: Modal Body -->
                         <!-- BEGIN: Modal Footer -->
@@ -618,6 +630,7 @@
                                     <option selected disabled> --- Pilih Tahun Ajar --- </option>
                                 </select>
                             </div>
+                            <input type="hidden" id="selected-tahun-ajar" name="selected_tahun_ajar">
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="fileInput" class="form-label">File Excel</label>
                                 <input type="file" class="form-control" id="fileInput1" required>
@@ -708,66 +721,138 @@
                 });
 
                 // Data Table List Nilai Hafalan
-                jQuery('#data-table').dataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": "http://127.0.0.1:8000/api/data-nilai/hafalan-siswa/list",
-                        "dataType": "json",
-                        "type": "POST",
-                        "headers": {
-                            'Authorization': 'Bearer ' + token
-                        }
-                    },
-                    "columns": [
-                        { data: 'id', className: 'text-center'},
-                        { data: 'nama_siswa', className: 'text-center'},
-                        { data: 'ket_hafalan', className: 'text-center'},
-                        { data: 'nilai', className: 'text-center'},
-                        {
-                            data: null,
-                            render: function(data, type, row){
-
-                                // create action buttons
-                                var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-ket_hafalan="' + data.ket_hafalan + '" data-nilai="' + data.nilai + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
-                                var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
-
-                                // combine th buttons
-                                var action = editBtn + ' || ' + deleteBtn;
-                                return action;
+                function loadDataTable (jurusanId = '')
+                {
+                    jQuery('#data-table').dataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "destroy": true,
+                        "ajax": {
+                            "url": "http://127.0.0.1:8000/api/data-nilai/hafalan-siswa/list",
+                            "dataType": "json",
+                            "type": "POST",
+                            "headers": {
+                                'Authorization': 'Bearer ' + token
+                            },
+                            "data": function (d) {
+                                if (jurusanId === '-1') 
+                                {
+                                    d.jurusan_id = ' ';
+                                } else 
+                                {
+                                    d.jurusan_id = jurusanId;
+                                }
                             }
+                        },
+                        "columns": [
+                            { data: 'id', className: 'text-center'},
+                            { data: 'nama_siswa', className: 'text-center'},
+                            { data: 'jurusan', className: 'text-center'},
+                            { data: 'semester', className: 'text-center'},
+                            { data: 'tahun_ajar', className: 'text-center'},
+                            {
+                                data: null,
+                                render: function(data, type, row){
+
+                                    // create action buttons
+                                    var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
+                                    var detailBtn = '<button class="btn btn-warning btn-detail" data-id="' + data.id + '"><i data-feather="align-justify" class="w-4 h-4 mr-1"></i></button>';
+
+                                    // combine th buttons
+                                    var action = detailBtn + ' || ' + deleteBtn;
+                                    return action;
+                                }
+                            }
+                        ],
+                        "drawCallback": function(settings){
+                            feather.replace();
                         }
-                    ],
-                    "drawCallback": function(settings){
-                        feather.replace();
-                    }
-                });
+                    });
+                }
 
                 // Data Table Detail List
-                jQuery('#data-table-detail').dataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": "http://127.0.0.1:8000/api/data-nilai/hafalan-siswa/list-detail",
-                        "dataType": "json",
-                        "type": "POST",
-                        "headers": {
-                            'Authorization': 'Bearer ' + token
+                // jQuery('#data-table-detail').dataTable({
+                //     "processing": true,
+                //     "serverSide": true,
+                //     "ajax": {
+                //         "url": "http://127.0.0.1:8000/api/data-nilai/hafalan-siswa/list-detail",
+                //         "dataType": "json",
+                //         "type": "POST",
+                //         "headers": {
+                //             'Authorization': 'Bearer ' + token
+                //         }
+                //     },
+                //     "columns": [
+                //         { data: 'id', className: 'text-center'},
+                //         { data: 'nama_siswa', className: 'text-center'},
+                //         { data: 'ket_hafalan', className: 'text-center'},
+                //         { data: 'nilai', className: 'text-center'},
+                //         {
+                //             data: null,
+                //             render: function(data, type, row){
+
+                //                 // create action buttons
+                //                 var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-ket_hafalan="' + data.ket_hafalan + '" data-nilai="' + data.nilai + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+
+                //                 // combine th buttons
+                //                 var action = editBtn;
+                //                 return action;
+                //             }
+                //         }
+                //     ],
+                //     "drawCallback": function(settings){
+                //         feather.replace();
+                //     }
+                // });
+
+                jQuery('#data-table').on('click', '.btn-detail', function() {
+                    var siswaId = jQuery(this).attr("data-id"); 
+
+                    // Inisialisasi atau reset DataTable di dalam modal
+                    var table = jQuery('#data-table-detail').DataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "destroy": true, // Hapus DataTable yang sudah ada untuk menghindari duplikasi
+                        "ajax": {
+                            url: "http://127.0.0.1:8000/api/data-nilai/hafalan-siswa/list-detail",
+                            type: "POST",
+                            data: {
+                                siswa_id: siswaId // Mengirimkan siswa_id ke server
+                            },
+                            headers: {
+                                'Authorization': 'Bearer ' + token
+                            }
+                        },
+                        columns: [
+                            { data: 'id', className: 'text-center' },
+                            { data: 'nama_siswa', className: 'text-center' },
+                            { data: 'ket_hafalan', className: 'text-center' },
+                            { data: 'nilai', className: 'text-center' },
+                            {
+                                data: null,
+                                render: function (data, type, row) {
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-ket_hafalan="' + data.ket_hafalan + '" data-nilai="' + data.nilai + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                    return editBtn;
+                                }
+                            }
+                        ],
+                        drawCallback: function(settings) {
+                            feather.replace();
                         }
-                    },
-                    "columns": [
-                        { data: 'id', className: 'text-center'},
-                        { data: 'nama_siswa', className: 'text-center'},
-                        { data: 'ket_hafalan', className: 'text-center'},
-                        { data: 'nilai', className: 'text-center'},
-                        { data: 'jurusan', className: 'text-center'},
-                        { data: 'semester', className: 'text-center'},
-                        { data: 'tahun_ajar', className: 'text-center'},
-                    ],
-                    "drawCallback": function(settings){
-                        feather.replace();
-                    }
+                    });
+
+                    // Tampilkan modal
+                    const el = document.querySelector('#header-detail-footer-modal-preview');
+                    const modal = tailwind.Modal.getOrCreateInstance(el);
+                    modal.show();
                 });
+
+                // Fungsi button sortBy
+                loadDataTable();
+                jQuery('#search-button').on('click', function() {
+                    var jurusanId = $('#select-jurusan').val();
+                    loadDataTable(jurusanId);
+                })
 
                 // Show Modal Detail
                 jQuery('.modal-detail').click(function(){
@@ -809,7 +894,7 @@
                     jQuery.each(data, function(index, item){
                         for(let i = 0; i < item.length; i++)
                         {
-                            select.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            select.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -833,6 +918,30 @@
                         {
                             // isi data dengan nilai dalam database
                             selectUpdateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>')
+                        }
+                    });
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+
+                // Data Support jurusan
+                var url = 'http://127.0.0.1:8000/api/data-nilai/hafalan-siswa/data-support/jurusan';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }).then(response => response.json()).then(data => {
+                    // Panggil element select
+                    var selectJurusan = jQuery('.form-jurusan');
+                    var selectUpdateNama = jQuery('.update-jurusan');
+
+                    // Iterasi melalui data dan membuat objek untuk setiap entri
+                    jQuery.each(data, function(index, item) {
+                        for (let i = 0; i < item.length; i++) {
+                            // Isi data dengan nilai dalam database
+                            selectUpdateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selectJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -876,7 +985,7 @@
                 });
 
                 // Fungsi Button edit-data
-                jQuery('#data-table').on('click', '.btn-edit', function() {
+                jQuery('#data-table-detail').on('click', '.btn-edit', function() {
                     // show the modal
                     const el = document.querySelector('#header-update-footer-modal-preview');
                     const modal = tailwind.Modal.getOrCreateInstance(el);
@@ -1018,9 +1127,11 @@
                     // Get Form Data
                     var inp = jQuery('#fileInput1')[0];
                     var foto = inp.files[0];
+                    var selectedTahunAjar = jQuery('#modal-form-6').val();
 
                     var formData = new FormData();
                     formData.append('excel', foto);
+                    formData.append('selected_tahun_ajar', selectedTahunAjar);
 
                     // Kirim permintaan pembaruan produk ke API
                     jQuery.ajax({
