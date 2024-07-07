@@ -139,6 +139,12 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('penilaian.nilainormalisasi') }}" class="menu">
+                                    <div class="menu__icon"> <i data-lucide="trello"></i> </div>
+                                    <div class="menu__title"> Nilai Normalisasi </div>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('penilaian.nilaiperangkingan') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="columns"></i> </div>
                                     <div class="menu__title"> Perangkingan </div>
@@ -261,6 +267,12 @@
                                 <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="side-menu side-menu--active">
                                     <div class="side-menu__icon"> <i data-lucide="grid"></i> </div>
                                     <div class="side-menu__title"> Nilai Keseluruhan </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('penilaian.nilainormalisasi') }}" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-lucide="trello"></i> </div>
+                                    <div class="side-menu__title"> Nilai Normalisasi </div>
                                 </a>
                             </li>
                             <li>
@@ -622,18 +634,18 @@
                             { data: 'semester', className: 'text-center' },
                             { data: 'tahun_ajar', className: 'text-center' },
                             {
-                                    data: null,
-                                    render: function (data, type, row) {
+                                data: null,
+                                render: function (data, type, row) {
 
-                                        // Create action buttons
-                                        // var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
-                                        var detailBtn = '<button class="btn btn-warning btn-detail" data-id="' + data.id + '"><i data-feather="align-justify" class="w-4 h-4 mr-1"></i></button>';
-                                        
-                                        // Combine the buttons
-                                        var actions = detailBtn;
-                                        return actions;
-                                    }
-                                },
+                                    // Create action buttons
+                                    // var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
+                                    var detailBtn = '<button class="btn btn-warning btn-detail" data-id="' + data.id + '"><i data-feather="align-justify" class="w-4 h-4 mr-1"></i></button>';
+                                    
+                                    // Combine the buttons
+                                    var actions = detailBtn;
+                                    return actions;
+                                }
+                            },
                         ],
                         "drawCallback": function (settings) {
                             feather.replace(); // Asumsikan feather adalah plugin ikon yang digunakan

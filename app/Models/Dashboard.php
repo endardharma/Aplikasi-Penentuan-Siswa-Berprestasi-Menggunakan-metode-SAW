@@ -28,4 +28,9 @@ class Dashboard extends Model
     {
         return $this->hasMany(NilaiPerangkingan::class);
     }
+
+    public function jurusan()
+    {
+        return $this->belongsTo(MasterJurusanSiswa::class);
+    }
 }

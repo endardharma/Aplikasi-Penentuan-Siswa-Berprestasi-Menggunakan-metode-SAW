@@ -11,6 +11,7 @@ use App\Http\Controllers\MasterkriteriaController;
 use App\Http\Controllers\MastermapelController;
 use App\Http\Controllers\MastertajarController;
 use App\Http\Controllers\NilaiKeseluruhanController;
+use App\Http\Controllers\NilaiNormalisasiController;
 use App\Http\Controllers\NilaiPerangkinganController;
 use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\PresensiSiswaController;
@@ -54,3 +55,4 @@ Route::get('/aplikasi/data-nilai/hafalan', [HafalanSiswaController::class, 'inde
 
 Route::get('/aplikasi/data-penilaian/nilai-keseluruhan', [NilaiKeseluruhanController::class, 'index'])->name('penilaian.nilaikeseluruhan');
 Route::get('/aplikasi/data-penilaian/nilai-perangkingan', [NilaiPerangkinganController::class, 'index'])->name('penilaian.nilaiperangkingan');
+Route::get('/aplikasi/data-penilaian/nilai-normalisasi', [NilaiNormalisasiController::class, 'index'])->name('penilaian.nilainormalisasi');

@@ -112,7 +112,7 @@
                             </li>
                             <li>
                                 <a href="{{ route('data_nilai.keterlambatan') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="user-x"></i> </div>
+                                    <div class="menu__icon"> <i data-lucide="calendar"></i> </div>
                                     <div class="menu__title"> Keterlambatan </div>
                                 </a>
                             </li>
@@ -132,13 +132,19 @@
                         <ul class="">
                             <li>
                                 <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="award"></i> </div>
+                                    <div class="menu__icon"> <i data-lucide="gird"></i> </div>
                                     <div class="menu__title"> Nilai Keseluruhan </div>
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('penilaian.nilainormalisasi') }}" class="menu">
+                                    <div class="menu__icon"> <i data-lucide="trello"></i> </div>
+                                    <div class="menu__title"> Nilai Normalisasi </div>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('penilaian.nilaiperangkingan') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="columns"></i> </div>
+                                    <div class="menu__icon"> <i data-lucide="award"></i> </div>
                                     <div class="menu__title"> Perangkingan </div>
                                 </a>
                             </li>
@@ -259,6 +265,12 @@
                                 <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="grid"></i> </div>
                                     <div class="side-menu__title"> Nilai Keseluruhan </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('penilaian.nilainormalisasi') }}" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-lucide="trello"></i> </div>
+                                    <div class="side-menu__title"> Nilai Normalisasi </div>
                                 </a>
                             </li>
                             <li>
@@ -409,7 +421,7 @@
                             <div class="dropdown-menu w-40">
                                 <ul class="dropdown-content">
                                     <li>
-                                        <a href="#" class="dropdown-item modal-detail"> <i data-lucide="table" class="w-4 h-4 mr-2"></i> Detail Nilai </a>
+                                        <a href="{{ route ('tablenormalisasi')}}" class="dropdown-item modal-detail"> <i data-lucide="table" class="w-4 h-4 mr-2"></i> Tabel Normalisasi </a>
                                     </li>
                                 </ul>
                             </div>

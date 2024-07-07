@@ -12,6 +12,7 @@ use App\Http\Controllers\MasterkriteriaController;
 use App\Http\Controllers\MastermapelController;
 use App\Http\Controllers\MastertajarController;
 use App\Http\Controllers\NilaiKeseluruhanController;
+use App\Http\Controllers\NilaiNormalisasiController;
 use App\Http\Controllers\NilaiPerangkinganController;
 use App\Http\Controllers\PresensiSiswaController;
 use App\Http\Controllers\PrestasiSiswaController;
@@ -44,6 +45,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get("/data-support/guru", [DashboardController::class, 'jumlahGuru']);
         Route::get("data-support/user", [DashboardController::class, 'jumlahUser']);
         Route::get("/data-support/nilai", [DashboardController::class, 'nilaiTertinggi']);
+        Route::get("/chart-data/{jurusan_id}", [DashboardController::class, 'getChartData']);
+        Route::get("/data-support/jurusan", [DashboardController::class, 'supportJurusan']);
     });
 
     Route::prefix('master-guru')->group(function () {
@@ -203,11 +206,19 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get("/data-support/jurusan", [NilaiKeseluruhanController::class, 'supportJurusan']);
         });
 
+        Route::prefix('nilai-normalisasi')->group(function() {
+            Route::post('list-normalisasi-mipa', [NilaiNormalisasiController::class, 'listNormalisasiMipa']);
+            Route::post('list-detail-normalisasi-mipa', [NilaiNormalisasiController::class, 'listDetailNormalisasiMipa']);
+            Route::post('list-normalisasi-iis', [NilaiNormalisasiController::class, 'listNormalisasiIis']);
+            Route::post('list-detail-normalisasi-iis', [NilaiNormalisasiController::class, 'listDetailNormalisasiIis']);
+        });
+        
         Route::prefix('nilai-perangkingan')->group(function(){
             Route::post("listMipa", [NilaiPerangkinganController::class, 'listNilaiPerangkinganMipa']);
             Route::post("listIis", [NilaiPerangkinganController::class, 'listNilaiPerangkinganIis']);
             Route::post("list-detail", [NilaiPerangkinganController::class, 'listDetailNilaiPerangkingan']);
             Route::get("/export-data/export-xls", [NilaiPerangkinganController::class, 'exportData']);
         });
+        
     });
 });

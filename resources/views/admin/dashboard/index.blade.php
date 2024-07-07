@@ -109,7 +109,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             </li>
                             <li>
                                 <a href="{{ route('data_nilai.keterlambatan') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="calender"></i> </div>
+                                    <div class="menu__icon"> <i data-lucide="calendar"></i> </div>
                                     <div class="menu__title"> Keterlambatan </div>
                                 </a>
                             </li>
@@ -123,7 +123,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     </li>
                     <li>
                         <a href="javascript:;" class="menu menu--active">
-                            <div class="menu__icon"> <i data-lucide="book-open"></i> </div>
+                            <div class="menu__icon"> <i data-lucide="book"></i> </div>
                             <div class="menu__title"> Penilaian <i data-lucide="chevron-down" class="menu__sub-icon "></i> </div>
                         </a>
                         <ul class="">
@@ -134,8 +134,14 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('penilaian.nilainormalisasi') }}" class="menu">
+                                    <div class="menu__icon"> <i data-lucide="trello"></i> </div>
+                                    <div class="menu__title"> Nilai Normalisasi </div>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('penilaian.nilaiperangkingan') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="columns"></i> </div>
+                                    <div class="menu__icon"> <i data-lucide="award"></i> </div>
                                     <div class="menu__title"> Perangkingan </div>
                                 </a>
                             </li>
@@ -256,6 +262,12 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="grid"></i> </div>
                                     <div class="side-menu__title"> Nilai Keseluruhan </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('penilaian.nilainormalisasi') }}" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-lucide="trello"></i> </div>
+                                    <div class="side-menu__title"> Nilai Normalisasi </div>
                                 </a>
                             </li>
                             <li>
@@ -481,16 +493,16 @@ License: You must have a valid license purchased only from themeforest(the above
                             <div class="col-span-12 lg:col-span-6 mt-8">
                                 <div class="intro-y block sm:flex items-center h-10">
                                     <h2 class="text-lg font-medium truncate mr-5">
-                                        Sales Report
+                                        Nilai Perangkingan
                                     </h2>
-                                    <div class="sm:ml-auto mt-3 sm:mt-0 relative text-slate-500">
+                                    {{-- <div class="sm:ml-auto mt-3 sm:mt-0 relative text-slate-500">
                                         <i data-lucide="calendar" class="w-4 h-4 z-10 absolute my-auto inset-y-0 ml-3 left-0"></i> 
                                         <input type="text" class="datepicker form-control sm:w-56 box pl-10">
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <div class="intro-y box p-5 mt-12 sm:mt-5">
                                     <div class="flex flex-col md:flex-row md:items-center">
-                                        <div class="flex">
+                                        {{-- <div class="flex">
                                             <div>
                                                 <div class="text-primary dark:text-slate-300 text-lg xl:text-xl font-medium">$15,000</div>
                                                 <div class="mt-0.5 text-slate-500">This Month</div>
@@ -500,18 +512,12 @@ License: You must have a valid license purchased only from themeforest(the above
                                                 <div class="text-slate-500 text-lg xl:text-xl font-medium">$10,000</div>
                                                 <div class="mt-0.5 text-slate-500">Last Month</div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="dropdown md:ml-auto mt-5 md:mt-0">
-                                            <button class="dropdown-toggle btn btn-outline-secondary font-normal" aria-expanded="false" data-tw-toggle="dropdown"> Filter by Category <i data-lucide="chevron-down" class="w-4 h-4 ml-2"></i> </button>
-                                            <div class="dropdown-menu w-40">
-                                                <ul class="dropdown-content overflow-y-auto h-32">
-                                                    <li><a href="" class="dropdown-item">PC & Laptop</a></li>
-                                                    <li><a href="" class="dropdown-item">Smartphone</a></li>
-                                                    <li><a href="" class="dropdown-item">Electronic</a></li>
-                                                    <li><a href="" class="dropdown-item">Photography</a></li>
-                                                    <li><a href="" class="dropdown-item">Sport</a></li>
-                                                </ul>
-                                            </div>
+                                            <label for="jurusan" class="form-label"></label>
+                                                <select class="form-select form-jurusan" name="jurusan" id="select-jurusan" required>
+                                                    <option disabled selected> -- Pilih Jurusan -- </option>
+                                                </select>
                                         </div>
                                     </div>
                                     <div class="report-chart">
@@ -908,7 +914,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         <div class="2xl:border-l -mb-10 pb-10">
                             <div class="2xl:pl-6 grid grid-cols-12 gap-x-6 2xl:gap-x-0 gap-y-6">
                                 <!-- BEGIN: Transactions -->
-                                <div class="col-span-12 md:col-span-6 xl:col-span-4 2xl:col-span-12 mt-3 2xl:mt-8">
+                                {{-- <div class="col-span-12 md:col-span-6 xl:col-span-4 2xl:col-span-12 mt-3 2xl:mt-8">
                                     <div class="intro-x flex items-center h-10">
                                         <h2 class="text-lg font-medium truncate mr-5">
                                             Transactions
@@ -977,7 +983,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                         </div>
                                         <a href="" class="intro-x w-full block text-center rounded-md py-3 border border-dotted border-slate-400 dark:border-darkmode-300 text-slate-500">View More</a> 
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- END: Transactions -->
                                 <!-- BEGIN: Recent Activities -->
                                 {{-- <div class="col-span-12 md:col-span-6 xl:col-span-4 2xl:col-span-12 mt-3">
@@ -1214,6 +1220,9 @@ License: You must have a valid license purchased only from themeforest(the above
 
         <!-- JavaScript Asset Anda (app.js) -->
         <script src="{{ asset('template/dist/js/app.js') }}"></script>
+        <!-- Memuat Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
         {{-- <script src="{{ asset('template/src/js/chart.js') }}"></script> --}}
 
         <script>
@@ -1330,6 +1339,262 @@ License: You must have a valid license purchased only from themeforest(the above
                     console.error('Error', error);
                 });
 
+                // if ($("#report-line-chart").length) {
+                //     var ctx = $("#report-line-chart")[0].getContext("2d");
+
+                //     jQuery.ajax({
+                //         url: 'http://127.0.0.1:8000/api/dashboard/chart-data-mipa',
+                //         type: 'POST',
+                //         dataType: 'json',
+                //         headers: {
+                //             'Authorization': 'Bearer ' + token
+                //         },
+                //         success: function(response) {
+                //             var labels = response.labels;
+                //             var values = response.values;
+
+                //             var myChart = new Chart(ctx, {
+                //                 type: "bar",
+                //                 data: {
+                //                     labels: labels,
+                //                     datasets: [{
+                //                         label: "Nilai Perangkingan",
+                //                         data: values,
+                //                         borderWidth: 2,
+                //                         borderColor: "rgba(75, 192, 192, 1)",
+                //                         backgroundColor: "rgba(75, 192, 192, 0.2)",
+                //                         pointBorderColor: "transparent",
+                //                         tension: 0.4
+                //                     }]
+                //                 },
+                //                 options: {
+                //                     maintainAspectRatio: false,
+                //                     plugins: {
+                //                         legend: {
+                //                             display: false
+                //                         }
+                //                     },
+                //                     scales: {
+                //                         x: {
+                //                             ticks: {
+                //                                 font: {
+                //                                     size: 12
+                //                                 },
+                //                                 color: "rgba(100, 100, 100, 0.8)"
+                //                             },
+                //                             grid: {
+                //                                 display: false,
+                //                                 drawBorder: false
+                //                             }
+                //                         },
+                //                         y: {
+                //                             ticks: {
+                //                                 font: {
+                //                                     size: 12
+                //                                 },
+                //                                 color: "rgba(100, 100, 100, 0.8)",
+                //                                 callback: function(value, index, values) {
+                //                                     return value; // Menampilkan nilai tanpa modifikasi
+                //                                 }
+                //                             },
+                //                             grid: {
+                //                                 color: "rgba(200, 200, 200, 0.3)",
+                //                                 borderDash: [2, 2],
+                //                                 drawBorder: false
+                //                             }
+                //                         }
+                //                     }
+                //                 }
+                //             });
+                //         },
+                //         error: function(xhr, status, error) {
+                //             console.error("Error fetching chart data:", status, error);
+                //         }
+                //     });
+                // }
+
+                // if ($("#report-line-chart").length) {
+                //     var ctx = $("#report-line-chart")[0].getContext("2d");
+
+                //     jQuery.ajax({
+                //         url: 'http://127.0.0.1:8000/api/dashboard/chart-data-mipa',
+                //         type: 'POST',
+                //         dataType: 'json',
+                //         headers: {
+                //             'Authorization': 'Bearer ' + token
+                //         },
+                //         success: function(response) {
+                //             var labels = response.labels;
+                //             var values = response.values;
+
+                //             var myChart = new Chart(ctx, {
+                //                 type: "bar",
+                //                 data: {
+                //                     labels: labels,
+                //                     values: values,
+                //                     datasets: [{
+                //                         label: "Nilai Perangkingan",
+                //                         data: values,
+                //                         borderWidth: 2,
+                //                         borderColor: "rgba(75, 192, 192, 1)",
+                //                         backgroundColor: "rgba(75, 192, 192, 0.2)",
+                //                         pointBorderColor: "transparent",
+                //                         tension: 0.4
+                //                     }]
+                //                 },
+                //                 options: {
+                //                     maintainAspectRatio: false,
+                //                     plugins: {
+                //                         legend: {
+                //                             display: false
+                //                         }
+                //                     },
+                //                     scales: {
+                //                         x: {
+                //                             ticks: {
+                //                                 font: {
+                //                                     size: 12
+                //                                 },
+                //                                 color: "rgba(100, 100, 100, 0.8)"
+                //                             },
+                //                             grid: {
+                //                                 display: false,
+                //                                 drawBorder: false
+                //                             }
+                //                         },
+                //                         y: {
+                //                             ticks: {
+                //                                 font: {
+                //                                     size: 12
+                //                                 },
+                //                                 color: "rgba(100, 100, 100, 0.8)",
+                //                                 callback: function(value, index, values) {
+                //                                     return value; // Menampilkan nilai tanpa modifikasi
+                //                                 }
+                //                             },
+                //                             grid: {
+                //                                 color: "rgba(200, 200, 200, 0.3)",
+                //                                 borderDash: [2, 2],
+                //                                 drawBorder: false
+                //                             }
+                //                         }
+                //                     }
+                //                 }
+                //             });
+                //         },
+                //         error: function(xhr, status, error) {
+                //             console.error("Error fetching chart data:", status, error);
+                //         }
+                //     });
+                // }
+
+                var ctx = document.getElementById('report-line-chart').getContext('2d');
+                jQuery('#select-jurusan').on('change', function() {
+                    var selectedJurusanId = jQuery(this).val();
+
+                    // Kirim AJAX request untuk mendapatkan data siswa berdasarkan jurusan_id
+                    jQuery.ajax({
+                        url: 'http://127.0.0.1:8000/api/dashboard/chart-data/' + selectedJurusanId,
+                        type: 'GET',
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        success: function(response) {
+                            var labels = response.map(function(siswa) {
+                                return siswa.name; // Mengambil nama siswa
+                            });
+
+                            var values = response.map(function(siswa) {
+                                return siswa.nilai_akhir; // Mengambil nilai akhir siswa
+                            });
+
+                            // Hapus chart sebelumnya jika ada
+                            if (window.myChart) {
+                                window.myChart.destroy();
+                            }
+
+                            // Buat chart baru dengan data yang diambil
+                            window.myChart = new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: labels,
+                                    datasets: [{
+                                        label: 'Nilai Perangkingan',
+                                        data: values,
+                                        borderWidth: 2,
+                                        borderColor: 'rgba(75, 192, 192, 1)',
+                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                        pointBorderColor: 'transparent',
+                                        tension: 0.4
+                                    }]
+                                },
+                                options: {
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            display: false
+                                        }
+                                    },
+                                    scales: {
+                                        x: {
+                                            ticks: {
+                                                font: {
+                                                    size: 12
+                                                },
+                                                color: 'rgba(100, 100, 100, 0.8)'
+                                            },
+                                            grid: {
+                                                display: false,
+                                                drawBorder: false
+                                            }
+                                        },
+                                        y: {
+                                            ticks: {
+                                                font: {
+                                                    size: 12
+                                                },
+                                                color: 'rgba(100, 100, 100, 0.8)',
+                                                callback: function(value, index, values) {
+                                                    return value; // Menampilkan nilai tanpa modifikasi
+                                                }
+                                            },
+                                            grid: {
+                                                color: 'rgba(200, 200, 200, 0.3)',
+                                                borderDash: [2, 2],
+                                                drawBorder: false
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error fetching student data:', status, error);
+                        }
+                    });
+                });
+
+                // data support jurusan
+                var url = 'http://127.0.0.1:8000/api/dashboard/data-support/jurusan';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }).then(response => response.json()).then(data => {
+                    var selectJurusan = jQuery('.form-jurusan');
+
+                    jQuery.each(data, function(inex, item) {
+                        for (let i = 0; i < item.length; i++)
+                        {
+                            selectJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                        }
+                    });
+                }).catch(error => {
+                    console.error('Error: ', error);
+                });
+
+                
                 function logout(name) {
                     document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                     window.location.href = "{{ route('login') }}";

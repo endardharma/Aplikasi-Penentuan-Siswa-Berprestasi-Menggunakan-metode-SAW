@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\MasterGuru;
+use App\Models\MasterJurusan;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\NilaiPerangkingan;
 use App\Models\Role;
@@ -88,4 +90,98 @@ class DashboardController extends Controller
         ], 200);
     }
 
+    // public function getChartData(Request $request)
+    // {
+    //     // Ambil data nilai perangkingan siswa dengan jurusan MIPA
+    //     $data = NilaiPerangkingan::select('siswa_id', 'nilai_akhir')
+    //                             ->whereHas('siswa.kelas', function ($query) {
+    //                                 $query->whereHas('jurusan', function ($query) {
+    //                                     $query->where('name', 'MIPA');
+    //                                 });
+    //                             })
+    //                             ->orderBy('nilai_akhir', 'desc')
+    //                             ->get();
+
+    //     // Ambil nama siswa dari tabel master_siswa berdasarkan siswa_id
+    //     $labels = [];
+    //     foreach ($data as $item) {
+    //         $siswa = MasterSiswa::find($item->siswa_id);
+    //         if ($siswa) {
+    //             $labels[] = $siswa->name;
+    //         } else {
+    //             $labels[] = 'Unknown';
+    //         }
+    //     }
+
+    //     // Ambil nilai akhir dari setiap siswa untuk digunakan sebagai data chart
+    //     $values = $data->pluck('nilai_akhir');
+
+    //     // Format responsenya sesuai dengan yang diharapkan oleh Chart.js
+    //     $response = [
+    //         'labels' => $labels,
+    //         'values' => $values,
+    //     ];
+
+    //     return response()->json($response);
+    // }
+
+    // public function getChartData()
+    // {
+    //     // Query untuk mengambil data NilaiPerangkingan
+    //     $nilaiPerangkingan = NilaiPerangkingan::with('siswa')
+    //         ->orderBy('nilai_akhir', 'desc') // Urutkan dari nilai tertinggi ke terendah
+    //         ->get();
+
+    //         $labels = $nilaiPerangkingan->map(function ($item) {
+    //             return $item->siswa->name; // Mengambil nama siswa dari relasi
+    //         });
+        
+    //         $values = $nilaiPerangkingan->pluck('nilai_akhir');
+        
+    //         $data = [
+    //             'labels' => $labels,
+    //             'values' => $values,
+    //         ];
+        
+    //         return response()->json($data);
+    // }
+
+    public function getChartData($jurusan_id)
+    {
+        // Ambil data NilaiPerangkingan yang terhubung dengan MasterJurusanSiswa berdasarkan jurusan_id
+        $nilaiPerangkingan = NilaiPerangkingan::whereHas('siswa.kelas.jurusan', function ($query) use ($jurusan_id) {
+                $query->where('jurusan_id', $jurusan_id);
+            })
+            ->orderBy('nilai_akhir', 'desc') // Urutkan dari nilai tertinggi ke terendah
+            ->with('siswa') // Load relasi siswa
+            ->get();
+
+        // Siapkan data yang akan dikirimkan sebagai JSON response
+        $data = $nilaiPerangkingan->map(function ($item) {
+            return [
+                'name' => $item->siswa->name, // Nama siswa
+                'nilai_akhir' => $item->nilai_akhir, // Nilai akhir siswa
+            ];
+        });
+
+        return response()->json($data);
+    }
+
+    public function supportJurusan()
+    {
+        $jurusan = MasterJurusanSiswa::all();
+        $data = array();
+
+        foreach ($jurusan as $j)
+        {
+            $item['id'] = $j->id;
+            $item['name'] = $j->name;
+            $data[] = $item;
+        }
+
+        return response()->json([
+            'data' => $data,
+        ], 201);
+    }
+    
 }
