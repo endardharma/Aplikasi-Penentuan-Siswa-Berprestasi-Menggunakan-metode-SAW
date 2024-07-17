@@ -138,6 +138,12 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('penilaian.nilainormalisasi') }}" class="menu">
+                                    <div class="menu__icon"> <i data-lucide="trello"></i> </div>
+                                    <div class="menu__title"> Nilai Normalisasi </div>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('penilaian.nilaiperangkingan') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="award"></i> </div>
                                     <div class="menu__title"> Perangkingan </div>
@@ -260,6 +266,12 @@
                                 <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="grid"></i> </div>
                                     <div class="side-menu__title"> Nilai Keseluruhan </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('penilaian.nilainormalisasi') }}" class="side-menu">
+                                    <div class="side-menu__icon"> <i data-lucide="trello"></i> </div>
+                                    <div class="side-menu__title"> Nilai Normalisasi </div>
                                 </a>
                             </li>
                             <li>

@@ -8,7 +8,7 @@
         <meta name="description" content="Tinker admin is super flexible, powerful, clean & modern responsive tailwind admin template with unlimited possibilities.">
         <meta name="keywords" content="admin template, Tinker Admin Template, dashboard template, flat admin template, responsive admin template, web app">
         <meta name="author" content="LEFT4CODE">
-        <title>Nilai Perangkingan - Aplikasi PSB</title>
+        <title>Nilai Normalisasi - Aplikasi PSB</title>
         <!-- BEGIN: CSS Assets-->
         <link rel="stylesheet" href="{{ asset('template/dist/css/app.css') }}" />
         <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -292,7 +292,7 @@
                     <nav aria-label="breadcrumb" class="-intro-x mr-auto hidden sm:flex">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#">Aplikasi</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Nilai Perangkingan</li>
+                            <li class="breadcrumb-item active" aria-current="page">Nilai Normalisasi</li>
                         </ol>
                     </nav>
                     <!-- END: Breadcrumb -->
