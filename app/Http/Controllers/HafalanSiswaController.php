@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\HafalanSiswaExport;
 use App\Exports\HafalanSiswaTemplate;
+use App\Exports\HafalanSiswaTemplateIis;
 use App\Imports\HafalanSiswaImport;
 use App\Models\HafalanSiswa;
 use App\Models\MasterJurusanSiswa;
@@ -255,9 +256,14 @@ class HafalanSiswaController extends Controller
         }
     }
 
-    public function template(Request $request)
+    public function templateMipa(Request $request)
     {
-        return Excel::download(new HafalanSiswaTemplate($request->tajar), 'Template-Hafalan-Siswa.xlsx');
+        return Excel::download(new HafalanSiswaTemplate($request->tajar), 'Template-Hafalan-Siswa-Mipa.xlsx');
+    }
+
+    public function templateIis(Request $request)
+    {
+        return Excel::download(new HafalanSiswaTemplateIis($request->tajar), 'Template-Hafalan-Siswa-Iis.xlsx');
     }
 
     public function importData(Request $request)
@@ -270,8 +276,9 @@ class HafalanSiswaController extends Controller
         // proses import data
         $file = $request->file('excel');
         $selectedTahunAjar = $request->input('selected_tahun_ajar');
+        $selectedJurusan = $request->input('selected_jurusan');
 
-        Excel::import(new HafalanSiswaImport($selectedTahunAjar), $file);
+        Excel::import(new HafalanSiswaImport($selectedTahunAjar, $selectedJurusan), $file);
 
         return response()->json([
             'success' => true,

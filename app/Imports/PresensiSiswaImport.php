@@ -34,9 +34,11 @@ class PresensiSiswaImport implements ToCollection, WithHeadingRow
     }
 
     protected $selectedTahunAjar;
-    public function __construct($selectedTahunAjar)
+    protected $selectedJurusan;
+    public function __construct($selectedTahunAjar, $selectedJurusan)
     {
         $this->selectedTahunAjar = $selectedTahunAjar;
+        $this->selectedJurusan = $selectedJurusan;
     }
 
     public function collection(Collection $rows)
@@ -45,9 +47,11 @@ class PresensiSiswaImport implements ToCollection, WithHeadingRow
         foreach($rows as $row)
         {
             // $tajar = TahunAjar::where('name','LIKE','%'.$row['tahun_ajar'].'%')->first();
-            $jurusan = MasterJurusanSiswa::where('name','LIKE','%'.$row['jurusan'].'%')->first();
-            $siswa = MasterSiswa::where('name','LIKE','%'.$row['nama_siswa'].'%')->first();
+            // $jurusan = MasterJurusanSiswa::where('name','LIKE','%'.$row['jurusan'].'%')->first();
+            // $siswa = MasterSiswa::where('name','LIKE','%'.$row['nama_siswa'].'%')->first();
+            $siswa = MasterSiswa::where('name', $row['nama_siswa'])->first();
             $tajar = TahunAjar::find($this->selectedTahunAjar);
+            $jurusan = MasterJurusanSiswa::find($this->selectedJurusan);
 
             if($tajar && $jurusan && $siswa)
             {
@@ -55,6 +59,7 @@ class PresensiSiswaImport implements ToCollection, WithHeadingRow
                     'tajar_id' => $tajar->id,
                     'siswa_id' => $siswa->id,
                     'jurusan_id' => $jurusan->id,
+                    'nilai' => $row['nilai'],
                 ], [
                     'tajar_id' => $tajar->id,
                     'siswa_id' => $siswa->id,
@@ -64,9 +69,8 @@ class PresensiSiswaImport implements ToCollection, WithHeadingRow
                     'jumlah_hari' => $row['jumlah_hari'],
                     'jumlah_hari_lainnya' => $row['jumlah_hari_lainnya'],
                     'nilai' => $row['nilai'],
-                    'jurusan' => $row['jurusan'],
+                    'jurusan' => $jurusan->name,
                     'semester' => $row['semester'],
-                    // 'tahun_ajar' => $row['tahun_ajar'],
                     'tahun_ajar' => $tajar->name,
                 ]);
             }

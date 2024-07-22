@@ -2,46 +2,47 @@
 
 namespace App\Exports;
 
-use App\Models\MasterJurusan;
 use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\TahunAjar;
 use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, WithEvents
+class PresensiSiswaTemplateIis implements FromArray, WithHeadings, ShouldAutoSize, WithEvents
 {
     protected $data;
-    
+
     public function __construct($data)
     {
         $this->data = $data;
     }
-
+    
     public function array(): array
     {
         $siswa = MasterSiswa::with('kelas.jurusan')->get();
         $tajar = TahunAjar::all();
-        $jurusanMipa = MasterJurusanSiswa::where('name','MIPA')->pluck('id')->first();
+        $jurusanIis = MasterJurusanSiswa::where('name','IIS')->pluck('id')->first();
 
-        $data = array();
-
-        if($siswa->isNotEmpty())
+        $data = [];
+        if ($siswa->isNotEmpty())
         {
-            foreach($siswa as $s)
+            foreach ($siswa as $s)
             {
-                $jurusan_id = $s->kelas->jurusan->id ??  null;
-                if ($jurusan_id === $jurusanMipa)
+                $jurusan_id = $s->kelas->jurusan->id ?? null;
+                if ($jurusan_id === $jurusanIis)
                 {
-                    foreach($tajar as $t)
+                    foreach ($tajar as $t)
                     {
                         $item = [];
                         $item['nama_siswa'] = $s->name;
-                        $item['jumlah_keterlambatan'] = 'Masukkan jumlah keterlambatan siswa masuk sekolah(0 Kali, 1-2 Kali, 3-4 Kali, 5-6 Kali, > 7 Kali)';
-                        $item['nilai'] = 'Isi nilai dengan angka';
+                        $item['ket_ketidakhadira'] = 'Isi dengan Tidak Ada/Sakit/Izin/Tanpa Keterangan';
+                        $item['jumlah_hari'] = 'Isi dengan angka berapa hari tidak masuk';
+                        $item['jumlah_hari_lainnya'] = 'Isi dengan angka berapa hari tidak masuk yang melebihi 4 hari';
+                        $item['nilai'] = 'Isi nilai dengan angka(0 - 5) sesuai dengan jumlah hari';
                         $item['semester'] = $t->semester;
                         $data[] = $item;
                     }
@@ -55,7 +56,7 @@ class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoS
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:D1'; // All headers
+                $cellRange = 'A1:F1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -78,16 +79,18 @@ class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoS
 
             },
         ];
+
     }
 
     public function headings(): array
     {
         return [
             'Nama Siswa',
-            'Jumlah Keterlambatan',
+            'Keterangan Ketidakhadiran',
+            'Jumlah Hari',
+            'Jumlah Hari Lainnya',
             'Nilai',
             'Semester',
         ];
     }
-    
 }

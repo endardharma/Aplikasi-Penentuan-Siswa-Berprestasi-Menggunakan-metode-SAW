@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\MasterJurusan;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\TahunAjar;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -25,6 +26,7 @@ class SikapSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
         // Fungsi Template Export dan Detail Sikap Siswa
         $siswa = MasterSiswa::with('kelas.jurusan')->get();
         $tajar = TahunAjar::all();
+        $jurusanMipa = MasterJurusanSiswa::where('name','MIPA')->pluck('id')->first();
 
         $data = array();
         if($siswa->isNotEmpty())
@@ -32,7 +34,7 @@ class SikapSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
             foreach($siswa as $s)
             {
                 $jurusan_id = $s->kelas->jurusan->id ?? null;
-                if ($jurusan_id)
+                if ($jurusan_id === $jurusanMipa)
                 {
                     foreach($tajar as $t)
                     {
@@ -40,7 +42,6 @@ class SikapSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
                         $item['nama_siswa'] = $s->name;
                         $item['ket_sikap'] = 'Isi dengan pilihan yang sesuai (Sangat Baik, Baik, Cukup, Tidak Baik, Sangat Tidak Baik)';
                         $item['nilai'] = 'Isi dengan angka yang sesuai (5, 4, 3, 2, 1)';
-                        $item['jurusan'] = $s->jurusan ? $s->jurusan->name : 'Jurusan tidak ditemukan';
                         $item['semester'] = $t->semester;
                         $data[] = $item;
                     }
@@ -54,7 +55,7 @@ class SikapSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:G1'; // All headers
+                $cellRange = 'A1:D1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -85,7 +86,6 @@ class SikapSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
             'Nama Siswa',
             'Keterangan Sikap',
             'Nilai',
-            'Jurusan',
             'Semester',
         ];
     }

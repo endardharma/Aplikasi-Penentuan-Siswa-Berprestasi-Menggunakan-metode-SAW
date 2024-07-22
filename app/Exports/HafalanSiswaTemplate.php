@@ -25,6 +25,7 @@ class HafalanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, W
     {
         $siswa = MasterSiswa::with('kelas.jurusan')->get();
         $tajar = TahunAjar::all();
+        $jurusanMipa = MasterJurusanSiswa::where('name','MIPA')->pluck('id')->first();
 
         // Daftar tetap keterangan hafalan
         $ket_hafalan_list = [
@@ -40,7 +41,7 @@ class HafalanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, W
         if ($siswa->isNotEmpty()) {
             foreach ($siswa as $s) {
                 $jurusan_id = $s->kelas->jurusan->id  ?? null;
-                if ($jurusan_id)
+                if ($jurusan_id === $jurusanMipa)
                 {
                     foreach ($ket_hafalan_list as $ket_hafalan) {
                         foreach ($tajar as $t) {
@@ -49,7 +50,7 @@ class HafalanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, W
                             $item['ket_hafalan'] = $ket_hafalan;
                             $item['nilai'] = 'Isi nilai dengan angka';
     
-                            $item['jurusan'] = $s->jurusan ? $s->jurusan->name : 'Jurusan tidak ditemukan';
+                            // $item['jurusan'] = $s->jurusan ? $s->jurusan->name : 'Jurusan tidak ditemukan';
     
                             $item['semester'] = $t->semester;
     
@@ -67,7 +68,7 @@ class HafalanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, W
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:G1'; // All headers
+                $cellRange = 'A1:D1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -97,7 +98,6 @@ class HafalanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, W
             'Nama Siswa',
             'Keterangan Hafalan',
             'Nilai',
-            'Jurusan',
             'Semester',
         ];
     }

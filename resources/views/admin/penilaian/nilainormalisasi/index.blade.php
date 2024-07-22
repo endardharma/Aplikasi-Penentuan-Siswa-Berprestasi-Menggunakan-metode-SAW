@@ -712,6 +712,42 @@
                     modal.show();
                 });
 
+                // fungsi btn-detail-mipa
+                jQuery('#data-table-iis').on('click', '.btn-detail-iis', function() {
+                    var siswaId = jQuery(this).attr("data-id"); 
+
+                    // Inisialisasi atau reset DataTable di dalam modal
+                    var table = jQuery('#data-table-detail-iis').DataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "destroy": true, // Hapus DataTable yang sudah ada untuk menghindari duplikasi
+                        "ajax": {
+                            url: "http://127.0.0.1:8000/api/data-penilaian/nilai-normalisasi/list-detail-normalisasi-iis",
+                            type: "POST",
+                            data: {
+                                siswa_id: siswaId // Mengirimkan siswa_id ke server
+                            },
+                            headers: {
+                                'Authorization': 'Bearer ' + token
+                            }
+                        },
+                        columns: [
+                            { data: 'id', className: 'text-center' },
+                            { data: 'nama_siswa', className: 'text-center' },
+                            { data: 'nama_kriteria', className: 'text-center' },
+                            { data: 'nilai_normalisasi', className: 'text-center' },
+                        ],
+                        drawCallback: function(settings) {
+                            feather.replace();
+                        }
+                    });
+
+                    // Tampilkan modal
+                    const el = document.querySelector('#header-detail-footer-modal-preview-iis');
+                    const modal = tailwind.Modal.getOrCreateInstance(el);
+                    modal.show();
+                });
+
             })
             
         </script>

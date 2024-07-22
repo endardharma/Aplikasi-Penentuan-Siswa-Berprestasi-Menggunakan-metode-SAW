@@ -12,10 +12,10 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, WithEvents
+class HafalanSiswaTemplateIis implements FromArray, WithHeadings, ShouldAutoSize, WithEvents
 {
     protected $data;
-    
+
     public function __construct($data)
     {
         $this->data = $data;
@@ -25,29 +25,42 @@ class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoS
     {
         $siswa = MasterSiswa::with('kelas.jurusan')->get();
         $tajar = TahunAjar::all();
-        $jurusanMipa = MasterJurusanSiswa::where('name','MIPA')->pluck('id')->first();
+        $jurusanMipa = MasterJurusanSiswa::where('name','IIS')->pluck('id')->first();
 
-        $data = array();
+        // Daftar tetap keterangan hafalan
+        $ket_hafalan_list = [
+            'Jumlah Juz',
+            'Makhrodul Huruf',
+            'Ketentuan Ilmu Tajwid',
+            'Irama/Lagu',
+            'Fasokhah'
+        ];
 
-        if($siswa->isNotEmpty())
-        {
-            foreach($siswa as $s)
-            {
-                $jurusan_id = $s->kelas->jurusan->id ??  null;
+        $data = [];
+
+        if ($siswa->isNotEmpty()) {
+            foreach ($siswa as $s) {
+                $jurusan_id = $s->kelas->jurusan->id  ?? null;
                 if ($jurusan_id === $jurusanMipa)
                 {
-                    foreach($tajar as $t)
-                    {
-                        $item = [];
-                        $item['nama_siswa'] = $s->name;
-                        $item['jumlah_keterlambatan'] = 'Masukkan jumlah keterlambatan siswa masuk sekolah(0 Kali, 1-2 Kali, 3-4 Kali, 5-6 Kali, > 7 Kali)';
-                        $item['nilai'] = 'Isi nilai dengan angka';
-                        $item['semester'] = $t->semester;
-                        $data[] = $item;
+                    foreach ($ket_hafalan_list as $ket_hafalan) {
+                        foreach ($tajar as $t) {
+                            $item = [];
+                            $item['nama_siswa'] = $s->name;
+                            $item['ket_hafalan'] = $ket_hafalan;
+                            $item['nilai'] = 'Isi nilai dengan angka';
+    
+                            // $item['jurusan'] = $s->jurusan ? $s->jurusan->name : 'Jurusan tidak ditemukan';
+    
+                            $item['semester'] = $t->semester;
+    
+                            $data[] = $item;
+                        }
                     }
                 }
             }
         }
+
         return $data;
     }
 
@@ -75,7 +88,6 @@ class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoS
                         'color' => ['argb' => 'B8860B']
                     ]
                 ];
-
             },
         ];
     }
@@ -84,10 +96,9 @@ class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoS
     {
         return [
             'Nama Siswa',
-            'Jumlah Keterlambatan',
+            'Keterangan Hafalan',
             'Nilai',
             'Semester',
         ];
     }
-    
 }

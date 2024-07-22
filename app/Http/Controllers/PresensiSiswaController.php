@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\PresensiSiswaExport;
 use App\Exports\PresensiSiswaTemplate;
+use App\Exports\PresensiSiswaTemplateIis;
 use App\Imports\PresensiSiswaImport;
 use App\Models\MasterJurusan;
 use App\Models\MasterJurusanSiswa;
@@ -364,9 +365,14 @@ class PresensiSiswaController extends Controller
         ], 201);
     }
 
-    public function template(Request $request)
+    public function templateMipa(Request $request)
     {
-        return Excel::download(new PresensiSiswaTemplate($request->tajar), 'Template-Presensi-Siswa.xlsx');
+        return Excel::download(new PresensiSiswaTemplate($request->tajar), 'Template-Presensi-Siswa-Mipa.xlsx');
+    }
+
+    public function templateIis(Request $request)
+    {
+        return Excel::download(new PresensiSiswaTemplateIis($request->tajar), 'Template-presensi-Siswa-Iis.xlsx');
     }
 
     public function importData(Request $request)
@@ -379,8 +385,9 @@ class PresensiSiswaController extends Controller
         // Proses data import
         $file = $request->file('excel');
         $selectedTahunAjar = $request->input('selected_tahun_ajar');
+        $selectedJurusan = $request->input('selected_jurusan');
 
-        Excel::import(new PresensiSiswaImport($selectedTahunAjar), $file);
+        Excel::import(new PresensiSiswaImport($selectedTahunAjar, $selectedJurusan), $file);
 
         return response()->json([
             'success' => true,

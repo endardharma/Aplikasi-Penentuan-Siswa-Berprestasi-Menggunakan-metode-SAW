@@ -75,6 +75,7 @@ class RaporSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
         // Fungsi Template Export dan detail rapor siswa
         $siswa = MasterSiswa::with('kelas.jurusan')->get();
         $tajar = TahunAjar::all();
+        $jurusanMipaId = MasterJurusanSiswa::where('name', 'MIPA')->pluck('id')->first();
     
         $data = [];
         if ($siswa->isNotEmpty()) 
@@ -82,7 +83,7 @@ class RaporSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
             foreach ($siswa as $s) 
             {
                 $jurusan_id = $s->kelas->jurusan->id ?? null;
-                if ($jurusan_id) 
+                if ($jurusan_id === $jurusanMipaId) 
                 {
                     $mapel = MasterMapel::where('jurusan_id', $jurusan_id)->get();
                     if ($mapel->isNotEmpty())
@@ -101,7 +102,7 @@ class RaporSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
                                     $item['nilai'] = 'Isi nilai dengan angka';
     
                                     $jurusansiswa = MasterJurusanSiswa::find($m->jurusan_id);
-                                    $item['jurusan'] = $jurusansiswa ? $jurusansiswa->name : 'Jurusan tidak ditemukan';
+                                    // $item['jurusan'] = $jurusansiswa ? $jurusansiswa->name : 'Jurusan tidak ditemukan';
     
                                     $item['semester'] = $t->semester;
                                     // $item['tahun_ajar'] = $t->periode;
@@ -123,7 +124,7 @@ class RaporSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:H1'; // All headers
+                $cellRange = 'A1:G1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -155,9 +156,8 @@ class RaporSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
             'Kelompok',
             'Tipe',
             'Nilai',
-            'Jurusan',
+            // 'Jurusan',
             'Semester',
-            'Tahun Ajar',
         ];
     }
 }

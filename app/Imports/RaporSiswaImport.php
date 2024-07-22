@@ -65,25 +65,38 @@ class RaporSiswaImport implements ToCollection, WithHeadingRow
     // }
     
     protected $selectedTahunAjar;
+    protected $selectedImportJurusan;
 
-    public function __construct($selectedTahunAjar)
+    public function __construct($selectedTahunAjar, $selectedImportJurusan)
     {
         $this->selectedTahunAjar = $selectedTahunAjar;
+        $this->selectedImportJurusan = $selectedImportJurusan;
     }
 
-    public function collection (Collection $rows)
+    // EDITED 23/07/2024 03:10 AM
+    public function collection(Collection $rows)
     {
         foreach ($rows as $row)
         {
             $tajar = TahunAjar::find($this->selectedTahunAjar);
-            $mapel = MasterMapel::where('name','LIKE','%'.$row['nama_mapel'].'%')
-                ->where('kelompok','LIKE','%'.$row['kelompok'].'%')
-                ->where('type','LIKE','%'.$row['tipe'].'%')
+            
+            $mapel = MasterMapel::where('name', 'LIKE', '%'.$row['nama_mapel'].'%')
+                ->where('kelompok', 'LIKE', '%'.$row['kelompok'].'%')
+                ->where('type', 'LIKE', '%'.$row['tipe'].'%')
                 ->first();
+    
+            // Cari siswa dengan nama dan kelas yang lebih spesifik
+            // $siswa = MasterSiswa::where('name', $row['nama_siswa'])
+            //     ->whereHas('kelas', function($query) use ($row) {
+            //         $query->where('name', $row['kelas']);
+            //     })
+            //     ->first();
+            // $siswa = MasterSiswa::where('id', $row['nama_siswa'])->first();
 
-            $siswa = MasterSiswa::where('name','LIKE','%'.$row['nama_siswa'].'%')->first();
-            $jurusan = MasterJurusanSiswa::where('name','LIKE','%'.$row['jurusan'].'%')->first();
+            $siswa = MasterSiswa::where('name', $row['nama_siswa'])->first();
 
+            $jurusan = MasterJurusanSiswa::find($this->selectedImportJurusan);
+    
             if ($tajar && $mapel && $siswa && $jurusan)
             {
                 RaporSiswa::updateOrCreate([
@@ -91,14 +104,13 @@ class RaporSiswaImport implements ToCollection, WithHeadingRow
                     'siswa_id' => $siswa->id,
                     'mapel_id' => $mapel->id,
                     'jurusan_id' => $jurusan->id,
-                    'nilai' => $row['nilai'],
                 ],[
                     'nama_siswa' => $row['nama_siswa'],
                     'nama_mapel' => $row['nama_mapel'],
                     'kelompok' => $row['kelompok'],
                     'type' => $row['tipe'],
                     'nilai' => $row['nilai'],
-                    'jurusan' => $row['jurusan'],
+                    'jurusan' => $jurusan->name,
                     'semester' => $row['semester'],
                     'tahun_ajar' => $tajar->name,
                 ]);

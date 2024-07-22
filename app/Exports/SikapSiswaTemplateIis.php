@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\TahunAjar;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -10,30 +11,42 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class TemplateMastersiswa implements FromArray, WithHeadings, ShouldAutoSize, WithEvents
+class SikapSiswaTemplateIis implements FromArray, WithHeadings, ShouldAutoSize, WithEvents
 {
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    function array(): array
+    protected $data;
+
+    public function __construct($data)
     {
-        $master = MasterSiswa::take(1)->get();
-        if ($master->isNotEmpty()) {
+        $this->data = $data;
+    }
 
-            foreach ($master as $m)
+    public function array(): array
+    {
+        // Fungsi Template Export dan Detail Sikap Siswa
+        $siswa = MasterSiswa::with('kelas.jurusan')->get();
+        $tajar = TahunAjar::all();
+        $jurusanMipa = MasterJurusanSiswa::where('name','Iis')->pluck('id')->first();
+
+        $data = array();
+        if($siswa->isNotEmpty())
+        {
+            foreach($siswa as $s)
             {
-                $item['nis'] = $m->nis;
-                $item['nama'] = $m->name;
-                $item['email'] = 'user@mail.com';
-                $item['kelas'] = $m->kelas->name ?? '';
-                $item['jenkel'] = 'laki-laki/perempuan';
-                $item['telpon'] = '62821********';
-                $data[] = $item;
+                $jurusan_id = $s->kelas->jurusan->id ?? null;
+                if ($jurusan_id === $jurusanMipa)
+                {
+                    foreach($tajar as $t)
+                    {
+                        $item = [];
+                        $item['nama_siswa'] = $s->name;
+                        $item['ket_sikap'] = 'Isi dengan pilihan yang sesuai (Sangat Baik, Baik, Cukup, Tidak Baik, Sangat Tidak Baik)';
+                        $item['nilai'] = 'Isi dengan angka yang sesuai (5, 4, 3, 2, 1)';
+                        $item['semester'] = $t->semester;
+                        $data[] = $item;
+                    }
+                }
             }
-        } else {
-            $data = [];
         }
-
         return $data;
     }
 
@@ -41,7 +54,7 @@ class TemplateMastersiswa implements FromArray, WithHeadings, ShouldAutoSize, Wi
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:F1'; // All headers
+                $cellRange = 'A1:D1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -64,18 +77,15 @@ class TemplateMastersiswa implements FromArray, WithHeadings, ShouldAutoSize, Wi
 
             },
         ];
-
     }
 
     public function headings(): array
     {
         return [
-            'NIS',
             'Nama Siswa',
-            'Email',
-            'Kelas',
-            'Jenkel',
-            'Telpon',
+            'Keterangan Sikap',
+            'Nilai',
+            'Semester',
         ];
     }
 }

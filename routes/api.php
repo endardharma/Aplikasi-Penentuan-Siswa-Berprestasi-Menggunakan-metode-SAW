@@ -119,7 +119,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get("/data-support/jurusan", [RaporSiswaController::class, 'supportJurusan']);
             Route::get("/data-support/siswa", [RaporSiswaController::class, 'supportSiswa']);
             Route::get("/export-data/export-xls", [RaporSiswaController::class, 'exportData']);
-            Route::get("/export-data/download-template", [RaporSiswaController::class, 'template']);
+            Route::get("/export-data/download-template-mipa", [RaporSiswaController::class, 'templateMipa']);
+            Route::get("/export-data/download-template-iis", [RaporSiswaController::class, 'templateIis']);
             Route::post("/import-data/import-xls", [RaporSiswaController::class, 'importData']);
             Route::put("/update-data/{id}", [RaporSiswaController::class, 'updateData']);
             Route::delete("/hapus-data/{id}", [RaporSiswaController::class, 'deleteData']);
@@ -131,7 +132,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post("/list-detail", [PresensiSiswaController::class, 'listDetailPresensi']);
             Route::get("/data-support/tajar", [PresensiSiswaController::class, 'supportTajar']);
             Route::get("/data-support/jurusan", [PresensiSiswaController::class, 'supportJurusan']);
-            Route::get("/export-data/download-template", [PresensiSiswaController::class, 'template']);
+            Route::get("/export-data/download-template-mipa", [PresensiSiswaController::class, 'templateMipa']);
+            Route::get("/export-data/download-template-iis", [PresensiSiswaController::class, 'templateIis']);
             Route::post("/import-data/import-xls", [PresensiSiswaController::class, 'importData']);
             Route::get("/export-data/export-xls", [PresensiSiswaController::class, 'exportData']);
             Route::get("/data-support/siswa", [PresensiSiswaController::class, 'supportSiswa']);
@@ -146,7 +148,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
            Route::get("/data-support/jurusan", [SikapSiswaController::class, 'supportJurusan']);
            Route::post("/list", [SikapSiswaController::class, 'listSikap']); 
            Route::post("/list-detail", [SikapSiswaController::class, 'listDetailSikap']); 
-           Route::get("/export-data/download-template", [SikapSiswaController::class, 'template']);
+           Route::get("/export-data/download-template-mipa", [SikapSiswaController::class, 'templateMipa']);
+           Route::get("/export-data/download-template-iis", [SikapSiswaController::class, 'templateIis']);
            Route::post("/import-data/import-xls", [SikapSiswaController::class, 'importData']);
            Route::get("/export-data/export-xls", [SikapSiswaController::class, 'exportData']);
            Route::put("/update-data/{id}", [SikapSiswaController::class, 'updateData']);
@@ -161,7 +164,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get("/data-support/jurusan", [PrestasiSiswaController::class, 'supportJurusan']);
             Route::post("list", [PrestasiSiswaController::class, 'listPrestasi']);
             Route::post("list-detail", [PrestasiSiswaController::class, 'listDetailPrestasi']);
-            Route::get("/export-data/download-template", [PrestasiSiswaController::class, 'template']);
+            Route::get("/export-data/download-template-mipa", [PrestasiSiswaController::class, 'templateMipa']);
+            Route::get("/export-data/download-template-iis", [PrestasiSiswaController::class, 'templateIis']);
             Route::post("/import-data/import-xls", [PrestasiSiswaController::class, 'importData']);
             Route::get("/export-data/export-xls", [PrestasiSiswaController::class, 'exportData']);
             Route::put("/update-data/{id}", [PrestasiSiswaController::class, 'updateData']);
@@ -176,7 +180,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get("/data-support/tajar", [KeterlambatanSiswaController::class, 'supportTajar']);
             Route::get("/data-support/siswa", [KeterlambatanSiswaController::class, 'supportSiswa']);
             Route::get("/data-support/jurusan", [KeterlambatanSiswaController::class, 'supportJurusan']);
-            Route::get("/export-data/download-template", [KeterlambatanSiswaController::class, 'template']);
+            Route::get("/export-data/download-template-mipa", [KeterlambatanSiswaController::class, 'templateMipa']);
+            Route::get("/export-data/download-template-iis", [KeterlambatanSiswaController::class, 'templateIis']);
             Route::post("/import-data/import-xls", [KeterlambatanSiswaController::class, 'importData']);
             Route::get("/export-data/export-xls", [KeterlambatanSiswaController::class, 'exportData']);
             Route::put("/update-data/{id}", [KeterlambatanSiswaController::class, 'updateData']);
@@ -190,7 +195,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get("/data-support/tajar", [HafalanSiswaController::class, 'supportTajar']);
             Route::get("/data-support/siswa", [HafalanSiswaController::class, 'supportSiswa']);
             Route::get("/data-support/jurusan", [HafalanSiswaController::class, 'supportJurusan']);
-            Route::get("/export-data/download-template", [HafalanSiswaController::class, 'template']);
+            Route::get("/export-data/download-template-mipa", [HafalanSiswaController::class, 'templateMipa']);
+            Route::get("/export-data/download-template-iis", [HafalanSiswaController::class, 'templateIis']);
             Route::get("/export-data/export-xls", [HafalanSiswaController::class, 'exportData']);
             Route::post("/import-data/import-xls", [HafalanSiswaController::class, 'importData']);
             Route::put("/update-data/{id}", [HafalanSiswaController::class, 'updateData']);

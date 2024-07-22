@@ -688,6 +688,12 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <button type="button" class="btn btn-primary w-20 btn-unduh">Unduh</button>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-6" class="form-label">Periode Angkatan</label>
+                                <select id="tajar-import" class="form-select import-tajar" required>
+                                    <option selected disabled> --- Pilih Periode Angkatan Tahun Ajar --- </option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
                                 <label for="fileInput" class="form-label">File Excel</label>
                                 <input type="file" class="form-control" id="fileInput1" required>
                             </div>
@@ -817,16 +823,28 @@ License: You must have a valid license purchased only from themeforest(the above
                 }).then(response => response.json()).then(data => {
                     var select = jQuery('.form-tajar');
                     var selectUpdate = jQuery('.update-tajar');
+                    var selectTajar = jQuery('.import-tajar');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
                         for (let i = 0; i < item.length; i++) {
                             select.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                             selectUpdate.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selectTajar.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
                         }
                     });
                 }).catch(error => {
                     console.error('Error:', error);
+                });
+
+                //Hide Element
+                jQuery('.template-element').hide();
+                jQuery('.btn-import').hide();
+
+                // Show the element
+                jQuery('.import-tajar').change(function(){
+                    jQuery('.template-element').show();
+                    jQuery('.btn-import').show();
                 });
 
                 jQuery('.btn-simpan').click(function() {
@@ -1049,7 +1067,8 @@ License: You must have a valid license purchased only from themeforest(the above
                     jQuery('.btn-iya').click(function() {
                         // Ajax delete Api
                         jQuery.ajax({
-                            url: '{{ env('BASE_URL') }}api/master-siswa/hapus-data/' + id,
+                            // url: '{{ env('BASE_URL') }}api/master-siswa/hapus-data/' + id,
+                            url: 'http://127.0.0.1:8000/api/master-siswa/hapus-data/' + id,
                             type: 'DELETE',
                             headers: {
                                 'Authorization': 'Bearer ' + token
@@ -1089,7 +1108,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 }).showToast();
 
                                 setTimeout(function() {
-                                    location.reload();
+                                    // location.reload();
                                 }, 5000); // 3000 milliseconds = 3 seconds
                             }
                         });
@@ -1178,9 +1197,11 @@ License: You must have a valid license purchased only from themeforest(the above
                     // Get form data
                     var inp = jQuery('#fileInput1')[0];
                     var foto = inp.files[0];
+                    var selectedTahunAjar = jQuery('#tajar-import').val();
 
                     var formData = new FormData();
                     formData.append('excel', foto);
+                    formData.append('selected_tahun_ajar', selectedTahunAjar);
 
                     // Kirim permintaan pembaruan produk ke API
                     jQuery.ajax({

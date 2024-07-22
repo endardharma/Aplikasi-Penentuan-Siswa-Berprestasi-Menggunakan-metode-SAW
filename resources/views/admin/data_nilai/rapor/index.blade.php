@@ -414,7 +414,7 @@
                     <h2 class="text-lg font-medium mr-auto">
                         List Data Nilai Rapor Siswa
                     </h2>
-                    <div class="w-full sm:w-10 flex mt-4 sm:mt-0">
+                    {{-- <div class="w-full sm:w-10 flex mt-4 sm:mt-0">
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
                                 <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-lucide="list"></i> </span>
@@ -427,7 +427,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
@@ -673,15 +673,23 @@
                             <div class="col-span-12 sm:col-span-6">
                                 <label for="modal-form-1" class="form-label">Unduh Template</label>
                                 <br/>
-                                <button type="button" class="btn btn-primary w-20 btn-unduh">Unduh</button>
+                                <button type="button" class="btn btn-primary w-50 btn-unduh-mipa">Unduh MIPA</button>
+                                <button type="button" class="btn btn-primary w-50 btn-unduh-iis">Unduh IIS</button>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-6" class="form-label">Pilih Jurusan</label>
+                                    <select id="jurusan-import" class="form-select import-jurusan" name="jurusan">
+                                        <option selected disabled> --- Pilih Jurusan --- </option>
+                                    </select>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-6" class="form-label">Pilih Tahun Ajar</label>
-                                    <select id="modal-form-6" class="form-select tahun-ajar" name="tahun_ajar">
+                                    <select id="tajar-import" class="form-select tahun-ajar" name="tahun_ajar">
                                         <option selected disabled> --- Pilih Tahun Ajar --- </option>
                                     </select>
                             </div>
                             <input type="hidden" id="selected-tahun-ajar" name="selected_tahun_ajar">
+                            <input type="hidden" id="selected-jurusan" name="selected_jurusan">
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="fileInput" class="form-label">File Excel</label>
                                 <input type="file" class="form-control" id="fileInput1" required>
@@ -916,6 +924,7 @@
                 }).catch(error => {
                     console.error('Error:', error);
                 });
+                
 
                 // Data Support mapel
                 var url = 'http://127.0.0.1:8000/api/data-nilai/rapor-siswa/data-support/mapel';
@@ -954,6 +963,7 @@
                     // Panggil element select
                     var selectJurusan = jQuery('.form-jurusan');
                     var selectUpdateNama = jQuery('.update-jurusan');
+                    var selectImportJurusan = jQuery('.import-jurusan');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
@@ -961,6 +971,7 @@
                             // Isi data dengan nilai dalam database
                             selectUpdateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                             selectJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selectImportJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -989,9 +1000,9 @@
                     console.error('Error:', error);
                 });
                 
-                jQuery('.btn-unduh').click(function() {
+                jQuery('.btn-unduh-mipa').click(function() {
                     // Akses URL Export data
-                    var linkto = 'http://127.0.0.1:8000/api/data-nilai/rapor-siswa/export-data/download-template';
+                    var linkto = 'http://127.0.0.1:8000/api/data-nilai/rapor-siswa/export-data/download-template-mipa';
                     jQuery.ajax({
                         xhrFields: {
                             responseType: 'blob',
@@ -1005,7 +1016,7 @@
 
                             var disposition = xhr.getResponseHeader('content-disposition');
                             var matches = /"([^"]*)"/.exec(disposition);
-                            var filename = (matches != null && matches[1] ? matches[1] : 'Template-Rapor-Siswa.xlsx');
+                            var filename = (matches != null && matches[1] ? matches[1] : 'Template-Rapor-Siswa-Mipa.xlsx');
 
                             // The actual download
                             var blob = new Blob([result], {
@@ -1023,16 +1034,54 @@
                     });
                 })
 
+                // Button Unduh Template IIS
+                jQuery('.btn-unduh-iis').click(function() {
+                    //akses URL
+                    var linkto = 'http://127.0.0.1:8000/api/data-nilai/rapor-siswa/export-data/download-template-iis';
+                    jQuery.ajax({
+                        xhrFields: {
+                            responseType: 'blob',
+                        },
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        type: 'GET',
+                        url: linkto,
+                        success: function(result, status, xhr){
+
+                            var disposition = xhr.getResponseHeader('content-disposition');
+                            var matches = /"([^"]*)"/.exec(disposition);
+                            var filename = (matches != null && matches[1] ? matches[1] : 'Template-Rapor-Siswa-Iis.xlsx');
+
+                            // the actual download
+                            var blob = new Blob([result], {
+                                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                            });
+
+                            var link = document.createElement('a');
+                            link.href = window.URL.createObjectURL(blob);
+                            link.download = filename;
+                            document.body.appendChild(link);
+
+                            link.click();
+                            document.body.removeChild(link);
+                            
+                        }
+                    });
+                });
+
                 // Fungsi button import
                 jQuery('.btn-import').click(function() {
                     // Get form data
                     var inp = jQuery('#fileInput1')[0];
                     var foto = inp.files[0];
-                    var selectedTahunAjar = jQuery('#modal-form-6').val();
+                    var selectedTahunAjar = jQuery('#tajar-import').val();
+                    var selectedJurusan = jQuery('#jurusan-import').val();
 
                     var formData = new FormData();
                     formData.append('excel', foto);
                     formData.append('selected_tahun_ajar', selectedTahunAjar);
+                    formData.append('selected_jurusan', selectedJurusan);
 
                     // Kirim permintaan pembaruan produk ke API
                     jQuery.ajax({

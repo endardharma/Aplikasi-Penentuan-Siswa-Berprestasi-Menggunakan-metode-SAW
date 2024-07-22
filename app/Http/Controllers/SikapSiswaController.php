@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\SikapSiswaExport;
 use App\Exports\SikapSiswaTemplate;
+use App\Exports\SikapSiswaTemplateIis;
 use App\Imports\SikapSiswaImport;
 use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
@@ -286,9 +287,14 @@ class SikapSiswaController extends Controller
 
     }
 
-    public function template(Request $request)
+    public function templateMipa(Request $request)
     {
-        return Excel::download(new SikapSiswaTemplate($request->tajar), 'Template-Sikap-Siswa.xlsx');
+        return Excel::download(new SikapSiswaTemplate($request->tajar), 'Template-Sikap-Siswa-Mipa.xlsx');
+    }
+
+    public function templateIis(Request $request)
+    {
+        return Excel::download(new SikapSiswaTemplateIis($request->tajar), 'Template-Sikap-Siswa-Iis.xlsx');
     }
 
     public function importData(Request $request)
@@ -301,8 +307,9 @@ class SikapSiswaController extends Controller
         // Proses Data import
         $file = $request->file('excel');
         $selectedTahunAjar = $request->input('selected_tahun_ajar');
+        $selectedJurusan = $request->input('selected_jurusan');
 
-        Excel::import(new SikapSiswaImport($selectedTahunAjar), $file);
+        Excel::import(new SikapSiswaImport($selectedTahunAjar, $selectedJurusan), $file);
 
         return response()->json([
             'success' => true,

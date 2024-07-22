@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, WithEvents
+class PrestasiSiswaTemplateIis implements FromArray, WithHeadings, ShouldAutoSize, WithEvents
 {
     protected $data;
     
@@ -21,29 +21,29 @@ class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoS
         $this->data = $data;
     }
 
-    public function array(): array
+    public function array(): array 
     {
         $siswa = MasterSiswa::with('kelas.jurusan')->get();
         $tajar = TahunAjar::all();
-        $jurusanMipa = MasterJurusanSiswa::where('name','MIPA')->pluck('id')->first();
-
+        $jurusanMipa = MasterJurusanSiswa::where('name','IIS')->pluck('id')->first();
+        
         $data = array();
 
-        if($siswa->isNotEmpty())
+        if ($siswa->isNotEmpty())
         {
-            foreach($siswa as $s)
+            foreach ($siswa as $s)
             {
-                $jurusan_id = $s->kelas->jurusan->id ??  null;
+                $jurusan_id = $s->kelas->jurusan->id ?? null;
                 if ($jurusan_id === $jurusanMipa)
                 {
-                    foreach($tajar as $t)
+                    foreach ($tajar as $t)
                     {
                         $item = [];
                         $item['nama_siswa'] = $s->name;
-                        $item['jumlah_keterlambatan'] = 'Masukkan jumlah keterlambatan siswa masuk sekolah(0 Kali, 1-2 Kali, 3-4 Kali, 5-6 Kali, > 7 Kali)';
-                        $item['nilai'] = 'Isi nilai dengan angka';
+                        $item['ket_prestasi'] = 'Isi dengan pilihan prestasi yang sesuai (Tingkat Internasional Juara 1/2/3, Tingkat Nasional Juara 1/2/3, Tingkat Provinsi Juara 1/2/3, Tingkat Kabupaten/Kota Juara 1/2/3, Tidak Ada)';
+                        $item['nilai'] = 'Isi dengan angka yang sesuai dengan keterangan prestasi (12 = untuk Tingkat Internasional Juara 1, 11 = untuk Tingkat Internasional Juara 2, dst Hingga angka 0)';
                         $item['semester'] = $t->semester;
-                        $data[] = $item;
+                        $data[] = $item;   
                     }
                 }
             }
@@ -79,12 +79,12 @@ class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoS
             },
         ];
     }
-
+    
     public function headings(): array
     {
         return [
             'Nama Siswa',
-            'Jumlah Keterlambatan',
+            'Keterangan Prestasi',
             'Nilai',
             'Semester',
         ];

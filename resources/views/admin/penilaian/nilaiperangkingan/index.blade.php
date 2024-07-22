@@ -132,7 +132,7 @@
                         <ul class="">
                             <li>
                                 <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="gird"></i> </div>
+                                    <div class="menu__icon"> <i data-lucide="grid"></i> </div>
                                     <div class="menu__title"> Nilai Keseluruhan </div>
                                 </a>
                             </li>

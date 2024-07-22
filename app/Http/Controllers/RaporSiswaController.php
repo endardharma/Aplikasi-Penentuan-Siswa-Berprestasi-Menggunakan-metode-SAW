@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\RaporSiswaExport;
 use App\Exports\RaporSiswaTemplate;
+use App\Exports\RaporSiswaTemplateIis;
 use App\Imports\RaporSiswaImport;
 use App\Models\MasterJurusan;
 use App\Models\MasterJurusanSiswa;
@@ -298,9 +299,14 @@ class RaporSiswaController extends Controller
         ], 200);
     }
 
-    public function template(Request $request)
+    public function templateMipa(Request $request)
     {
-        return Excel::download(new RaporSiswaTemplate($request->tajar), 'Template-Rapor-Siswa.xlsx');
+        return Excel::download(new RaporSiswaTemplate($request->tajar), 'Template-Rapor-Siswa-Mipa.xlsx');
+    }
+
+    public function templateIis(Request $request)
+    {
+        return Excel::download(new RaporSiswaTemplateIis($request->tajar), 'Template-Rapor-Siswa-Iis.xlsx');
     }
 
     public function importData(Request $request)
@@ -313,8 +319,11 @@ class RaporSiswaController extends Controller
         // Proses data impor
         $file = $request->file('excel');
         $selectedTahunAjar = $request->input('selected_tahun_ajar');
+        $selectedJurusan = $request->input('selected_jurusan');
         
-        Excel::import(new RaporSiswaImport($selectedTahunAjar), $file);
+        Excel::import(new RaporSiswaImport($selectedTahunAjar, $selectedJurusan), $file);
+
+        // dd($selectedJurusan)->toArray();
 
         return response()->json([
             'success' => true,

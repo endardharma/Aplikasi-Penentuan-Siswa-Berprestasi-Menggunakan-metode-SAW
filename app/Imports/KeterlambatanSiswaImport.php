@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\KeterlambatanSiswa;
 use App\Models\MasterJurusan;
+use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\TahunAjar;
 use Illuminate\Support\Collection;
@@ -26,9 +27,12 @@ class KeterlambatanSiswaImport implements ToCollection, WithHeadingRow
     }
 
     protected $selectedTahunAjar;
-    public function __construct($selectedTahunAjar)
+    protected $selectedJurusan;
+
+    public function __construct($selectedTahunAjar, $selectedJurusan)
     {
         $this->selectedTahunAjar = $selectedTahunAjar;
+        $this->selectedJurusan = $selectedJurusan;
     }
 
     public function collection(Collection $rows)
@@ -37,9 +41,11 @@ class KeterlambatanSiswaImport implements ToCollection, WithHeadingRow
 
         foreach($rows as $row)
         {
-            $siswa = MasterSiswa::where('name','LIKE','%'.$row['nama_siswa'].'%')->first();
-            $jurusan = MasterJurusan::where('name','LIKE','%'.$row['jurusan'].'%')->first();
+            // $siswa = MasterSiswa::where('name','LIKE','%'.$row['nama_siswa'].'%')->first();
+            // $jurusan = MasterJurusan::where('name','LIKE','%'.$row['jurusan'].'%')->first();
+            $siswa = MasterSiswa::where('name', $row['nama_siswa'])->first();
             $tajar = TahunAjar::find($this->selectedTahunAjar);
+            $jurusan = MasterJurusanSiswa::find($this->selectedJurusan);
 
             if($tajar && $siswa && $jurusan)
             {
@@ -51,7 +57,7 @@ class KeterlambatanSiswaImport implements ToCollection, WithHeadingRow
                     'nama_siswa' => $row['nama_siswa'],
                     'jumlah_keterlambatan' => $row['jumlah_keterlambatan'],
                     'nilai' => $row['nilai'],
-                    'jurusan' => $row['jurusan'],
+                    'jurusan' => $jurusan->name,
                     'semester' => $row['semester'],
                     'tahun_ajar' => $tajar->name,
                 ]);

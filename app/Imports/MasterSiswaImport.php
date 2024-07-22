@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Models\MasterJurusan;
 use App\Models\MasterMapel;
 use App\Models\MasterSiswa;
+use App\Models\TahunAjar;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -17,25 +18,36 @@ class MastersiswaImport implements ToCollection, WithHeadingRow
     public function rules(): array
     {
         return [
-            'nis' => 'required',
-            'nama_siswa' => 'required',
             'email' => 'required|string|email|max:255|unique:master_siswas',
-            'kelas' => 'required',
+            'name' => 'required',
+            'nis' => 'required',
+            'kelas_id' => 'required',
             'jenkel' => 'required',
+            'tajar_id' => 'required',
             'telpon' => 'required',
-            'periode_angkatan' => 'required',
         ];
     }
  
+    protected $selectedTahunAjar;
+
+    public function __construct($selectedTahunAjar)
+    {
+        $this->selectedTahunAjar = $selectedTahunAjar;
+    }
+    
     public function collection(Collection $rows)
     {
-        foreach ($rows as $row) {
+        foreach ($rows as $row) 
+        {
             $kelas = MasterJurusan::where('name','LIKE','%'.$row['kelas'].'%')->where('is_active',1)->first();
-            if($kelas)
+            $tajar = TahunAjar::find($this->selectedTahunAjar);
+            
+            if($kelas && $tajar)
             {
-                $siswa = MasterSiswa::updateOrCreate([
+                MasterSiswa::updateOrCreate([
                     'kelas_id' => $kelas->id,
-                    'name' => $row['name'],
+                    'tajar_id' => $tajar->id,
+                    'name' => $row['nama_siswa'],
                     'email' => $row['email'],
                 ],[
                     'nis' => $row['nis'],
@@ -44,7 +56,7 @@ class MastersiswaImport implements ToCollection, WithHeadingRow
                     'kelas_id' => $kelas->id,
                     'jenkel' => $row['jenkel'],
                     'telpon' => $row['telpon'],
-                    'periode' => $row['periode'],
+                    'tajar_id' => $tajar->id,
                 ]);
             }
         }

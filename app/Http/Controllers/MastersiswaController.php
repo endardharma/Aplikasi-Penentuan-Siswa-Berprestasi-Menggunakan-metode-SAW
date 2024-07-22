@@ -129,6 +129,7 @@ class MastersiswaController extends Controller
         {
             $item['id'] = $t->id;
             $item['name'] = $t->name;
+            $item['periode'] = $t->periode;
             $data[] = $item;
         }
 
@@ -214,8 +215,11 @@ class MastersiswaController extends Controller
 
         // Proses data impor
         $file = $request->file('excel');
+        $selectedTahunAjar = $request->input('selected_tahun_ajar');
 
-        Excel::import(new MastersiswaImport, $file);
+        Excel::import(new MastersiswaImport($selectedTahunAjar), $file);
+
+        // dd($selectedTahunAjar)->toArray();
 
         return response()->json([
             'success' => true,

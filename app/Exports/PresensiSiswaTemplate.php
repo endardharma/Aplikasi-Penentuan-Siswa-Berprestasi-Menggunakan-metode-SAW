@@ -30,7 +30,7 @@ class PresensiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
         // Fungsi template export dan detail rapor siswa
         $siswa = MasterSiswa::with('kelas.jurusan')->get();
         $tajar = TahunAjar::all();
-        // $jurusan = MasterJurusanSiswa::first();
+        $jurusanMipa = MasterJurusanSiswa::where('name', 'MIPA')->pluck('id')->first();
         
         $data = array();
 
@@ -39,7 +39,7 @@ class PresensiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
             foreach($siswa as $s)
             {
                 $jurusan_id = $s->kelas->jurusan->id ?? null;
-                if ($jurusan_id)
+                if ($jurusan_id === $jurusanMipa)
                 {
                     foreach($tajar as $t)
                     {
@@ -49,7 +49,8 @@ class PresensiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
                         $item['jumlah_hari'] = 'Isi dengan angka berapa hari tidak masuk';
                         $item['jumlah_hari_lainnya'] = 'Isi dengan angka berapa hari tidak masuk yang melebihi 4 hari';
                         $item['nilai'] = 'Isi nilai dengan angka(0 - 5) sesuai dengan jumlah hari';
-                        $item['jurusan'] = $s->jurusan ? $s->jurusan->name : 'Jurusan tidak ditemukan';
+                        // $item['jurusan'] = $s->jurusan ? $s->jurusan->name : 'Jurusan tidak ditemukan';
+                        // $jurusanSiswa = MasterJurusanSiswa::find($m->jurusan_id);
                         $item['semester'] = $t->semester;
                         $data[] = $item;
                     }
@@ -63,7 +64,7 @@ class PresensiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:G1'; // All headers
+                $cellRange = 'A1:F1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -97,9 +98,7 @@ class PresensiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
             'Jumlah Hari',
             'Jumlah Hari Lainnya',
             'Nilai',
-            'Jurusan',
             'Semester',
-            // 'Tahun Ajar',
         ];
     }
 }

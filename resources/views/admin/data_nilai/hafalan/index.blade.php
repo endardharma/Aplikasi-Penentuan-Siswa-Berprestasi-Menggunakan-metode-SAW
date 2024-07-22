@@ -634,11 +634,18 @@
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-1" class="form-label">Unduh Template</label>
                                 <br/>
-                                <button type="button" class="btn btn-primary w-20 btn-unduh">Unduh</button>
+                                <button type="button" class="btn btn-primary w-50 btn-unduh-mipa">Unduh MIPA</button>
+                                <button type="button" class="btn btn-primary w-50 btn-unduh-iis">Unduh IIS</button>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                            <label for="modal-form-6" class="form-label">Pilih Jurusan</label>
+                                <select id="jurusan-import" class="form-select import-jurusan">
+                                    <option selected disabled> --- Pilih Jurusan --- </option>
+                                </select>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                             <label for="modal-form-6" class="form-label">Pilih Tahun Ajar</label>
-                                <select id="modal-form-6" class="form-select tahun-ajar">
+                                <select id="tajar-import" class="form-select import-tajar">
                                     <option selected disabled> --- Pilih Tahun Ajar --- </option>
                                 </select>
                             </div>
@@ -886,7 +893,7 @@
                 });
 
                 // Show Element
-                jQuery('.tahun-ajar').change(function(){
+                jQuery('.import-tajar').change(function(){
                     jQuery('.template-element').show();
                     jQuery('.btn-import').show();
                 });
@@ -900,7 +907,7 @@
                     }
                 }).then(response => response.json()).then(data => {
 
-                    var select = jQuery('.tahun-ajar');
+                    var select = jQuery('.import-tajar');
                     
                     // iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item){
@@ -947,6 +954,7 @@
                     // Panggil element select
                     var selectJurusan = jQuery('.form-jurusan');
                     var selectUpdateNama = jQuery('.update-jurusan');
+                    var selectImportJurusan = jQuery('.import-jurusan');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
@@ -954,6 +962,7 @@
                             // Isi data dengan nilai dalam database
                             selectUpdateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                             selectJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selectImportJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -961,9 +970,9 @@
                 });
 
                 // Button Unduh Template
-                jQuery('.btn-unduh').click(function(){
+                jQuery('.btn-unduh-mipa').click(function(){
                     // Akses URL Export Data
-                    var linkto = 'http://127.0.0.1:8000/api/data-nilai/hafalan-siswa/export-data/download-template';
+                    var linkto = 'http://127.0.0.1:8000/api/data-nilai/hafalan-siswa/export-data/download-template-mipa';
                     jQuery.ajax({
                         xhrFields: {
                             responseType: 'blob',
@@ -977,7 +986,43 @@
 
                             var disposition = xhr.getResponseHeader('content-disposition');
                             var matches = /"([^"]*)"/.exec(disposition);
-                            var filename = (matches != null && matches[1] ? matches[1] : 'Template-Hafalan-Siswa.xlsx');
+                            var filename = (matches != null && matches[1] ? matches[1] : 'Template-Hafalan-Siswa-Mipa.xlsx');
+
+                            // the actual donwload
+                            var blob = new Blob([result], {
+                                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                            });
+
+                            var link = document.createElement('a');
+                            link.href = window.URL.createObjectURL(blob);
+                            link.download = filename;
+                            document.body.appendChild(link);
+
+                            link.click();
+                            document.body.removeChild(link);
+                            
+                        }
+                    });
+                });
+
+                // Button Unduh Template IIS
+                jQuery('.btn-unduh-iis').click(function(){
+                    // Akses URL Export Data
+                    var linkto = 'http://127.0.0.1:8000/api/data-nilai/hafalan-siswa/export-data/download-template-iis';
+                    jQuery.ajax({
+                        xhrFields: {
+                            responseType: 'blob',
+                        },
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        type: 'GET',
+                        url: linkto,
+                        success: function(result, status, xhr){
+
+                            var disposition = xhr.getResponseHeader('content-disposition');
+                            var matches = /"([^"]*)"/.exec(disposition);
+                            var filename = (matches != null && matches[1] ? matches[1] : 'Template-Hafalan-Siswa-Iis.xlsx');
 
                             // the actual donwload
                             var blob = new Blob([result], {
@@ -1139,11 +1184,13 @@
                     // Get Form Data
                     var inp = jQuery('#fileInput1')[0];
                     var foto = inp.files[0];
-                    var selectedTahunAjar = jQuery('#modal-form-6').val();
+                    var selectedTahunAjar = jQuery('#tajar-import').val();
+                    var selectedJurusan = jQuery('#jurusan-import').val();
 
                     var formData = new FormData();
                     formData.append('excel', foto);
                     formData.append('selected_tahun_ajar', selectedTahunAjar);
+                    formData.append('selected_jurusan', selectedJurusan);
 
                     // Kirim permintaan pembaruan produk ke API
                     jQuery.ajax({

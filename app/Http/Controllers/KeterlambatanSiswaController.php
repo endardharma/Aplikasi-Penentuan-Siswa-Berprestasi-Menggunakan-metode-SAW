@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\KeterlambatanSiswaExport;
 use App\Exports\KeterlambatanSiswaTemplate;
+use App\Exports\KeterlambatanSiswaTemplateIis;
 use App\Imports\KeterlambatanSiswaImport;
 use App\Models\KeterlambatanSiswa;
 use App\Models\MasterJurusanSiswa;
@@ -293,9 +294,14 @@ class KeterlambatanSiswaController extends Controller
         }
     }
 
-    public function template(Request $request)
+    public function templateMipa(Request $request)
     {
-        return Excel::download(new KeterlambatanSiswaTemplate($request->tajar), 'Template-Keterlambatan-Siswa.xlsx');
+        return Excel::download(new KeterlambatanSiswaTemplate($request->tajar), 'Template-Keterlambatan-Siswa-Mipa.xlsx');
+    }
+    
+    public function templateIis(Request $request)
+    {
+        return Excel::download(new KeterlambatanSiswaTemplateIis($request->tajar), 'Template-Keterlambatan-Siswa-Iis.xlsx');
     }
 
     public function importData(Request $request)
@@ -308,8 +314,9 @@ class KeterlambatanSiswaController extends Controller
         // Proses Import Data
         $file = $request->file('excel');
         $selectedTahunAjar = $request->input('selected_tahun_ajar');
+        $selectedJurusan = $request->input('selected_jurusan');
         
-        Excel::import(new KeterlambatanSiswaImport($selectedTahunAjar), $file);
+        Excel::import(new KeterlambatanSiswaImport($selectedTahunAjar, $selectedJurusan), $file);
 
         return response()->json([
             'success' => true,

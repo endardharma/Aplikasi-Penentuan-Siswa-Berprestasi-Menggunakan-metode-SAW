@@ -172,62 +172,52 @@ class NilaiPerangkinganController extends Controller
             $nilaiakhir[$s->id] = $nilaiakhirsiswa;
         }
 
-        $data = array();
-        foreach ($nilaiPerangkingan as $s)
-        {
-            $item['id'] = $s->id;
-            $item['nama_siswa'] = $s->siswa->name;
-            $item['nilai_akhir'] = $nilaiakhir[$s->siswa->id] ?? 0;
-            $item['jurusan'] = $s->siswa->kelas->jurusan->name;
-            $item['semester'] = $s->tajar->semester;
-            $item['tahun_ajar'] = $s->tajar->periode;
-
-            $data[] = $item;
-
-            $updateDa = [
-                'nilai_akhir' => $nilaiakhir[$s->siswa->id] ?? 0,
-            ];
-
-            $recordData = NilaiPerangkingan::where('siswa_id', $s->siswa->id)
-                                        ->where('tajar_id', $s->tajar->id)
-                                        ->where('jurusan_id', $s->siswa->kelas->jurusan_id)
-                                        ->first();
-            if ($recordData)
-            {
-                $recordData->update($updateDa);
-            } else
-            {
-                NilaiPerangkingan::create(
-                    [
-                        'siswa_id' => $s->siswa->id,
-                        'tajar_id' => $s->tajar->id,
-                        'jurusan_id' => $s->siswa->kelas->jurusan_id,
-                    ],
-                    [
-                        'nilai_akhir' => $nilaiakhir[$s->siswa->id] ?? 0,
-                    ]
-                );
-            }
+        // Simpan data secara otomatis
+        foreach ($siswa as $siswa) {
+            NilaiPerangkingan::updateOrCreate(
+                [
+                    'siswa_id' => $siswa->id,
+                    'tajar_id' => $siswa->tajar->id,
+                    'jurusan_id' => $siswa->kelas->jurusan_id,
+                ],
+                [
+                    'nilai_akhir' => $nilaiakhir[$siswa->id] ?? 0,
+                ]
+            );
         }
-
+    
+        // Menyiapkan data untuk ditampilkan
+        $data = [];
+        foreach ($nilaiPerangkingan as $s) {
+            $item = [
+                'id' => $s->id,
+                'nama_siswa' => $s->siswa->name,
+                'nilai_akhir' => $nilaiakhir[$s->siswa->id] ?? 0,
+                'jurusan' => $s->siswa->kelas->jurusan->name,
+                'semester' => $s->tajar->semester,
+                'tahun_ajar' => $s->tajar->periode,
+            ];
+    
+            $data[] = $item;
+        }
+    
         // sortir data berdasarkan kolom yang diinginkan
         if (isset($columns[$orderColumnIndex])) {
             $orderColumn = $columns[$orderColumnIndex];
-    
+
             usort($data, function ($a, $b) use ($orderColumn, $dir) {
-                if ($dir === 'asc') 
-                {
+                if ($dir === 'asc') {
+                    // Urutkan dari yang terkecil ke yang terbesar
                     return $a[$orderColumn] <=> $b[$orderColumn];
-                } 
-                else 
-                {
+                } else {
+                    // Urutkan dari yang terbesar ke yang terkecil
                     return $b[$orderColumn] <=> $a[$orderColumn];
                 }
             });
         }
-        
-        // Mengurutkan data berdasarkan nilai_akhir
-        usort($data, function ($a, $b){
+
+        // Jika ingin mengurutkan berdasarkan nilai_akhir dari tertinggi ke terendah secara default
+        usort($data, function ($a, $b) {
             return $b['nilai_akhir'] <=> $a['nilai_akhir'];
         });
 
@@ -347,37 +337,51 @@ class NilaiPerangkinganController extends Controller
             $nilaiakhir[$s->id] = $nilaiakhirsiswa;
         }
 
-        $data = array();
-        foreach ($nilaiPerangkingan as $s)
-        {
-            $item['id'] = $s->id;
-            $item['nama_siswa'] = $s->siswa->name;
-            $item['nilai_akhir'] = $nilaiakhir[$s->siswa->id] ?? 0;
-            $item['jurusan'] = $s->siswa->kelas->jurusan->name;
-            $item['semester'] = $s->tajar->semester;
-            $item['tahun_ajar'] = $s->tajar->periode;
-
+        foreach ($siswa as $siswa) {
+            NilaiPerangkingan::updateOrCreate(
+                [
+                    'siswa_id' => $siswa->id,
+                    'tajar_id' => $siswa->tajar->id,
+                    'jurusan_id' => $siswa->kelas->jurusan_id,
+                ],
+                [
+                    'nilai_akhir' => $nilaiakhir[$siswa->id] ?? 0,
+                ]
+            );
+        }
+    
+        // Menyiapkan data untuk ditampilkan
+        $data = [];
+        foreach ($nilaiPerangkingan as $s) {
+            $item = [
+                'id' => $s->id,
+                'nama_siswa' => $s->siswa->name,
+                'nilai_akhir' => $nilaiakhir[$s->siswa->id] ?? 0,
+                'jurusan' => $s->siswa->kelas->jurusan->name,
+                'semester' => $s->tajar->semester,
+                'tahun_ajar' => $s->tajar->periode,
+            ];
+    
             $data[] = $item;
         }
-
-        // sortir data berdasarkan kolom yang diinginkan
+    
+        // Mengurutkan data berdasarkan kolom yang diinginkan
         if (isset($columns[$orderColumnIndex])) {
             $orderColumn = $columns[$orderColumnIndex];
-    
+
             usort($data, function ($a, $b) use ($orderColumn, $dir) {
-                if ($dir === 'asc') 
-                {
+                if ($dir === 'asc') {
+                    // Urutkan dari yang terkecil ke yang terbesar
                     return $a[$orderColumn] <=> $b[$orderColumn];
-                } 
-                else 
-                {
+                } else {
+                    // Urutkan dari yang terbesar ke yang terkecil
                     return $b[$orderColumn] <=> $a[$orderColumn];
                 }
             });
         }
-        
-        // Mengurutkan data berdasarkan nilai_akhir
-        usort($data, function ($a, $b){
+
+        // Jika ingin mengurutkan berdasarkan nilai_akhir dari tertinggi ke terendah secara default
+        usort($data, function ($a, $b) {
             return $b['nilai_akhir'] <=> $a['nilai_akhir'];
         });
 
