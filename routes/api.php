@@ -44,7 +44,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get("/data-support/siswa", [DashboardController::class, 'jumlahSiswa']);
         Route::get("/data-support/guru", [DashboardController::class, 'jumlahGuru']);
         Route::get("data-support/user", [DashboardController::class, 'jumlahUser']);
-        Route::get("/data-support/nilai", [DashboardController::class, 'nilaiTertinggi']);
+        Route::get("/data-support/nilai-mipa", [DashboardController::class, 'nilaiTertinggiMipa']);
+        Route::get("/data-support/nilai-iis", [DashboardController::class, 'nilaiTertinggiIis']);
         Route::get("/chart-data/{jurusan_id}", [DashboardController::class, 'getChartData']);
         Route::get("/data-support/jurusan", [DashboardController::class, 'supportJurusan']);
     });

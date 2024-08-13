@@ -76,17 +76,63 @@ class DashboardController extends Controller
         ], 200);
     }
 
-    public function nilaiTertinggi()
-    {
-        $find = NilaiPerangkingan::max('nilai_akhir');
-        $findName = NilaiPerangkingan::where('nilai_akhir', $find)->first();
+    // public function nilaiTertinggiMipa()
+    // {
+    //     $find = NilaiPerangkingan::max('nilai_akhir');
+    //     $findName = NilaiPerangkingan::where('nilai_akhir', $find)->first();
 
-        $namaSiswa = $findName->siswa->name ?? '';
+    //     $namaSiswa = $findName->siswa->name ?? '';
+
+    //     return response()->json([
+    //         'nama_siswa' => $namaSiswa,
+    //         'nilai_tertinggi' => $find,
+    //         'message' => 'Nilai tertinggi saat ini yaitu : '.$find
+    //     ], 200);
+    // }
+
+    public function nilaiTertinggiMipa()
+    {
+        $jurusanName = 'MIPA';
+        
+        $nilaiMax = NilaiPerangkingan::whereHas('jurusan', function($query) use ($jurusanName){
+            $query->where('name', $jurusanName);
+        })->max('nilai_akhir');
+
+        // dd($nilaiMax);
+
+        $nilaiPerangkingan = NilaiPerangkingan::whereHas('jurusan', function($query) use ($jurusanName){
+            $query->where('name', $jurusanName);
+        })->where('nilai_akhir', $nilaiMax)->first();
+
+        $namaSiswa = $nilaiPerangkingan->siswa->name ?? '';
 
         return response()->json([
             'nama_siswa' => $namaSiswa,
-            'nilai_tertinggi' => $find,
-            'message' => 'Nilai tertinggi saat ini yaitu : '.$find
+            'nilai_tertinggi' => $nilaiMax,
+            'message' => 'Nilai tertinggi saat ini di jurusan MIPA yaitu: ' . $nilaiMax 
+        ], 200);
+    }
+
+    public function nilaiTertinggiIis()
+    {
+        $jurusanName = 'IIS';
+        
+        $nilaiMax = NilaiPerangkingan::whereHas('jurusan', function($query) use ($jurusanName){
+            $query->where('name', $jurusanName);
+        })->max('nilai_akhir');
+
+        // dd($nilaiMax);
+
+        $nilaiPerangkingan = NilaiPerangkingan::whereHas('jurusan', function($query) use ($jurusanName){
+            $query->where('name', $jurusanName);
+        })->where('nilai_akhir', $nilaiMax)->first();
+
+        $namaSiswa = $nilaiPerangkingan->siswa->name ?? '';
+
+        return response()->json([
+            'nama_siswa' => $namaSiswa,
+            'nilai_tertinggi' => $nilaiMax,
+            'message' => 'Nilai tertinggi saat ini di jurusan IIS yaitu: ' . $nilaiMax 
         ], 200);
     }
 

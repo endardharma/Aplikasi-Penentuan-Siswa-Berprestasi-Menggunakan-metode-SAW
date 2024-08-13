@@ -48,85 +48,85 @@ License: You must have a valid license purchased only from themeforest(the above
             <div class="scrollable">
                 <a href="javascript:;" class="mobile-menu-toggler"> <i data-lucide="x-circle" class="w-8 h-8 text-white transform -rotate-90"></i> </a>
                 <ul class="scrollable__content py-2">
-                    <li>
-                        <a href="{{ route('dashboard') }}" class="menu">
+                    <li class="mobile-dashboard">
+                        <a href="{{ route('dashboard') }}" class="menu menu--active">
                             <div class="menu__icon"> <i data-lucide="airplay"></i> </div>
                             <div class="menu__title"> Dashboard </div>
                         </a>
                     </li>
-                    <li>
+                    <li class="mobile-masterguru">
                         <a href="{{ route('masterguru') }}" class="menu">
                             <div class="menu__icon"> <i data-lucide="user-check"></i> </div>
                             <div class="menu__title"> Master Guru </div>
                         </a>
                     </li>
-                    <li>
+                    <li class="mobile-mastersiswa">
                         <a href="{{ route('mastersiswa') }}" class="menu">
                             <div class="menu__icon"> <i data-lucide="users"></i> </div>
                             <div class="menu__title"> Master Siswa </div>
                         </a>
                     </li>
-                    <li>
+                    <li class="mobile-masterkelas">
                         <a href="{{ route('masterjurusan') }}" class="menu">
                             <div class="menu__icon"> <i data-lucide="home"></i> </div>
                             <div class="menu__title"> Master Kelas </div>
                         </a>
                     </li>
-                    <li>
+                    <li class="mobile-mastermapel">
                         <a href="{{ route('masterpelajaran') }}" class="menu">
                             <div class="menu__icon"> <i data-lucide="book-open"></i> </div>
                             <div class="menu__title"> Master Mapel </div>
                         </a>
                     </li>
-                    <li>
+                    <li class="mobile-datatajar">
                         <a href="{{ route('mastertajar') }}" class="menu">
                             <div class="menu__icon"> <i data-lucide="calendar"></i> </div>
                             <div class="menu__title"> Data Tahun Ajar </div>
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ route('masterkriteria') }}" class="menu menu--active">
+                    <li class="mobile-kriteria">
+                        <a href="{{ route('masterkriteria') }}" class="menu">
                             <div class="menu__icon"> <i data-lucide="list"></i> </div>
                             <div class="menu__title"> Data Kriteria </div>
                         </a>
                     </li>
-                    <li>
+                    <li class="mobile-datanilai">
                         <a href="javascript:;" class="menu">
                             <div class="menu__icon"> <i data-lucide="book-open"></i> </div>
                             <div class="menu__title"> Data Nilai <i data-lucide="chevron-down" class="menu__sub-icon "></i> </div>
                         </a>
                         <ul class="">
-                            <li>
+                            <li class="mobile-rapor">
                                 <a href="{{ route('data_nilai.rapor') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="book"></i> </div>
                                     <div class="menu__title"> Rapor </div>
                                 </a>
                             </li>
-                            <li>
+                            <li class="mobile-presensi">
                                 <a href="{{ route('data_nilai.presensi') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="clipboard"></i> </div>
                                     <div class="menu__title"> Presensi </div>
                                 </a>
                             </li>
-                            <li>
+                            <li class="mobile-sikapsiswa">
                                 <a href="{{ route('data_nilai.sikap') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="thumbs-up"></i> </div>
                                     <div class="menu__title"> Sikap Siswa </div>
                                 </a>
                             </li>
-                            <li>
+                            <li class="mobile-prestasi">
                                 <a href="{{ route('data_nilai.prestasi') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="activity"></i> </div>
                                     <div class="menu__title"> Prestasi </div>
                                 </a>
                             </li>
-                            <li>
+                            <li class="mobile-keterlambatan">
                                 <a href="{{ route('data_nilai.keterlambatan') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="calendar"></i> </div>
                                     <div class="menu__title"> Keterlambatan </div>
                                 </a>
                             </li>
-                            <li>
+                            <li class="mobile-hafalan">
                                 <a href="{{ route('data_nilai.hafalan') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="album"></i> </div>
                                     <div class="menu__title"> Hafalan Qur'an </div>
@@ -134,25 +134,25 @@ License: You must have a valid license purchased only from themeforest(the above
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <a href="javascript:;" class="menu">
+                    <li class="mobile-penilaian">
+                        <a href="javascript:;" class="menu menu--active">
                             <div class="menu__icon"> <i data-lucide="book"></i> </div>
                             <div class="menu__title"> Penilaian <i data-lucide="chevron-down" class="menu__sub-icon "></i> </div>
                         </a>
                         <ul class="">
-                            <li>
+                            <li class="mobile-nilaikes">
                                 <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="menu">
-                                    <div class="menu__icon"> <i data-lucide="grid"></i> </div>
+                                    <div class="menu__icon"> <i data-lucide="award"></i> </div>
                                     <div class="menu__title"> Nilai Keseluruhan </div>
                                 </a>
                             </li>
-                            <li>
+                            <li class="mobile-normalisasi">
                                 <a href="{{ route('penilaian.nilainormalisasi') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="trello"></i> </div>
                                     <div class="menu__title"> Nilai Normalisasi </div>
                                 </a>
                             </li>
-                            <li>
+                            <li class="mobile-perangkingan">
                                 <a href="{{ route('penilaian.nilaiperangkingan') }}" class="menu">
                                     <div class="menu__icon"> <i data-lucide="award"></i> </div>
                                     <div class="menu__title"> Perangkingan </div>
@@ -173,49 +173,49 @@ License: You must have a valid license purchased only from themeforest(the above
                 </a>
                 <div class="side-nav__devider my-6"></div>
                 <ul>
-                    <li>
-                        <a href="{{ route('dashboard') }}" class="side-menu">
+                    <li class="desktop-dashboard">
+                        <a href="{{ route('dashboard') }}" class="side-menu side-menu--active">
                             <div class="side-menu__icon"> <i data-lucide="airplay"></i> </div>
                             <div class="side-menu__title"> Dashboard </div>
                         </a>
                     </li>
-                    <li>
+                    <li class="desktop-masterguru">
                         <a href="{{ route('masterguru') }}" class="side-menu">
                             <div class="side-menu__icon"> <i data-lucide="user-check"></i> </div>
                             <div class="side-menu__title"> Master Guru </div>
                         </a>
                     </li>
-                    <li>
+                    <li class="desktop-mastersiswa">
                         <a href="{{ route('mastersiswa') }}" class="side-menu">
                             <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
                             <div class="side-menu__title"> Master Siswa </div>
                         </a>
                     </li>
-                    <li>
+                    <li class="desktop-masterkelas">
                         <a href="{{ route('masterjurusan') }}" class="side-menu">
                             <div class="side-menu__icon"> <i data-lucide="home"></i> </div>
                             <div class="side-menu__title"> Master Kelas </div>
                         </a>
                     </li>
-                    <li>
+                    <li class="desktop-mastermapel">
                         <a href="{{ route('masterpelajaran') }}" class="side-menu">
                             <div class="side-menu__icon"> <i data-lucide="book-open"></i> </div>
                             <div class="side-menu__title"> Master Mapel </div>
                         </a>
                     </li>
-                    <li>
+                    <li class="desktop-datatajar">
                         <a href="{{ route('mastertajar') }}" class="side-menu">
                             <div class="side-menu__icon"> <i data-lucide="calendar"></i> </div>
                             <div class="side-menu__title"> Data Tahun Ajar </div>
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ route('masterkriteria') }}" class="side-menu side-menu--active">
+                    <li class="desktop-kriteria">
+                        <a href="{{ route('masterkriteria') }}" class="side-menu">
                             <div class="side-menu__icon"> <i data-lucide="list"></i> </div>
                             <div class="side-menu__title"> Data Kriteria </div>
                         </a>
                     </li>
-                    <li>
+                    <li class="desktop-datanilai">
                         <a href="javascript:;" class="side-menu">
                             <div class="side-menu__icon"> <i data-lucide="book-open"></i> </div>
                             <div class="side-menu__title">
@@ -224,37 +224,37 @@ License: You must have a valid license purchased only from themeforest(the above
                             </div>
                         </a>
                         <ul class="">
-                            <li>
+                            <li class="desktop-rapor">
                                 <a href="{{ route('data_nilai.rapor') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="book"></i> </div>
                                     <div class="side-menu__title"> Rapor </div>
                                 </a>
                             </li>
-                            <li>
+                            <li class="desktop-presensi">
                                 <a href="{{ route('data_nilai.presensi') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="clipboard"></i> </div>
                                     <div class="side-menu__title"> Presensi </div>
                                 </a>
                             </li>
-                            <li>
+                            <li class="desktop-sikapsiswa">
                                 <a href="{{ route('data_nilai.sikap') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="thumbs-up"></i> </div>
                                     <div class="side-menu__title"> Sikap Siswa </div>
                                 </a>
                             </li>
-                            <li>
+                            <li class="desktop-prestasi">
                                 <a href="{{ route('data_nilai.prestasi') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="activity"></i> </div>
                                     <div class="side-menu__title"> Prestasi </div>
                                 </a>
                             </li>
-                            <li>
+                            <li class="desktop-keterlambatan">
                                 <a href="{{ route('data_nilai.keterlambatan') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="calendar"></i> </div>
                                     <div class="side-menu__title"> Keterlambatan </div>
                                 </a>
                             </li>
-                            <li>
+                            <li class="desktop-hafalan">
                                 <a href="{{ route('data_nilai.hafalan') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="album"></i> </div>
                                     <div class="side-menu__title"> Hafalan Qur'an </div>
@@ -262,7 +262,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             </li>
                         </ul>
                     </li>
-                    <li>
+                    <li class="desktop-penilaian">
                         <a href="javascript:;" class="side-menu">
                             <div class="side-menu__icon"> <i data-lucide="book"></i> </div>
                             <div class="side-menu__title">
@@ -271,19 +271,19 @@ License: You must have a valid license purchased only from themeforest(the above
                             </div>
                         </a>
                         <ul class="">
-                            <li>
+                            <li class="desktop-nilaikes">
                                 <a href="{{ route('penilaian.nilaikeseluruhan') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="grid"></i> </div>
                                     <div class="side-menu__title"> Nilai Keseluruhan </div>
                                 </a>
                             </li>
-                            <li>
+                            <li class="desktop-nilainormalisasi">
                                 <a href="{{ route('penilaian.nilainormalisasi') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="trello"></i> </div>
                                     <div class="side-menu__title"> Nilai Normalisasi </div>
                                 </a>
                             </li>
-                            <li>
+                            <li class="desktop-perangkingan">
                                 <a href="{{ route('penilaian.nilaiperangkingan') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="award"></i> </div>
                                     <div class="side-menu__title"> Perangkingan </div>
@@ -685,6 +685,299 @@ License: You must have a valid license purchased only from themeforest(the above
                         'Authorization': 'Bearer ' + token
                     }
                 }).then(response => response.json()).then(data => {
+
+                    // Pisahkan role sesuai user_id
+                    if(data.role_id == 2)
+                    {
+                        // Desktop
+                        jQuery('.desktop-presensi').show();
+                        jQuery('.desktop-keterlambatan').show();
+                        
+                        jQuery('.desktop-admin').hide();
+                        jQuery('.desktop-masterguru').hide();
+                        jQuery('.desktop-mastersiswa').hide();
+                        jQuery('.desktop-masterkelas').hide();
+                        jQuery('.desktop-mastermapel').hide();
+                        jQuery('.desktop-datatajar').hide();
+                        jQuery('.desktop-kriteria').hide();
+                        jQuery('.desktop-rapor').hide();
+                        jQuery('.desktop-sikapsiswa').hide();
+                        jQuery('.desktop-prestasi').hide();
+                        jQuery('.desktop-hafalan').hide();
+                        jQuery('.desktop-penilaian').hide();
+                        jQuery('.desktop-nilaikes').hide();
+                        jQuery('.desktop-nilainormalisasi').hide();
+                        jQuery('.desktop-perangkingan').hide();
+
+                        // Desktop
+                        jQuery('.mobile-presensi').show();
+                        jQuery('.mobile-keterlambatan').show();
+                        
+                        jQuery('.mobile-admin').hide();
+                        jQuery('.mobile-masterguru').hide();
+                        jQuery('.mobile-mastersiswa').hide();
+                        jQuery('.mobile-masterkelas').hide();
+                        jQuery('.mobile-mastermapel').hide();
+                        jQuery('.mobile-datatajar').hide();
+                        jQuery('.mobile-kriteria').hide();
+                        jQuery('.mobile-rapor').hide();
+                        jQuery('.mobile-sikapsiswa').hide();
+                        jQuery('.mobile-prestasi').hide();
+                        jQuery('.mobile-hafalan').hide();
+                        jQuery('.mobile-penilaian').hide();
+                        jQuery('.mobile-nilaikes').hide();
+                        jQuery('.mobile-nilainormalisasi').hide();
+                        jQuery('.mobile-perangkingan').hide();
+                        
+                    }else if(data.role_id == 3) {
+                        // Desktop
+                        jQuery('.desktop-presensi').hide();
+                        jQuery('.desktop-keterlambatan').hide();
+                        jQuery('.desktop-admin').hide();
+                        jQuery('.desktop-masterguru').hide();
+                        jQuery('.desktop-mastersiswa').hide();
+                        jQuery('.desktop-masterkelas').hide();
+                        jQuery('.desktop-mastermapel').hide();
+                        jQuery('.desktop-datatajar').hide();
+
+                        jQuery('.desktop-kriteria').show();
+
+                        jQuery('.desktop-rapor').hide();
+                        jQuery('.desktop-sikap').hide();
+                        jQuery('.desktop-prestasi').hide();
+                        jQuery('.desktop-hafalan').hide();
+
+                        jQuery('.desktop-nilaikes').show();
+                        jQuery('.desktop-nilainormalisasi').show();
+                        jQuery('.desktop-perangkingan').show();
+
+                        // Mobile
+                        jQuery('.mobile-presensi').hide();
+                        jQuery('.mobile-keterlambatan').hide();
+                        jQuery('.mobile-admin').hide();
+                        jQuery('.mobile-masterguru').hide();
+                        jQuery('.mobile-mastersiswa').hide();
+                        jQuery('.mobile-masterkelas').hide();
+                        jQuery('.mobile-mastermapel').hide();
+                        jQuery('.mobile-datatajar').hide();
+
+                        jQuery('.mobile-kriteria').show();
+
+                        jQuery('.mobile-rapor').hide();
+                        jQuery('.mobile-sikap').hide();
+                        jQuery('.mobile-prestasi').hide();
+                        jQuery('.mobile-hafalan').hide();
+
+                        jQuery('.mobile-nilaikes').show();
+                        jQuery('.mobile-nilainormalisasi').show();
+                        jQuery('.mobile-perangkingan').show();
+                    }else if(data.role_id == 4) {
+                        // Desktop
+                        jQuery('.desktop-presensi').hide();
+                        jQuery('.desktop-keterlambatan').hide();
+                        jQuery('.desktop-admin').hide();
+                        jQuery('.desktop-masterguru').hide();
+                        jQuery('.desktop-mastersiswa').hide();
+                        jQuery('.desktop-masterkelas').hide();
+
+                        jQuery('.desktop-mastermapel').show();
+                        
+                        jQuery('.desktop-datatajar').hide();
+                        jQuery('.desktop-kriteria').hide();
+                        jQuery('.desktop-rapor').hide();
+                        jQuery('.desktop-sikap').hide();
+                        jQuery('.desktop-prestasi').hide();
+                        jQuery('.desktop-hafalan').hide();
+
+                        jQuery('.desktop-nilaikes').show();
+                        jQuery('.desktop-nilainormalisasi').show();
+                        jQuery('.desktop-perangkingan').show();
+
+                        // Mobile
+                        jQuery('.mobile-presensi').hide();
+                        jQuery('.mobile-keterlambatan').hide();
+                        jQuery('.mobile-admin').hide();
+                        jQuery('.mobile-masterguru').hide();
+                        jQuery('.mobile-mastersiswa').hide();
+                        jQuery('.mobile-masterkelas').hide();
+
+                        jQuery('.mobile-mastermapel').show();
+                        
+                        jQuery('.mobile-datatajar').hide();
+                        jQuery('.mobile-kriteria').hide();
+                        jQuery('.mobile-rapor').hide();
+                        jQuery('.mobile-sikap').hide();
+                        jQuery('.mobile-prestasi').hide();
+                        jQuery('.mobile-hafalan').hide();
+
+                        jQuery('.mobile-nilaikes').show();
+                        jQuery('.mobile-nilainormalisasi').show();
+                        jQuery('.mobile-perangkingan').show();
+                    }else if(data.role_id == 5){
+                        // Desktop
+                        jQuery('.desktop-presensi').hide();
+                        jQuery('.desktop-keterlambatan').hide();
+                        jQuery('.desktop-admin').hide();
+
+                        jQuery('.desktop-masterguru').show();
+                        jQuery('.desktop-mastersiswa').show();
+
+                        jQuery('.desktop-masterkelas').hide();
+                        jQuery('.desktop-mastermapel').hide();
+                        jQuery('.desktop-datatajar').hide();
+                        jQuery('.desktop-kriteria').hide();
+                        jQuery('.desktop-rapor').hide();
+                        jQuery('.desktop-sikap').hide();
+
+                        jQuery('.desktop-prestasi').show();
+
+                        jQuery('.desktop-hafalan').hide();
+                        jQuery('.desktop-nilaikes').hide();
+                        jQuery('.desktop-nilainormalisasi').hide();
+                        jQuery('.desktop-perangkingan').hide();
+
+                        // Mobile
+                        jQuery('.desktop-presensi').hide();
+                        jQuery('.desktop-keterlambatan').hide();
+                        jQuery('.desktop-admin').hide();
+
+                        jQuery('.desktop-masterguru').show();
+                        jQuery('.desktop-mastersiswa').show();
+
+                        jQuery('.desktop-masterkelas').hide();
+                        jQuery('.desktop-mastermapel').hide();
+                        jQuery('.desktop-datatajar').hide();
+                        jQuery('.desktop-kriteria').hide();
+                        jQuery('.desktop-rapor').hide();
+                        jQuery('.desktop-sikap').hide();
+
+                        jQuery('.desktop-prestasi').show();
+
+                        jQuery('.desktop-hafalan').hide();
+                        jQuery('.desktop-nilaikes').hide();
+                        jQuery('.desktop-nilainormalisasi').hide();
+                        jQuery('.desktop-perangkingan').hide();
+
+                    }else if(data.role_id == 6){
+                        // Desktop
+                        jQuery('.desktop-presensi').hide();
+                        jQuery('.desktop-keterlambatan').hide();
+                        jQuery('.desktop-admin').hide();
+                        jQuery('.desktop-masterguru').hide();
+                        jQuery('.desktop-mastersiswa').hide();
+                        jQuery('.desktop-masterkelas').hide();
+                        jQuery('.desktop-mastermapel').hide();
+                        jQuery('.desktop-datatajar').hide();
+                        jQuery('.desktop-kriteria').hide();
+                        jQuery('.desktop-rapor').hide();
+                        jQuery('.desktop-sikap').hide();
+                        jQuery('.desktop-prestasi').hide();
+                        
+                        jQuery('.desktop-hafalan').show();
+
+                        jQuery('.desktop-nilaikes').hide();
+                        jQuery('.desktop-nilainormalisasi').hide();
+                        jQuery('.desktop-perangkingan').hide();
+
+                        // Mobile
+                        jQuery('.mobile-presensi').hide();
+                        jQuery('.mobile-keterlambatan').hide();
+                        jQuery('.mobile-admin').hide();
+                        jQuery('.mobile-masterguru').hide();
+                        jQuery('.mobile-mastersiswa').hide();
+                        jQuery('.mobile-masterkelas').hide();
+                        jQuery('.mobile-mastermapel').hide();
+                        jQuery('.mobile-datatajar').hide();
+                        jQuery('.mobile-kriteria').hide();
+                        jQuery('.mobile-rapor').hide();
+                        jQuery('.mobile-sikap').hide();
+                        jQuery('.mobile-prestasi').hide();
+                        
+                        jQuery('.mobile-hafalan').show();
+                        
+                        jQuery('.mobile-nilaikes').hide();
+                        jQuery('.mobile-nilainormalisasi').hide();
+                        jQuery('.mobile-perangkingan').hide();
+                    }else if(data.role_id == 7){
+                        // Desktop
+                        jQuery('.desktop-presensi').hide();
+                        jQuery('.desktop-keterlambatan').hide();
+                        jQuery('.desktop-admin').hide();
+                        jQuery('.desktop-masterguru').hide();
+                        jQuery('.desktop-mastersiswa').hide();
+                        jQuery('.desktop-masterkelas').hide();
+                        jQuery('.desktop-mastermapel').hide();
+                        jQuery('.desktop-datatajar').hide();
+                        jQuery('.desktop-kriteria').hide();
+
+                        jQuery('.desktop-rapor').show();
+                        jQuery('.desktop-sikap').show();
+
+                        jQuery('.desktop-prestasi').hide();
+                        jQuery('.desktop-hafalan').hide();
+                        jQuery('.desktop-nilaikes').hide();
+                        jQuery('.desktop-nilainormalisasi').hide();
+                        jQuery('.desktop-perangkingan').hide();
+
+                        // Mobile
+                        jQuery('.mobile-presensi').hide();
+                        jQuery('.mobile-keterlambatan').hide();
+                        jQuery('.mobile-admin').hide();
+                        jQuery('.mobile-masterguru').hide();
+                        jQuery('.mobile-mastersiswa').hide();
+                        jQuery('.mobile-masterkelas').hide();
+                        jQuery('.mobile-mastermapel').hide();
+                        jQuery('.mobile-datatajar').hide();
+                        jQuery('.mobile-kriteria').hide();
+
+                        jQuery('.mobile-rapor').show();
+                        jQuery('.mobile-sikap').show();
+
+                        jQuery('.mobile-prestasi').hide();
+                        jQuery('.mobile-hafalan').hide();
+                        jQuery('.mobile-nilaikes').hide();
+                        jQuery('.mobile-nilainormalisasi').hide();
+                        jQuery('.mobile-perangkingan').hide();
+                    } else
+                    {
+                        // role khusus admin / Team IT
+                        // Desktop
+                        jQuery('.desktop-presensi').show();
+                        jQuery('.desktop-keterlambatan').show();
+
+                        jQuery('.desktop-admin').show();
+                        jQuery('.desktop-masterguru').show();
+                        jQuery('.desktop-mastersiswa').show();
+                        jQuery('.desktop-masterkelas').show();
+                        jQuery('.desktop-mastermapel').show();
+                        jQuery('.desktop-datatajar').show();
+                        jQuery('.desktop-kriteria').show();
+                        jQuery('.desktop-rapor').show();
+                        jQuery('.desktop-sikap').show();
+                        jQuery('.desktop-prestasi').show();
+                        jQuery('.desktop-hafalan').show();
+                        jQuery('.desktop-nilaikes').show();
+                        jQuery('.desktop-nilainormalisasi').show();
+                        jQuery('.desktop-perangkingan').show();
+
+                        // Mobile
+                        jQuery('.mobile-presensi').show();
+                        jQuery('.mobile-keterlambatan').show();
+                        jQuery('.mobile-admin').show();
+                        jQuery('.mobile-masterguru').show();
+                        jQuery('.mobile-mastersiswa').show();
+                        jQuery('.mobile-masterkelas').show();
+                        jQuery('.mobile-mastermapel').show();
+                        jQuery('.mobile-datatajar').show();
+                        jQuery('.mobile-kriteria').show();
+                        jQuery('.mobile-rapor').show();
+                        jQuery('.mobile-sikap').show();
+                        jQuery('.mobile-prestasi').show();
+                        jQuery('.mobile-hafalan').show();
+                        jQuery('.mobile-nilaikes').show();
+                        jQuery('.mobile-nilainormalisasi').show();
+                        jQuery('.mobile-perangkingan').show();
+                    }
 
                     jQuery('.nama-akun').text(data.name);
                     jQuery('.role-akun').text(data.role_name);

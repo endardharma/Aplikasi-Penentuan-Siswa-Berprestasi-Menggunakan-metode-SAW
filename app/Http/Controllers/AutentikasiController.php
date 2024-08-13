@@ -62,7 +62,7 @@ class AutentikasiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Login aplikasi PSB SMA Tamir berhasil, selamat datang '.$user->name,
+            'message' => 'Login Aplikasi PSB SMA Tamiriyah Surabaya Berhasil, Selamat Datang '.$user->name,
             'token' => $token,
         ],201);
     }
