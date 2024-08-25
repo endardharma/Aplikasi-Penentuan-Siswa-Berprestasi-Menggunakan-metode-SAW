@@ -90,26 +90,15 @@ class RaporSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
                     {
                         foreach ($mapel as $m) 
                         {
-                            if ($tajar->isNotEmpty())
-                            {
-                                foreach ($tajar as $t)
-                                {
-                                    $item = [];
-                                    $item['nama_siswa'] = $s->name;
-                                    $item['nama_mapel'] = $m->name;
-                                    $item['kelompok'] = $m->kelompok;
-                                    $item['type'] = $m->type;
-                                    $item['nilai'] = 'Isi nilai dengan angka';
-    
-                                    $jurusansiswa = MasterJurusanSiswa::find($m->jurusan_id);
-                                    // $item['jurusan'] = $jurusansiswa ? $jurusansiswa->name : 'Jurusan tidak ditemukan';
-    
-                                    $item['semester'] = $t->semester;
-                                    // $item['tahun_ajar'] = $t->periode;
-    
-                                    $data[] = $item;
-                                }
-                            }
+                            $item = [];
+                            $item['nama_siswa'] = $s->name;
+                            $item['nama_mapel'] = $m->name;
+                            $item['kelompok'] = $m->kelompok;
+                            $item['type'] = $m->type;
+                            $item['nilai'] = 'Isi nilai dengan angka';
+                            $jurusansiswa = MasterJurusanSiswa::find($m->jurusan_id);
+
+                            $data[] = $item;
                         }
                     }
                 }
@@ -124,7 +113,7 @@ class RaporSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:G1'; // All headers
+                $cellRange = 'A1:F1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -156,8 +145,6 @@ class RaporSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
             'Kelompok',
             'Tipe',
             'Nilai',
-            // 'Jurusan',
-            'Semester',
         ];
     }
 }

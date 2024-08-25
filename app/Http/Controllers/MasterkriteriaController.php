@@ -13,9 +13,66 @@ class MasterkriteriaController extends Controller
         return view('admin.masterkriteria.index');
     }
 
-    public function dataKriteria()
+    // public function dataKriteria()
+    // {
+    //     $kriteria = MasterKriteria::all();
+    //     $data = array();
+    //     $totalBobotPercent = 0;
+        
+    //     foreach($kriteria as $k)
+    //     {
+    //         $item['id'] = $k->id;
+    //         $item['kode'] = $k->kode;
+    //         $item['name'] = $k->name;
+    //         $item['atribut'] = $k->attribute;
+    //         $item['bobot_percent'] = $k->bobot.' %';
+    //         $item['bobot'] = $k->bobot;
+    //         $item['kurikulum'] = $k->kurikulum;
+
+    //         // $totalBobotPercent += $k->bobot;
+            
+    //         $data[] = $item;
+    //     }
+
+    //     // $warning = '';
+    //     // if ($totalBobotPercent > 100)
+    //     // {
+    //     //     $warning = 'Peringatan: Total bobot tidak boleh lebih dari 100%. Total saat ini adalah ' . $totalBobotPercent . '%';
+    //     // }
+
+    //     return response()->json([
+    //         'data' => $data,
+    //         // 'warning' => $warning,
+    //     ],200);
+    // }
+
+    public function dataKriteria(Request $request)
     {
-        $kriteria = MasterKriteria::all();
+        $columns = [
+            0 => 'id',
+            1 => 'kode',
+            2 => 'name',
+            3 => 'attribute',
+            4 => 'bobot',
+            5 => 'bobot_percent',
+            6 => 'kurikulum',
+        ];
+
+        $totalBobotPercent = 0;
+        $start = $request->start;
+        $limit = $request->length;
+        $orderColumn = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
+        $search = $request->input('search')['value'];
+
+        // Hitunga keseluruhan
+        $hitung = MasterKriteria::count();
+        $kriteria = MasterKriteria::where(function ($q) use ($search) {
+            if($search != null)
+            {
+                return $q->where('kode','LIKE','%'.$search.'%')->orWhere('name','LIKE','%'.$search.'%')->orwhere('attribute','LIKE','%'.$search.'%')->orWhere('bobot',$search);
+            }
+        })->orderby($orderColumn, $dir)->skip($start)->take($limit)->get();
         $data = array();
         foreach($kriteria as $k)
         {
@@ -26,12 +83,24 @@ class MasterkriteriaController extends Controller
             $item['bobot_percent'] = $k->bobot.' %';
             $item['bobot'] = $k->bobot;
             $item['kurikulum'] = $k->kurikulum;
+            $totalBobotPercent += $k->bobot;
+
             $data[] = $item;
         }
 
+        $warning = '';
+        if ($totalBobotPercent > 100)
+        {
+            $warning = 'Peringatan: Total bobot tidak boleh lebih dari 100%. Total bobot saat ini adalah ' . $totalBobotPercent . '%';
+        }
+
         return response()->json([
+            'draw' => $request->draw,
+            'recordsTotal' => $hitung,
+            'recordsFiltered' => $hitung,
+            'warning' => $warning,
             'data' => $data,
-        ],200);
+        ], 200);
     }
 
     public function tambahKriteria(Request $request)

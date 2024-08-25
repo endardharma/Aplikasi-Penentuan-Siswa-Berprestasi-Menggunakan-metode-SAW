@@ -430,6 +430,7 @@
                         </div>
                     </div> --}}
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <button class="btn btn-primary shadow-md mr-2 btn-tambah">Tambah Data</button>
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
                                 <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-lucide="plus"></i> </span>
@@ -472,7 +473,6 @@
                                     <th>Keterangan Sikap</th>
                                     <th>Nilai</th>
                                     <th>Jurusan</th>
-                                    <th>Semester</th>
                                     <th>Tahun Ajar</th>
                                     <th>Action</th>
                                 </tr>
@@ -506,7 +506,6 @@
                                                     <th>Keterangan Sikap</th>
                                                     <th>Nilai</th>
                                                     <th>Jurusan</th>
-                                                    <th>Semester</th>
                                                     <th>Tahun Ajar</th>
                                                 </tr>
                                             </thead>
@@ -588,6 +587,84 @@
                 </div>
             </div>
             <!-- END: Notification Gagal Import Data sikap Siswa Content -->
+            <!-- BEGIN: Modal Tambah Data Content -->
+            <div id="header-footer-modal-preview" class="modal" tabindex="-1" aria-invalid="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- BEGIN: Modal Content -->
+                        <div class="modal-header">
+                            <h2 class="font-medium text-base mr-auto">Form Tambah Data Sikap</h2>
+                            <a href="javascript:;" data-tw-dismiss="modal"><i data-feather="x" class="w-8 h-8 text-gray-500"></i></a>
+                        </div>
+                        <!-- END: Modal Content -->
+                        <!-- BEGIN: Modal Body -->
+                        <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Nama Siswa</label>
+                                <input type="hidden" class="form-control">
+                                <select class="form-select create-nama-siswa" required>
+                                    <option disabled selected> --- Pilih Nama Siswa ---</option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12 create-hari">
+                                <label for="modal-form-2" class="form-label">Keterangan Sikap</label>
+                                <select class="form-select create-ket-sikap" required>
+                                    <option disabled selected> --- Pilih Keterangan Sikap --- </option>
+                                    <option value="Sangat Baik">Sangat Baik</option>
+                                    <option value="Baik">Baik</option>
+                                    <option value="Cukup">Cukup</option>
+                                    <option value="Tidak Baik">Tidak Baik</option>
+                                    <option value="Sangat Tidak Baik">Sangat Tidak Baik</option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Nilai</label>
+                                <input type="number" class="form-control create-nilai" placeholder="Masukkan Nilai Keterangan Sikap Siswa" required readonly>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Jurusan</label>
+                                <select class="form-select create-jurusan" required>
+                                    <option disabled selected> --- Pilih jurusan --- </option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Tahun Ajar</label>
+                                <select class="form-select create-tahun-ajar" required>
+                                    <option disabled selected> --- Pilih Tahun Ajar --- </option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- END: Modal Body -->
+                        <!-- BEGIN: Modal Footer -->
+                        <div class="modal-footer">
+                            <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1"> Batalkan </button>
+                            <button type="button" class="btn btn-primary w-20 btn-simpan">Simpan</button>
+                        </div>
+                        <!-- END: Modal Footer -->
+                    </div>
+                </div>
+            </div>
+            <!-- END: Modal Tambah Data Content -->
+            <!-- BEGIN: Notification Sukses Create Sikap Content -->
+            <!-- BEGIN: Notification Sukses Create Sikap Content -->
+            <div id="success-create-notification-content" class="toastify-content hidden flex">
+                <i class="text-success" data-lucide="check-circle"></i>
+                <div class="ml-4 mr-4">
+                    <div class="font-medium">Berhasil menambahkan data sikap siswa!</div>
+                    <div class="text-slate-500 mt-1 create-sukses"></div>
+                </div>
+            </div>
+            <!-- END: Notification Sukses Create Sikap Content -->
+            <!-- BEGIN: Notification gagal Create Sikap Content -->
+            <div id="failed-create-notification-content" class="toastify-content hidden flex">
+                <i class="text-danger" data-lucide="x-circle"></i>
+                <div class="ml-4 mr-4">
+                    <div class="font-medium">Gagal menambahkan data sikap siswa!</div>
+                    <div class="text-slate-500 mt-1 create-gagal"></div>
+                </div>
+            </div>
+            <!-- END: Notification gagal Create Sikap Content -->
+            <!-- END: Notification Sukses Create Sikap Content -->
             <!-- BEGIN: Modal Content Form Update -->
             <div id="header-update-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
@@ -631,12 +708,6 @@
                                 </select>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Semester</label>
-                                <select class="form-select update-semester">
-                                    <option disabled selected> --- Pilih Semester --- </option>
-                                </select>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Tahun Ajar</label>
                                 <select class="form-select update-tahun-ajar">
                                     <option disabled selected> --- Pilih Tahun Ajar --- </option>
@@ -665,7 +736,7 @@
             <!-- END: Notification Content Sukses Update Sikap Siswa -->
             <!-- BEGIN: Notification Content Gagal Update Sikap Siswa -->
             <div id="failed-update-notification-content" class="toastify-content hidden flex">
-                <i class="text-success" data-lucide="x-circle"></i>
+                <i class="text-danger" data-lucide="x-circle"></i>
                 <div class="ml-4 mr-4">
                     <div class="font-medium">Gagal update data nilai sikap siswa!</div>
                     <div class="text-slate-500 mt-1 update-gagal"></div>
@@ -706,7 +777,7 @@
             <!-- END: Notification Content Sukses Hapus Presensi -->
             <!-- BEGIN: Notification Content Gagal Hapus Presensi -->
             <div id="failed-hapus-notification-content" class="toastify-content hidden flex">
-                <i class="text-success" data-lucide="x-circle"></i>
+                <i class="text-danger" data-lucide="x-circle"></i>
                 <div class="ml-4 mr-4">
                     <div class="font-medium">Gagal hapus data nilai sikap!</div>
                     <div class="text-slate-500 mt-1 hapus-gagal"></div>
@@ -1076,15 +1147,15 @@
                 }).then(response => response.json()).then(data => {
 
                     var select = jQuery('.import-tajar');
-                    var selectUpdateSemester = jQuery('.update-semester');
-                    var selectUpdatePeriode = jQuery('.update-tahun-ajar')
+                    var selectUpdatePeriode = jQuery('.update-tahun-ajar');
+                    var selectCreatePeriode = jQuery('.create-tahun-ajar');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
                         for (let i = 0; i < item.length; i++) {
                             select.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
-                            selectUpdateSemester.append('<option value="' + item[i].id + '">' + item[i].semester + '</option>');
                             selectUpdatePeriode.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
+                            selectCreatePeriode.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
                         }
                     });
 
@@ -1102,12 +1173,14 @@
                 }).then(response => response.json()).then(data => {
                     // panggil element select
                     var selectUpdateNama = jQuery('.update-nama-siswa');
+                    var selecteCreateNama = jQuery('.create-nama-siswa');
 
                     // iterasi melalui data dan membuat objek untuk setipa entri
                     jQuery.each(data, function(index, item) {
                         for (let i = 0; i < item.length; i++){
                             // isi data dengan nilai dalam database
                             selectUpdateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selecteCreateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -1125,12 +1198,14 @@
                     var selectUpdateJurusan = jQuery('.update-jurusan');
                     var selectSortByJurusan = jQuery('.form-jurusan');
                     var selectImportJurusan = jQuery('.import-jurusan');
+                    var selectCreateJurusan = jQuery('.create-jurusan');
 
                     jQuery.each(data, function(index, item){
                         for (let i = 0; i < item.length; i++){
                             selectUpdateJurusan.append('<option value="' + item[i].id +'">' + item[i].name +'</option>');
                             selectSortByJurusan.append('<option value="' + item[i].id +'">' + item[i].name +'</option>');
                             selectImportJurusan.append('<option value="' + item[i].id +'">' + item[i].name +'</option>');
+                            selectCreateJurusan.append('<option value="' + item[i].id +'">' + item[i].name +'</option>');
                         }
                     });
                 }).catch(error => {
@@ -1167,13 +1242,12 @@
                             { data: 'ket_sikap', className: 'text-center' },
                             { data: 'nilai', className: 'text-center' },
                             { data: 'jurusan', className: 'text-center' },
-                            { data: 'semester', className: 'text-center' },
                             { data: 'tahun_ajar', className: 'text-center' },
                             {
                                 data: null,
                                 render: function(data, type, row){
                                     // Create action buttons
-                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-ket_sikap="' + data.ket_sikap + '" data-nilai="' + data.nilai + '" data-id_jurusan_nama="' + data.id_jurusan_nama + '" data-id_tajar_semester="' + data.id_tajar_semester + '" data-id_tajar_periode="' + data.id_tajar_periode + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-ket_sikap="' + data.ket_sikap + '" data-nilai="' + data.nilai + '" data-id_jurusan_nama="' + data.id_jurusan_nama + '" data-id_tajar_periode="' + data.id_tajar_periode + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
                                     var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
 
                                     // Combine the button
@@ -1206,7 +1280,6 @@
                         { data: 'ket_sikap', className: 'text-center' },
                         { data: 'nilai', className: 'text-center' },
                         { data: 'jurusan', className: 'text-center' },
-                        { data: 'semester', className: 'text-center' },
                         { data: 'tahun_ajar', className: 'text-center' },
                     ],
                     "drawCallback": function(settings){
@@ -1231,6 +1304,13 @@
                 jQuery('.import-tajar').change(function() {
                     jQuery('.template-element').show();
                     jQuery('.btn-import').show();
+                });
+
+                jQuery('.btn-tambah').click(function() {
+                    // show the modal
+                    const el = document.querySelector('#header-footer-modal-preview');
+                    const modal = tailwind.Modal.getOrCreateInstance(el);
+                    modal.show();
                 });
 
                 // fungsi button sortBy button
@@ -1308,6 +1388,95 @@
                     });
                 });
                 
+                jQuery('.btn-simpan').click(function(){
+                    // show the modal 
+                    event.preventDefault();
+
+                    // Get Form Data
+                    var siswa_id_nama = jQuery('.create-nama-siswa').val();
+                    var ket_sikap = jQuery('.create-ket-sikap').val();
+                    var nilai = jQuery('.create-nilai').val();
+                    var jurusan_id_nama = jQuery('.create-jurusan').val();
+                    var tajar_id_periode = jQuery('.create-tahun-ajar').val();
+
+                    var formData = new FormData();
+                    formData.append('siswa_id', siswa_id_nama);
+                    formData.append('ket_sikap', ket_sikap);
+                    formData.append('nilai', nilai);
+                    formData.append('jurusan_id', jurusan_id_nama);
+                    formData.append('tajar_id', tajar_id_periode);
+
+                    // Kerim ke API
+                    jQuery.ajax({
+                        url: 'http://127.0.0.1:8000/api/data-nilai/sikap-siswa/tambah-data',
+                        type: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                        },
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response){
+                            // show the modal
+                            jQuery('.create-sukses').text(response.message);
+                            Toastify({
+                                node: $('#success-create-notification-content')
+                                    .clone()
+                                    .removeClass("hidden")[0],
+                                duration: 3000,
+                                newWindow: true,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                stopOnFocus: true,
+                            }).showToast();
+
+                            setTimeout(function(){
+                                location.reload();
+                            }, 3000);
+                        },
+                        error: function(xhr, status, error) {
+                            jQuery('.create-gagal').text(error);
+                            Toastify({
+                                node: $('#failed-create-notification-content')
+                                    .clone()
+                                    .removeClass("hidden")[0],
+                                duration: 5000,
+                                newWindow: true,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                stopOnFocus: true,
+                            }).showToast();
+
+                            setTimeout(function(){
+                                location.reload();
+                            }, 5000);
+                        }
+                    });
+                });
+
+                jQuery('.create-ket-sikap').change(function(){
+                    var ket_sikap = jQuery(this).val();
+
+                    jQuery.ajax({
+                        url: 'http://127.0.0.1:8000/api/data-nilai/sikap-siswa/get-nilai',
+                        type: 'POST',
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                        },
+                        data: {
+                            ket_sikap: ket_sikap,
+                        },
+                        success: function(response){
+                            jQuery('.create-nilai').val(response.nilai);
+                        },
+                        error:function(xhr, status, error){
+                            console.error('Gagal mendapatkan nilai otomatis', error);
+                        }
+                    });
+                });
+                
                 jQuery('#data-table').on('click', '.btn-edit', function() {
                     // show the modal
                     const el = document.querySelector('#header-update-footer-modal-preview');
@@ -1319,7 +1488,6 @@
                     var ket_sikap = jQuery(this).attr("data-ket_sikap");
                     var nilai = jQuery(this).attr("data-nilai");
                     var id_jurusan_nama = jQuery(this).attr("data-id_jurusan_nama");
-                    var id_tajar_semester = jQuery(this).attr("data-id_tajar_semester");
                     var id_tajar_periode = jQuery(this).attr("data-id_tajar_periode");
 
                     // handle edit action
@@ -1328,7 +1496,6 @@
                     jQuery('.update-ket-sikap').val(ket_sikap);
                     jQuery('.update-nilai').val(nilai);
                     jQuery('.update-jurusan').val(id_jurusan_nama);
-                    jQuery('.update-semester').val(id_tajar_semester);
                     jQuery('.update-tahun-ajar').val(id_tajar_periode);
                 })
 
@@ -1340,7 +1507,6 @@
                     var ket_sikap = jQuery('.update-ket-sikap').val();
                     var nilai = jQuery('.update-nilai').val();
                     var nama_jurusan_id = jQuery('.update-jurusan').val();
-                    var semester_tajar_id = jQuery('.update-semester').val();
                     var periode_tajar_id = jQuery('.update-tahun-ajar').val();
 
                     // Kirim permintaan pembaruan produk ke API
@@ -1355,7 +1521,6 @@
                             ket_sikap : ket_sikap,
                             nilai : nilai,
                             jurusan_id : nama_jurusan_id,
-                            tajar_id : semester_tajar_id,
                             tajar_id : periode_tajar_id,
                         },
                         success: function(response){
@@ -1398,33 +1563,6 @@
                         }
                     });
                 })
-
-                // $('.update-ket-sikap').on('change', function(){
-                //     var ket_sikap = jQuery(this).val().toLowerCase();
-                //     var nilai;
-
-                //     // tentukan nilai berdasarkan keterangan sikap
-                //     switch(ket_sikap){
-                //         case 'Sangat Baik':
-                //             nilai = 5
-                //             break;
-                //         case 'Baik':
-                //             nilai = 4
-                //             break;
-                //         case 'Cukup':
-                //             nilai = 3
-                //             break;
-                //         case 'Tidak Baik':
-                //             nilai = 2
-                //             break;
-                //         case 'Sangat Tidak Baik':
-                //             nilai = 1
-                //             break;
-                //         default:
-                //             nilai = 0;
-                //     }
-                //     jQuery('.update-nilai').val(nilai);
-                // });
 
                 // Mendapatkan nilai otomatis berdasarkan keterangan sikap
                 jQuery('.update-ket-sikap').change(function(){

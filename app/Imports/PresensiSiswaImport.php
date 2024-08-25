@@ -28,17 +28,19 @@ class PresensiSiswaImport implements ToCollection, WithHeadingRow
             'jumlah_hari_lainnya' => 'required',
             'nilai' => 'required',
             'jurusan' => 'required',
-            'semester' => 'required',
             'tahun_ajar' => 'required',
         ];
     }
 
     protected $selectedTahunAjar;
     protected $selectedJurusan;
-    public function __construct($selectedTahunAjar, $selectedJurusan)
+    protected $nilaiCallback;
+
+    public function __construct($selectedTahunAjar, $selectedJurusan, $nilaiCallback)
     {
         $this->selectedTahunAjar = $selectedTahunAjar;
         $this->selectedJurusan = $selectedJurusan;
+        $this->nilaiCallback = $nilaiCallback;
     }
 
     public function collection(Collection $rows)
@@ -55,11 +57,12 @@ class PresensiSiswaImport implements ToCollection, WithHeadingRow
 
             if($tajar && $jurusan && $siswa)
             {
+                $nilai = call_user_func($this->nilaiCallback, $row['jumlah_hari'], $row['keterangan_ketidakhadiran']);
                 PresensiSiswa::updateOrCreate([
                     'tajar_id' => $tajar->id,
                     'siswa_id' => $siswa->id,
                     'jurusan_id' => $jurusan->id,
-                    'nilai' => $row['nilai'],
+                    'nilai' => $nilai,
                 ], [
                     'tajar_id' => $tajar->id,
                     'siswa_id' => $siswa->id,
@@ -68,9 +71,8 @@ class PresensiSiswaImport implements ToCollection, WithHeadingRow
                     'ket_ketidakhadiran' => $row['keterangan_ketidakhadiran'],
                     'jumlah_hari' => $row['jumlah_hari'],
                     'jumlah_hari_lainnya' => $row['jumlah_hari_lainnya'],
-                    'nilai' => $row['nilai'],
+                    'nilai' => $nilai,
                     'jurusan' => $jurusan->name,
-                    'semester' => $row['semester'],
                     'tahun_ajar' => $tajar->name,
                 ]);
             }

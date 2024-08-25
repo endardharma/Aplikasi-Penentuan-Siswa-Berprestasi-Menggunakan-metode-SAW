@@ -429,6 +429,7 @@
                         </div>
                     </div> --}}
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <button class="btn btn-primary shadow-md mr-2 btn-tambah">Tambah Data</button>
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
                                 <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-lucide="plus"></i> </span>
@@ -469,7 +470,6 @@
                                     <th>ID</th>
                                     <th>Nama Siswa </th>
                                     <th>Jurusan</th>
-                                    <th>Semester</th>
                                     <th>Tahun Ajar</th>
                                     <th>Action</th>
                                 </tr>
@@ -504,6 +504,8 @@
                                                     <th>Kelompok</th>
                                                     <th>Type</th>
                                                     <th>Nilai</th>
+                                                    {{-- <th>Jurusan</th> --}}
+                                                    {{-- <th>Tahun Ajar</th> --}}
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -519,6 +521,92 @@
                 <!-- END: Modal DetailContent -->
             </div>
             <!-- END: Content -->
+            <!-- BEGIN: Modal Create Content -->
+            <div id="header-footer-modal-preview" class="modal" tabindex="-1" aria-invalid="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- BEGIN: Modal Content -->
+                        <div class="modal-header">
+                            <h2 class="font-medium text-base mr-auto">Form Tambah Data Nilai Raport Siswa</h2>
+                            <a href="javascript:;" data-tw-dismiss="modal"><i data-feather="x" class="w-8 h-8 text-gray-500"></i></a>
+                        </div>
+                        <!-- END: Modal Content -->
+                        <!-- BEGIN: Modal Body -->
+                        <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Nama Siswa</label>
+                                <input type="hidden" class="form-control">
+                                <select class="form-select create-nama-siswa" required>
+                                    <option disabled selected> --- Pilih Nama Siswa --- </option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Nama Mapel</label>
+                                <input type="hidden" class="form-control">
+                                <select class="form-select create-nama-mapel" required>
+                                    <option disabled selected> --- Pilih Nama Mata Pelajaran --- </option>
+                                </select>
+                            </div>
+                            {{-- <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Kelompok Mapel</label>
+                                <input type="hidden" class="form-control">
+                                <select class="form-select create-kelompok" required>
+                                    <option disabled selected> --- Pilih Kelompok --- </option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Type Mapel</label>
+                                <input type="hidden" class="form-control">
+                                <select class="form-select create-type" required>
+                                    <option disabled selected> --- Pilih Type --- </option>
+                                </select>
+                            </div> --}}
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Nilai</label>
+                                <input type="number" class="form-control create-nilai" placeholder="Masukkan Nilai Mata Pelajaran Siswa">
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Jurusan</label>
+                                <select class="form-select create-jurusan" required>
+                                    <option disabled selected> --- Pilih Jurusan --- </option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Tahun Ajar</label>
+                                <select class="form-select create-tahun-ajar" required>
+                                    <option disabled selected> --- Pilih Tahun Ajar --- </option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- END: Modal Body -->
+                        <!-- BEGIN: Modal Footer -->
+                        <div class="modal-footer">
+                            <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Batalkan</button>
+                            <button type="button" class="btn btn-primary w-20 btn-simpan">Simpan</button>
+                        </div>
+                        <!-- END: Modal Footer -->
+                    </div>
+                </div>
+            </div>
+            <!-- END: Modal Create Content -->
+            <!-- BEGIN: Notification Sukses Create keterlambatan Content -->
+            <div id="success-create-notification-content" class="toastify-content hidden flex">
+                <i class="text-success" data-lucide="check-circle"></i>
+                <div class="ml-4 mr-4">
+                    <div class="font-medium">Berhasil menambahkan data keterlambatan siswa!</div>
+                    <div class="text-slate-500 mt-1 create-sukses"></div>
+                </div>
+            </div>
+            <!-- END: Notification Sukses Create keterlambatan Content -->
+            <!-- BEGIN: Notification gagal Create keterlambatan Content -->
+            <div id="failed-create-notification-content" class="toastify-content hidden flex">
+                <i class="text-danger" data-lucide="x-circle"></i>
+                <div class="ml-4 mr-4">
+                    <div class="font-medium">Gagal menambahkan data keterlambatan siswa!</div>
+                    <div class="text-slate-500 mt-1 create-gagal"></div>
+                </div>
+            </div>
+            <!-- END: Notification gagal Create keterlambatan Content -->
             <!-- BEGIN: Modal Content -->
             <div id="header-update-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
@@ -551,7 +639,7 @@
                                     <option disabled selected> --- Pilih Nama Mata Pelajaran ---</option>
                                 </select>
                             </div>
-                            <div class="col-span-12 sm:col-span-12">
+                            {{-- <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Kelompok</label>
                                 <select class="form-select update-kelompok" required disabled>
                                     <option disabled selected> --- Pilih Kelompok Mata Pelajaran ---</option>
@@ -562,29 +650,23 @@
                                 <select class="form-select update-type" required disabled>
                                     <option disabled selected> --- Pilih Type Mata Pelajaran ---</option>
                                 </select>
-                            </div>
+                            </div> --}}
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-1" class="form-label">Nilai</label>
                                 <input type="number" class="form-control update-nilai" placeholder="Masukkan Nilai Rapor Siswa" required>
                             </div>
-                            {{-- <div class="col-span-12 sm:col-span-12">
+                            <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Jurusan</label>
                                 <select class="form-select update-jurusan" required>
-                                    <option disabled selected> --- Pilih Jurusan ---</option>
-                                </select>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Semester</label>
-                                <select class="form-select update-semester" required>
-                                    <option disabled selected> --- Pilih Semester ---</option>
+                                    <option disabled selected> --- Pilih Jurusan --- </option>
                                 </select>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Tahun Ajar</label>
                                 <select class="form-select update-tahun-ajar" required>
-                                    <option disabled selected> --- Pilih Tahun Ajar ---</option>
+                                    <option disabled selected> --- Pilih Tahun Ajar --- </option>
                                 </select>
-                            </div> --}}
+                            </div>
                         </div>
                         <!-- END: Modal Body -->
                         <!-- BEGIN: Modal Footer -->
@@ -608,7 +690,7 @@
             <!-- END: Notification Sukses Update rapor Content -->
             <!-- BEGIN: Notification Gagal Update rapor Content -->
             <div id="failed-update-notification-content" class="toastify-content hidden flex">
-                <i class="text-success" data-lucide="x-circle"></i> 
+                <i class="text-danger" data-lucide="x-circle"></i> 
                 <div class="ml-4 mr-4">
                     <div class="font-medium">Gagal update data nilai rapor!</div>
                     <div class="text-slate-500 mt-1 update-gagal"></div>
@@ -649,7 +731,7 @@
             <!-- END: Notification Sukses Hapus rapor Content -->
             <!-- BEGIN: Notification Gagal Hapus rapor Content -->
             <div id="failed-hapus-notification-content" class="toastify-content hidden flex">
-                <i class="text-success" data-lucide="x-circle"></i> 
+                <i class="text-danger" data-lucide="x-circle"></i> 
                 <div class="ml-4 mr-4">
                     <div class="font-medium">Gagal hapus data nilai rapor!</div>
                     <div class="text-slate-500 mt-1 hapus-gagal"></div>
@@ -717,7 +799,7 @@
             <!-- END: Notification Sukses Import Rapor Content -->
             <!-- BEGIN: Notification Gagal Import Rapor Content -->
             <div id="failed-import-notification-content" class="toastify-content hidden flex">
-                <i class="text-success" data-lucide="x-circle"></i> 
+                <i class="text-danger" data-lucide="x-circle"></i> 
                 <div class="ml-4 mr-4">
                     <div class="font-medium">Gagal import data nilai rapor!</div>
                     <div class="text-slate-500 mt-1 import-gagal"></div>
@@ -1069,58 +1151,7 @@
                     console.error('Error:', error);
                 });
 
-                // Datatable list rapor
-                function loadDataTable (jurusanId = '')
-                {
-                    jQuery('#data-table').DataTable({
-                        "processing": true,
-                        "serverSide": true,
-                        "destroy": true,
-                        "ajax": {
-                            "url": "http://127.0.0.1:8000/api/data-nilai/rapor-siswa/list",
-                            "dataType": "json",
-                            "type": "POST",
-                            "headers": {
-                                'Authorization': 'Bearer ' + token
-                            },
-                            "data": function (d) {
-                                if (jurusanId === '-1')
-                                {
-                                    d.jurusan_id = ' ';
-                                }
-                                else
-                                {
-                                    d.jurusan_id = jurusanId;
-                                }
-                            }
-                        },
-                        "columns": [
-                            { data: 'id', className: 'text-center' },
-                            { data: 'nama_siswa', className: 'text-center' },
-                            { data: 'jurusan', className: 'text-center' },
-                            { data: 'semester', className: 'text-center' },
-                            { data: 'tahun_ajar', className: 'text-center' },
-                            // { data: 'nilai', className: 'text-center' },
-                            {
-                                data: null,
-                                render: function (data, type, row) {
-
-                                    // Create action buttons
-                                    var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
-                                    var detailBtn = '<button class="btn btn-warning btn-detail" data-id="' + data.id + '"><i data-feather="align-justify" class="w-4 h-4 mr-1"></i></button>';
-                                    
-                                    // Combine the buttons
-                                    var actions = detailBtn + ' || ' + deleteBtn ;
-                                    return actions;
-                                }
-                            }
-                        ],
-                        "drawCallback": function(settings) {
-                            feather.replace();
-                        }
-                    })
-                }
-
+                
                 // Datatable list rapor
                 // jQuery('#data-table-detail').DataTable({
                 //     "processing": true,
@@ -1175,6 +1206,14 @@
                     modal.show(); 
                 })
 
+                // Menampilkan modal tambah data
+                jQuery('.btn-tambah').click(function() {
+                    // Show the modal
+                    const el = document.querySelector("#header-footer-modal-preview");
+                    const modal = tailwind.Modal.getOrCreateInstance(el);
+                    modal.show(); 
+                })
+
                 // Hide element
                 jQuery('.template-element').hide();
                 jQuery('.btn-import').hide();
@@ -1206,12 +1245,16 @@
                 }).then(response => response.json()).then(data => {
                     // Panggil element select
                     var selectSupportTajar = jQuery('.tahun-ajar');
+                    var selectCreatePeriode = jQuery('.create-tahun-ajar');
+                    var selectUpdatePeriode = jQuery('.update-tahun-ajar');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
                         for (let i = 0; i < item.length; i++) {
                             // Isi data dengan nilai dalam database
                             selectSupportTajar.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
+                            selectCreatePeriode.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
+                            selectUpdatePeriode.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -1231,14 +1274,22 @@
                     var selectUpdateNama = jQuery('.update-nama-mapel');
                     var selectUpdateType = jQuery('.update-type');
                     var selectUpdateKelompok = jQuery('.update-kelompok')
+                    
+                    var selectCreateNama = jQuery('.create-nama-mapel');
+                    var selectCreateType = jQuery('.create-type');
+                    var selectCreateKelompok = jQuery('.create-kelompok')
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
                         for (let i = 0; i < item.length; i++) {
                             // Isi data dengan nilai dalam database
-                            selectUpdateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selectUpdateNama.append('<option value="' + item[i].id + '">' + item[i].name + ' - ' + item[i].type +'</option>');
                             selectUpdateType.append('<option value="' + item[i].id + '">' + item[i].type + '</option>');
                             selectUpdateKelompok.append('<option value="' + item[i].id + '">' + item[i].kelompok + '</option>');
+                            
+                            selectCreateNama.append('<option value="' + item[i].id + '">' + item[i].name + ' - ' + item[i].type +'</option>');
+                            selectCreateType.append('<option value="' + item[i].id + '">' + item[i].type + '</option>');
+                            selectCreateKelompok.append('<option value="' + item[i].id + '">' + item[i].kelompok + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -1255,16 +1306,18 @@
                 }).then(response => response.json()).then(data => {
                     // Panggil element select
                     var selectJurusan = jQuery('.form-jurusan');
-                    var selectUpdateNama = jQuery('.update-jurusan');
                     var selectImportJurusan = jQuery('.import-jurusan');
+                    var selectCreateJurusan = jQuery('.create-jurusan');
+                    var selectUpdateJurusan = jQuery('.update-jurusan');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
                         for (let i = 0; i < item.length; i++) {
                             // Isi data dengan nilai dalam database
-                            selectUpdateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                             selectJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                             selectImportJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selectCreateJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selectUpdateJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -1281,12 +1334,14 @@
                 }).then(response => response.json()).then(data => {
                     // Panggil element select
                     var selectUpdateNama = jQuery('.update-nama-siswa');
+                    var selectCreateNama = jQuery('.create-nama-siswa');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
                         for (let i = 0; i < item.length; i++) {
                             // Isi data dengan nilai dalam database
                             selectUpdateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selectCreateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -1461,6 +1516,56 @@
                     }); 
                 })
 
+                // Datatable list rapor
+                function loadDataTable (jurusanId = '')
+                {
+                    jQuery('#data-table').DataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "destroy": true,
+                        "ajax": {
+                            "url": "http://127.0.0.1:8000/api/data-nilai/rapor-siswa/list",
+                            "dataType": "json",
+                            "type": "POST",
+                            "headers": {
+                                'Authorization': 'Bearer ' + token
+                            },
+                            "data": function (d) {
+                                if (jurusanId === '-1')
+                                {
+                                    d.jurusan_id = ' ';
+                                }
+                                else
+                                {
+                                    d.jurusan_id = jurusanId;
+                                }
+                            }
+                        },
+                        "columns": [
+                            { data: 'id', className: 'text-center' },
+                            { data: 'nama_siswa', className: 'text-center' },
+                            { data: 'jurusan', className: 'text-center' },
+                            { data: 'tahun_ajar', className: 'text-center' },
+                            {
+                                data: null,
+                                render: function (data, type, row) {
+
+                                    // Create action buttons
+                                    var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
+                                    var detailBtn = '<button class="btn btn-warning btn-detail" data-id="' + data.id + '"><i data-feather="align-justify" class="w-4 h-4 mr-1"></i></button>';
+                                    
+                                    // Combine the buttons
+                                    var actions = detailBtn + ' || ' + deleteBtn ;
+                                    return actions;
+                                }
+                            }
+                        ],
+                        "drawCallback": function(settings) {
+                            feather.replace();
+                        }
+                    })
+                }
+
                 jQuery('#data-table').on('click', '.btn-detail', function() {
                     var siswaId = jQuery(this).attr("data-id"); 
 
@@ -1486,12 +1591,18 @@
                             { data: 'kelompok', className: 'text-center' },
                             { data: 'type', className: 'text-center' },
                             { data: 'nilai', className: 'text-center' },
+                            // { data: 'jurusan', className: 'text-center' },
+                            // { data: 'tahun_ajar', className: 'text-center' },
                             {
                                 data: null,
                                 render: function (data, type, row) {
                                     // var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.nama_siswa + '" data-id_mapel_nama="' + data.nama_mapel + '" data-id_mapel_kelompok="' + data.kelompok + '" data-id_mapel_type="' + data.type + '" data-nilai="' + data.nilai + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
-                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-id_mapel_nama="' + data.id_mapel_nama + '" data-id_mapel_kelompok="' + data.id_mapel_kelompok + '" data-id_mapel_type="' + data.id_mapel_type + '" data-nilai="' + data.nilai + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
-                                    return editBtn;
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-id_mapel_nama="' + data.id_mapel_nama + '" data-id_mapel_kelompok="' + data.id_mapel_kelompok + '" data-id_mapel_type="' + data.id_mapel_type + '" data-nilai="' + data.nilai + '" data-id_jurusan_nama="' + data.id_jurusan_nama + '" data-id_tajar_periode="' + data.id_tajar_periode + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                    var deleteBtnDetail = '<button class="btn btn-danger btn-delete-detail" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
+                                    // var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-id_mapel_nama="' + data.id_mapel_nama + '" data-id_mapel_kelompok="' + data.id_mapel_kelompok + '" data-id_mapel_type="' + data.id_mapel_type + '" data-nilai="' + data.nilai + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                    var actions = editBtn + ' || ' + deleteBtnDetail ;
+                                    return actions;
+
                                 }
                             }
                         ],
@@ -1506,6 +1617,75 @@
                     modal.show();
                 });
 
+                // button create
+                jQuery('.btn-simpan').click(function(){
+                    // show the modal
+                    event.preventDefault();
+
+                    // get form data
+                    var siswa_id_nama = jQuery('.create-nama-siswa').val();
+                    var mapel_id_nama = jQuery('.create-nama-mapel').val();
+                    var nilai = jQuery('.create-nilai').val();
+                    var jurusan_id_nama = jQuery('.create-jurusan').val();
+                    var tajar_id_periode = jQuery('.create-tahun-ajar').val();
+
+                    var formData = new FormData();
+                    formData.append('siswa_id', siswa_id_nama);
+                    formData.append('mapel_id', mapel_id_nama);
+                    formData.append('nilai', nilai);
+                    formData.append('jurusan_id', jurusan_id_nama);
+                    formData.append('tajar_id', tajar_id_periode);
+
+                    // kirim ke API
+                    jQuery.ajax({
+                        url: 'http://127.0.0.1:8000/api/data-nilai/rapor-siswa/tambah-data',
+                        type: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                        },
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response){
+                            // show the modal
+                            jQuery('.create-sukses').text(response.message);
+                            Toastify({
+                                node: $('#success-create-notification-content')
+                                    .clone()
+                                    .removeClass("hidden")[0],
+                                duration: 3000,
+                                newWindow: true,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                stopOnFocus: true,
+                            }).showToast();
+
+                            setTimeout(function(){
+                                location.reload();
+                            }, 3000);
+                        },
+                        error: function(xhr, status, error) {
+                            jQuery('.create-gagal').text(error);
+                            Toastify({
+                                node: $('#failed-create-notification-content')
+                                    .clone()
+                                    .removeClass("hidden")[0],
+                                duration: 5000,
+                                newWindow: true,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                stopOnFocus: true,
+                            }).showToast();
+
+                            setTimeout(function(){
+                                // location.reload();
+                            }, 5000);
+                        }
+                    });
+                });
+
                 // button update
                 jQuery('#data-table-detail').on('click', '.btn-edit', function() {
                     // show the modal
@@ -1516,23 +1696,17 @@
                     var id = jQuery(this).attr("data-id");
                     var id_siswa_nama = jQuery(this).attr("data-id_siswa_nama");
                     var id_mapel_nama = jQuery(this).attr("data-id_mapel_nama");
-                    var id_mapel_kelompok = jQuery(this).attr("data-id_mapel_kelompok");
-                    var id_mapel_type = jQuery(this).attr("data-id_mapel_type");
                     var nilai = jQuery(this).attr("data-nilai");
-                    // var id_jurusan_nama = jQuery(this).attr("data-id_jurusan_nama");
-                    // var id_tajar_semester = jQuery(this).attr("data-id_tajar_semester");
-                    // var id_tajar_tahun = jQuery(this).attr("data-id_tajar_tahun");
+                    var id_jurusan_nama = jQuery(this).attr("data-id_jurusan_nama");
+                    var id_tajar_periode = jQuery(this).attr("data-id_tajar_periode");
 
                     // handle edit action
                     jQuery('.update-id').val(id);
                     jQuery('.update-nama-siswa').val(id_siswa_nama);
                     jQuery('.update-nama-mapel').val(id_mapel_nama);
-                    jQuery('.update-kelompok').val(id_mapel_kelompok);
-                    jQuery('.update-type').val(id_mapel_type);
                     jQuery('.update-nilai').val(nilai);
-                    // jQuery('.update-jurusan').val(id_jurusan_nama);
-                    // jQuery('.update-semester').val(id_tajar_semester);
-                    // jQuery('.update-tahun-ajar').val(id_tajar_tahun);
+                    jQuery('.update-jurusan').val(id_jurusan_nama);
+                    jQuery('.update-tahun-ajar').val(id_tajar_periode);
                 })
 
                 // Fungsi button update
@@ -1541,9 +1715,9 @@
                     var id = jQuery('.update-id').val();
                     var nama_siswa_id = jQuery('.update-nama-siswa').val();
                     var nama_mapel_id = jQuery('.update-nama-mapel').val();
-                    var kelompok_mapel_id = jQuery('.update-kelompok').val();
-                    var type_mapel_id = jQuery('.update-type').val();
                     var nilai = jQuery('.update-nilai').val();
+                    var nama_jurusan_id = jQuery('.update-jurusan').val();
+                    var periode_tajar_id = jQuery('.update-tahun-ajar').val();
 
                     // kirim permintaan pembaruan produk ke API
                     jQuery.ajax({
@@ -1555,9 +1729,9 @@
                         data: {
                             siswa_id: nama_siswa_id,
                             mapel_id: nama_mapel_id,
-                            mapel_id: kelompok_mapel_id,
-                            mapel_id: type_mapel_id,
                             nilai: nilai,
+                            jurusan_id: nama_jurusan_id,
+                            tajar_id: periode_tajar_id,
                         },
                         success: function(response) {
                             // show the modal
@@ -1613,6 +1787,64 @@
                         // ajax delete API
                         jQuery.ajax({
                             url: 'http://127.0.0.1:8000/api/data-nilai/rapor-siswa/hapus-data/' + id,
+                            type: 'DELETE',
+                            headers: {
+                                'Authorization': 'Bearer ' + token
+                            },
+                            success: function(response) {
+                                // Show the modal
+                                jQuery('.hapus-sukses').text(response.message);
+                                Toastify({
+                                    node: $("#success-hapus-notification-content")
+                                        .clone()
+                                        .removeClass("hidden")[0],
+                                    duration: 3000,
+                                    newWindow: true,
+                                    close: true,
+                                    gravity: "top",
+                                    position: "right",
+                                    stopOnFocus: true,
+                                }).showToast();
+
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 3000); // 3000 milliseconds = 3 seconds
+                            },
+                            error: function(xhr, status, error) {
+                                // Show the modal
+                                jQuery('.hapus-gagal').text(error);
+                                Toastify({
+                                    node: $("#failed-hapus-notification-content")
+                                        .clone()
+                                        .removeClass("hidden")[0],
+                                    duration: 5000,
+                                    newWindow: true,
+                                    close: true,
+                                    gravity: "top",
+                                    position: "right",
+                                    stopOnFocus: true,
+                                }).showToast();
+
+                                setTimeout(function() {
+                                    // location.reload();
+                                }, 5000); // 3000 milliseconds = 3 seconds
+                            }
+                        })
+                    })
+                })
+
+                // Fungsi button delete detail
+                jQuery('#data-table-detail').on('click', '.btn-delete-detail', function() {
+                    var id = jQuery(this).attr("data-id");
+
+                    // show the modal
+                    const el = document.querySelector("#delete-modal-preview");
+                    const modal = tailwind.Modal.getOrCreateInstance(el);
+                    modal.show();
+
+                    jQuery('.btn-iya').click(function(){
+                        jQuery.ajax({
+                            url: 'http://127.0.0.1:8000/api/data-nilai/rapor-siswa/hapus-data-detail/' + id,
                             type: 'DELETE',
                             headers: {
                                 'Authorization': 'Bearer ' + token

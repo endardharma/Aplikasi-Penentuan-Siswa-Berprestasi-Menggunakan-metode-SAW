@@ -438,7 +438,7 @@
                                         <a href="#" class="dropdown-item modal-import"> <i data-lucide="file-plus" class="w-4 h-4 mr-2"></i> Import Data </a>
                                     </li> --}}
                                     <li>
-                                        <a href="#" class="dropdown-item btn-export"> <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export Excel </a>
+                                        <a href="#" class="dropdown-item btn-export-mipa"> <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export Excel </a>
                                     </li>
                                 </ul>
                             </div>
@@ -494,7 +494,7 @@
                                         <a href="#" class="dropdown-item modal-import"> <i data-lucide="file-plus" class="w-4 h-4 mr-2"></i> Import Data </a>
                                     </li> --}}
                                     <li>
-                                        <a href="#" class="dropdown-item btn-export"> <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export Excel </a>
+                                        <a href="#" class="dropdown-item btn-export-iis"> <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export Excel </a>
                                     </li>
                                 </ul>
                             </div>
@@ -931,9 +931,9 @@
                     modal.show();
                 })
                 
-                jQuery('.btn-export').click(function() {
+                jQuery('.btn-export-mipa').click(function() {
                     // Akses URL Export data
-                    var linkto = 'http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/export-data/export-xls';
+                    var linkto = 'http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/export-data/export-xls-mipa';
                     jQuery.ajax({
                         xhrFields: {
                             responseType: 'blob',
@@ -947,7 +947,41 @@
 
                             var disposition = xhr.getResponseHeader('content-disposition');
                             var matches = /"([^"]*)"/.exec(disposition);
-                            var filename = (matches != null && matches[1] ? matches[1] : 'Export-Nilai-Rangking-Siswa.xlsx');
+                            var filename = (matches != null && matches[1] ? matches[1] : 'Export-Nilai-Rangking-Siswa-Mipa.xlsx');
+
+                            // The actual download
+                            var blob = new Blob([result], {
+                                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                            });
+                            var link = document.createElement('a');
+                            link.href = window.URL.createObjectURL(blob);
+                            link.download = filename;
+
+                            document.body.appendChild(link);
+
+                            link.click();
+                            document.body.removeChild(link);
+                        }
+                    }); 
+                })
+
+                jQuery('.btn-export-iis').click(function() {
+                    // Akses URL Export data
+                    var linkto = 'http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/export-data/export-xls-iis';
+                    jQuery.ajax({
+                        xhrFields: {
+                            responseType: 'blob',
+                        },
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        type: 'GET',
+                        url: linkto,
+                        success: function(result, status, xhr) {
+
+                            var disposition = xhr.getResponseHeader('content-disposition');
+                            var matches = /"([^"]*)"/.exec(disposition);
+                            var filename = (matches != null && matches[1] ? matches[1] : 'Export-Nilai-Rangking-Siswa-Iis.xlsx');
 
                             // The actual download
                             var blob = new Blob([result], {

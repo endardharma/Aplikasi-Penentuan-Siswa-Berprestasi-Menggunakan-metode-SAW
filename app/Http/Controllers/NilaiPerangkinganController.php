@@ -192,7 +192,8 @@ class NilaiPerangkinganController extends Controller
             $item = [
                 'id' => $s->id,
                 'nama_siswa' => $s->siswa->name,
-                'nilai_akhir' => $nilaiakhir[$s->siswa->id] ?? 0,
+                // 'nilai_akhir' => $nilaiakhir[$s->siswa->id] ?? 0,
+                'nilai_akhir' => number_format($nilaiakhir[$s->siswa->id] ?? 0, 3), // mengambil 3 angka di belakang koma
                 'jurusan' => $s->siswa->kelas->jurusan->name,
                 'semester' => $s->tajar->semester,
                 'tahun_ajar' => $s->tajar->periode,
@@ -356,7 +357,8 @@ class NilaiPerangkinganController extends Controller
             $item = [
                 'id' => $s->id,
                 'nama_siswa' => $s->siswa->name,
-                'nilai_akhir' => $nilaiakhir[$s->siswa->id] ?? 0,
+                // 'nilai_akhir' => $nilaiakhir[$s->siswa->id] ?? 0,
+                'nilai_akhir' => number_format($nilaiakhir[$s->siswa->id] ?? 0, 3), // mengambil 3 angka di belakang koma
                 'jurusan' => $s->siswa->kelas->jurusan->name,
                 'semester' => $s->tajar->semester,
                 'tahun_ajar' => $s->tajar->periode,
@@ -412,24 +414,77 @@ class NilaiPerangkinganController extends Controller
         ], 200);
     }
 
-    public function exportData()
+    // public function exportData()
+    // {
+    //     $rangking = NilaiPerangkingan::all();
+    //     $data = array();
+
+    //     foreach ($rangking as $r)
+    //     {
+    //         $item['id'] = $r->id;
+    //         $item['nama_siswa'] = $r->siswa->name ?? '';
+    //         $item['nilai_akhir'] = $r->nilai_akhir;
+    //         $item['jurusan'] = $r->jurusan->name ?? '';
+    //         $item['tahun_ajar'] = $r->tajar->periode ?? '';
+    //         $data[] = $item;
+    //     }
+
+    //     // dd($data)->toArray();
+
+    //     return Excel::download(new NilaiPerangkinganExport($data), 'Data-Perangkingan.xlsx');
+    // }
+
+    public function exportDataMipa()
     {
-        $rangking = NilaiPerangkingan::all();
+        // Mengambil data NilaiPerangkingan hanya untuk jurusan MIPA
+        $rangking = NilaiPerangkingan::with(['siswa', 'jurusan', 'tajar'])
+            ->whereHas('jurusan', function ($query) {
+                $query->where('name', 'MIPA');
+            })
+            ->get();
+
+        // Urutkan data berdasarkan nilai_akhir dari tertinggi ke terendah
+        $rangking = $rangking->sortByDesc('nilai_akhir');
+
         $data = array();
 
-        foreach ($rangking as $r)
-        {
+        foreach ($rangking as $r) {
             $item['id'] = $r->id;
             $item['nama_siswa'] = $r->siswa->name ?? '';
             $item['nilai_akhir'] = $r->nilai_akhir;
             $item['jurusan'] = $r->jurusan->name ?? '';
-            $item['semester'] = $r->tajar->semester ?? '';
             $item['tahun_ajar'] = $r->tajar->periode ?? '';
             $data[] = $item;
         }
 
-        // dd($data)->toArray();
-
-        return Excel::download(new NilaiPerangkinganExport($data), 'Data-Perangkingan.xlsx');
+        return Excel::download(new NilaiPerangkinganExport($data), 'Data-Perangkingan-Mipa.xlsx');
     }
+
+    public function exportDataIis()
+    {
+        // Mengambil data NilaiPerangkingan hanya untuk jurusan MIPA
+        $rangking = NilaiPerangkingan::with(['siswa', 'jurusan', 'tajar'])
+            ->whereHas('jurusan', function ($query) {
+                $query->where('name', 'IIS');
+            })
+            ->get();
+
+        // Urutkan data berdasarkan nilai_akhir dari tertinggi ke terendah
+        $rangking = $rangking->sortByDesc('nilai_akhir');
+
+        $data = array();
+
+        foreach ($rangking as $r) {
+            $item['id'] = $r->id;
+            $item['nama_siswa'] = $r->siswa->name ?? '';
+            $item['nilai_akhir'] = $r->nilai_akhir;
+            $item['jurusan'] = $r->jurusan->name ?? '';
+            $item['tahun_ajar'] = $r->tajar->periode ?? '';
+            $data[] = $item;
+        }
+
+        return Excel::download(new NilaiPerangkinganExport($data), 'Data-Perangkingan-Iis.xlsx');
+    }
+
+    
 }

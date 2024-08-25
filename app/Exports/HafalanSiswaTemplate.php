@@ -44,18 +44,12 @@ class HafalanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, W
                 if ($jurusan_id === $jurusanMipa)
                 {
                     foreach ($ket_hafalan_list as $ket_hafalan) {
-                        foreach ($tajar as $t) {
-                            $item = [];
-                            $item['nama_siswa'] = $s->name;
-                            $item['ket_hafalan'] = $ket_hafalan;
-                            $item['nilai'] = 'Isi nilai dengan angka';
-    
-                            // $item['jurusan'] = $s->jurusan ? $s->jurusan->name : 'Jurusan tidak ditemukan';
-    
-                            $item['semester'] = $t->semester;
-    
-                            $data[] = $item;
-                        }
+                        $item = [];
+                        $item['nama_siswa'] = $s->name;
+                        $item['ket_hafalan'] = $ket_hafalan;
+                        $item['nilai'] = 'Isi nilai dengan angka';
+
+                        $data[] = $item;
                     }
                 }
             }
@@ -68,7 +62,7 @@ class HafalanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, W
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:D1'; // All headers
+                $cellRange = 'A1:C1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -98,7 +92,6 @@ class HafalanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, W
             'Nama Siswa',
             'Keterangan Hafalan',
             'Nilai',
-            'Semester',
         ];
     }
 }

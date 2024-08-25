@@ -36,15 +36,10 @@ class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoS
                 $jurusan_id = $s->kelas->jurusan->id ??  null;
                 if ($jurusan_id === $jurusanMipa)
                 {
-                    foreach($tajar as $t)
-                    {
-                        $item = [];
-                        $item['nama_siswa'] = $s->name;
-                        $item['jumlah_keterlambatan'] = 'Masukkan jumlah keterlambatan siswa masuk sekolah(0 Kali, 1-2 Kali, 3-4 Kali, 5-6 Kali, > 7 Kali)';
-                        $item['nilai'] = 'Isi nilai dengan angka';
-                        $item['semester'] = $t->semester;
-                        $data[] = $item;
-                    }
+                    $item = [];
+                    $item['nama_siswa'] = $s->name;
+                    $item['jumlah_keterlambatan'] = 'Masukkan jumlah keterlambatan siswa masuk sekolah(0 Kali, 1-2 Kali, 3-4 Kali, 5-6 Kali, > 7 Kali)';
+                    $data[] = $item;
                 }
             }
         }
@@ -55,7 +50,7 @@ class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoS
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:D1'; // All headers
+                $cellRange = 'A1:B1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -85,8 +80,6 @@ class KeterlambatanSiswaTemplate implements FromArray, WithHeadings, ShouldAutoS
         return [
             'Nama Siswa',
             'Jumlah Keterlambatan',
-            'Nilai',
-            'Semester',
         ];
     }
     

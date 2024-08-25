@@ -29,11 +29,13 @@ class PrestasiSiswaImport implements ToCollection, WithHeadingRow
     
     protected $selectedTahunAjar;
     protected $selectedJurusan;
+    protected $nilaiCallback;
 
-    public function __construct($selectedTahunAjar, $selectedJurusan)
+    public function __construct($selectedTahunAjar, $selectedJurusan, $nilaiCallback)
     {
         $this->selectedTahunAjar = $selectedTahunAjar;
         $this->selectedJurusan = $selectedJurusan;
+        $this->nilaiCallback = $nilaiCallback;
     }
 
     public function collection(Collection $rows)
@@ -43,28 +45,23 @@ class PrestasiSiswaImport implements ToCollection, WithHeadingRow
         foreach($rows as $row)
         {
             $tajar = TahunAjar::find($this->selectedTahunAjar);
-            // $siswa = MasterSiswa::where('name','LIKE','%'.$row['nama_siswa'].'%')->first();
-            // $jurusan = MasterJurusan::where('name','LIKE','%'.$row['jurusan'].'%')->first();
             $siswa = MasterSiswa::where('name', $row['nama_siswa'])->first();
             $jurusan = MasterJurusanSiswa::find($this->selectedJurusan);
 
             if($tajar && $siswa && $jurusan)
             {
+                $nilai = call_user_func($this->nilaiCallback, $row['keterangan_prestasi']);
                 $prestasi = PrestasiSiswa::updateOrCreate([
                     'tajar_id' => $tajar->id,
                     'siswa_id' => $siswa->id,
                     'jurusan_id' => $jurusan->id,
+                    'nilai' => $nilai,
                 ], [
-                    'tajar_id' => $tajar->id,
-                    'siswa_id' => $siswa->id,
-                    'jurusan_id' => $jurusan->id,
                     'nama_siswa' => $row['nama_siswa'],
                     'ket_prestasi' => $row['keterangan_prestasi'],
-                    'nilai' => $row['nilai'],
+                    'nilai' => $nilai,
                     'jurusan' => $jurusan->name,
-                    'semester' => $row['semester'],
                     'tahun_ajar' => $tajar->name,
-
                 ]);
             }
         }

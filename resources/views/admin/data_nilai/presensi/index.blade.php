@@ -429,6 +429,7 @@
                         </div>
                     </div> --}}
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <button class="btn btn-primary shadow-md mr-2 btn-tambah">Tambah Data</button>
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
                                 <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-lucide="plus"></i> </span>
@@ -473,7 +474,6 @@
                                     <th>Jumlah Hari Lainnya</th>
                                     <th>Nilai</th>
                                     <th>Jurusan</th>
-                                    <th>Semester</th>
                                     <th>Tahun Ajar</th>
                                     <th>Action</th>
                                 </tr>
@@ -486,7 +486,6 @@
                 <!-- END: HTML Table Data -->
             </div>
             <!-- END: Content -->
-
             <!-- BEGIN: Modal Content -->
             <div id="header-import-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
@@ -557,7 +556,6 @@
                                             <th>ID</th>
                                             <th>Nama Siswa</th>
                                             <th>Jurusan</th>
-                                            <th>Semester</th>
                                             <th>Tahun Ajar</th>
                                         </tr>
                                     </thead>
@@ -582,13 +580,104 @@
             <!-- END: Notification Sukses Import Data Ketidakhadiran Siswa -->
             <!-- BEGIN: Notification Gagal Import Data Ketidakhadiran Siswa -->
             <div id="failed-import-notification-content" class="toastify-content hidden flex">
-                <i class="text-success" data-lucide="x-circle"></i>
+                <i class="text-danger" data-lucide="x-circle"></i>
                 <div class="ml-4 mr-4">
                     <div class="font-medium">Gagal import data ketidakhadiran siswa!</div>
                     <div class="text-slate-500 mt-1 import-gagal"></div>
                 </div>
             </div>
             <!-- END: Notification Gagal Import Data Ketidakhadiran Siswa -->
+            <!-- BEGIN: Modal Tambah Data Content -->
+            <div id="header-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- BEGIN: Modal Header -->
+                        <div class="modal-header">
+                            <h2 class="font-medium text-base mr-auto">Form Tambah Data Presensi</h2>
+                            <a href="javascript:;" data-tw-dismiss="modal"><i data-feather="x" class="w-8 h-8 text-gray-500"></i></a>
+                        </div>
+                        <!-- END: Modal Header -->
+                        <!-- BEGIN: Modal Body -->
+                        <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Nama Siswa</label>
+                                <input type="hidden" class="form-control">
+                                <select class="form-select create-nama-siswa" required>
+                                    <option disabled selected> --- Pilih Nama Siswa --- </option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Keterangan Ketidakhadiran</label>
+                                <select class="form-select create-ket-ketidakhadiran" required>
+                                    <option disabled selected> --- Pilih Keterangan Ketidakhadiran --- </option>
+                                    <option value="Tidak Ada">Tidak Ada</option>
+                                    <option value="Sakit">Sakit</option>
+                                    <option value="Izin">Izin</option>
+                                    <option value="Tanpa Keterangan">Tanpa Keterangan</option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12 create-hari">
+                                <label for="modal-form-2" class="form-label">Jumlah Hari</label>
+                                <select class="form-select create-jumlah-hari" required>
+                                    <option disabled selected> --- Pilih Jumlah Hari --- </option>
+                                    <option value="0 Hari">0 hari</option>
+                                    <option value="1 Hari">1 Hari</option>
+                                    <option value="2 Hari">2 Hari</option>
+                                    <option value="3 Hari">3 Hari</option>
+                                    <option value="4 Hari">4 Hari</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12 create-lainnya">
+                                <label for="modal-form-2" class="form-label">Jumlah hari Lainnya</label>
+                                <input type="text" class="form-control create-jumlah-hari-lainnya" placeholder="Masukkan Jumlah Hari yang Lebih dari 4 Hari contoh: 7 Hari" required>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Nilai</label>
+                                <input type="number" class="form-control create-nilai" placeholder="Masukkan Nilai Ketidakhadiran Siswa" required readonly>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Jurusan</label>
+                                <select class="form-select create-jurusan" required>
+                                    <option disabled selected> --- Pilih Jurusan --- </option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Tahun Ajar</label>
+                                <select class="form-select create-tahun-ajar" required>
+                                    <option disabled selected> --- Pilih Tahun Ajar --- </option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- END: Modal Body -->
+                        <!-- BEGIN: Modal Footer -->
+                        <div class="modal-footer">
+                            <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Batalkan</button>
+                            <button type="button" class="btn btn-primary w-20 btn-simpan">Simpan</button>
+                        </div>
+                        <!-- END: Modal Footer -->
+                    </div>
+                </div>
+            </div>
+            <!-- END: Modal Tambah Data Content -->
+            <!-- BEGIN: Notification Sukses Create Presensi Content -->
+            <div id="success-create-notification-content" class="toastify-content hidden flex">
+                <i class="text-success" data-lucide="check-circle"></i>
+                <div class="ml-4 mr-4">
+                    <div class="font-medium">Berhasil menambahkan data presensi siswa!</div>
+                    <div class="text-slate-500 mt-1 create-sukses"></div>
+                </div>
+            </div>
+            <!-- END: Notification Sukses Create Presensi Content -->
+            <!-- BEGIN: Notification gagal Create Presensi Content -->
+            <div id="failed-create-notification-content" class="toastify-content hidden flex">
+                <i class="text-danger" data-lucide="x-circle"></i>
+                <div class="ml-4 mr-4">
+                    <div class="font-medium">Gagal menambahkan data presensi siswa!</div>
+                    <div class="text-slate-500 mt-1 create-gagal"></div>
+                </div>
+            </div>
+            <!-- END: Notification gagal Create Presensi Content -->
             <!-- BEGIN: Modal Content Update -->
             <div id="header-update-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
@@ -624,7 +713,7 @@
                                 <label for="modal-form-2" class="form-label">Jumlah Hari</label>
                                 {{-- <input type="number" class="form-control update-jumlah-hari" placeholder="Masukkan Jumlah Hari" required --}}
                                 <select class="form-select update-jumlah-hari" required> 
-                                    <option disabled selected> --- Pilih Jumlah Hari --- </option>
+                                    <option disabled selected> -- Pilih Jumlah Hari -- </option>
                                     <option value="0 Hari">0 Hari</option>
                                     <option value="1 Hari">1 Hari</option>
                                     <option value="2 Hari">2 Hari</option>
@@ -639,18 +728,12 @@
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Nilai</label>
-                                <input type="number" class="form-control update-nilai" placeholder="Masukkan Nilai Presensi Siswa" required readonly>
+                                <input type="number" class="form-control update-nilai" placeholder="Masukkan Nilai Ketidakhadiran Siswa" required readonly>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Jurusan</label>
                                 <select class="form-select update-jurusan" required>
                                     <option disabled selected> --- Pilih Jurusan ---</option>
-                                </select>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Semester</label>
-                                <select class="form-select update-semester" required>
-                                    <option disabled selected> --- Pilih Semester ---</option>
                                 </select>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
@@ -682,7 +765,7 @@
             <!-- END: Notification Sukses Update Presensi Content -->
             <!-- BEGIN: Notification Gaga Update Presensi Content -->
             <div id="failed-update-notification-content" class="toastify-content hidden flex">
-                <i class="text-success" data-lucide="check-circle"></i>
+                <i class="text-danger" data-lucide="check-circle"></i>
                 <div class="font-medium">Gagal update data presensi siswa!</div>
                 <div class="text-slate-500 mt-1 update-gagal"></div>
             </div>
@@ -721,7 +804,7 @@
             <!-- END: Notification Sukses Hapus Data Presensi Content -->
             <!-- BEGIN: Notification Gagal Hapus Data Presensi Content -->
             <div id="failed-hapus-notification-content" class="toastify-content hidden flex">
-                <i class="text-success" data-lucide="x-circle"></i>
+                <i class="text-danger" data-lucide="x-circle"></i>
                 <div class="ml-4 mr-4">
                     <div class="font-medium">Gagal hapus data presensi siswa!</div>
                     <div class="text-slate-500 mt-1 hapus-gagal"></div>
@@ -1080,15 +1163,15 @@
                 }).then(response => response.json()).then(data => {
 
                     var selectImportTajar = jQuery('.import-tajar');
-                    var selectUpdateSemester = jQuery('.update-semester');
                     var selectUpdatePeriode = jQuery('.update-tahun-ajar');
+                    var selectCreatePeriode = jQuery('.create-tahun-ajar');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
                         for (let i = 0; i < item.length; i++) {
                             selectImportTajar.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
-                            selectUpdateSemester.append('<option value="' + item[i].id + '">' + item[i].semester + '</option>');
                             selectUpdatePeriode.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
+                            selectCreatePeriode.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
                         }
                     });
 
@@ -1106,13 +1189,15 @@
                 }).then(response => response.json()).then(data => {
                     // panggil element select
                     var selectUpdateNama = jQuery('.update-nama-siswa');
+                    var selectCreateNama = jQuery('.create-nama-siswa');
 
                     // iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
                         for (let i = 0; i < item.length; i++)
                         {
                             // isi data dengan nilai dalam database
-                            selectUpdateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>')
+                            selectUpdateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selectCreateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -1130,6 +1215,7 @@
                     var selectImportJurusan = jQuery('.import-jurusan');
                     var selectJurusan = jQuery('.form-jurusan');
                     var selectUpdateJurusan = jQuery('.update-jurusan');
+                    var selectCreateJurusan = jQuery('.create-jurusan');
 
                     jQuery.each(data, function(index, item) {
                         for (let i = 0; i < item.length; i++)
@@ -1137,6 +1223,7 @@
                             selectImportJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                             selectJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                             selectUpdateJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selectCreateJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -1176,13 +1263,12 @@
                             { data: 'jumlah_hari_lainnya', className: 'text-center'},
                             { data: 'nilai', className: 'text-center'},
                             { data: 'jurusan', className: 'text-center'},
-                            { data: 'semester', className: 'text-center'},
                             { data: 'tahun_ajar', className: 'text-center'},
                             {
                                 data: null,
                                 render: function (data, type, row){
                                     // Create action buttons
-                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id +'" data-id_siswa_nama="' + data.id_siswa_nama + '" data-ket_ketidakhadiran="' +data.ket_ketidakhadiran +'" data-jumlah_hari="' +data.jumlah_hari +'" data-jumlah_hari_lainnya="' +data.jumlah_hari_lainnya +'" data-nilai="' +data.nilai +'" data-id_jurusan_nama="' +data.id_jurusan_nama +'" data-id_tajar_semester="' +data.id_tajar_semester +'" data-id_tajar_periode="' +data.id_tajar_periode +'"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id +'" data-id_siswa_nama="' + data.id_siswa_nama + '" data-ket_ketidakhadiran="' +data.ket_ketidakhadiran +'" data-jumlah_hari="' +data.jumlah_hari +'" data-jumlah_hari_lainnya="' +data.jumlah_hari_lainnya +'" data-nilai="' +data.nilai +'" data-id_jurusan_nama="' +data.id_jurusan_nama + '" data-id_tajar_periode="' +data.id_tajar_periode +'"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
                                     var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
 
 
@@ -1218,7 +1304,6 @@
                         // { data: 'jumlah_hari_lainnya', className: 'text-center'},
                         // { data: 'nilai', className: 'text-center'},
                         { data: 'jurusan', className: 'text-center'},
-                        { data: 'semester', className: 'text-center'},
                         { data: 'tahun_ajar', className: 'text-center'},
                     ],
                     "drawCallback": function(settings){
@@ -1258,10 +1343,19 @@
                 jQuery('.btn-import').hide();
                 jQuery('.update-lainnya').hide();
                 jQuery('.update-hari').hide();
+                jQuery('.create-lainnya').hide();
+                jQuery('.create-hari').hide();
 
                 // Fungsi button logout
                 jQuery('.btn-logout').click(function(){
                     logout(token);
+                });
+
+                jQuery('.btn-tambah').click(function() {
+                    // show modal
+                    const el = document.querySelector('#header-footer-modal-preview');
+                    const modal = tailwind.Modal.getOrCreateInstance(el);
+                    modal.show();
                 });
 
                 // Fungsi Button Unduh Template Mipa
@@ -1398,6 +1492,169 @@
                     }); 
                 })
 
+                // Button Simpan
+                jQuery('.btn-simpan').click(function(){
+                    // show the modal
+                    event.preventDefault(); // Prevent default form submission
+
+                    // Get form data
+                    var siswa_id_nama = jQuery('.create-nama-siswa').val();
+                    var ket_ketidakhadiran = jQuery('.create-ket-ketidakhadiran').val();
+                    var jumlah_hari = jQuery('.create-jumlah-hari').val();
+                    var jumlah_hari_lainnya = jQuery('.create-jumlah-hari-lainnya').val();
+                    var nilai = jQuery('.create-nilai').val();
+                    var jurusan_id_nama = jQuery('.create-jurusan').val();
+                    var tajar_id_periode = jQuery('.create-tahun-ajar').val();
+
+                    if (jumlah_hari === 'lainnya')
+                    {
+                        jumlah_hari = jumlah_hari_lainnya
+                    }
+
+                    var formData = new FormData();
+                    formData.append('siswa_id', siswa_id_nama);
+                    formData.append('ket_ketidakhadiran', ket_ketidakhadiran);
+                    formData.append('jumlah_hari', jumlah_hari);
+                    formData.append('jumlah_hari_lainnya', jumlah_hari_lainnya);
+                    formData.append('nilai', nilai);
+                    formData.append('jurusan_id', jurusan_id_nama);
+                    formData.append('tajar_id', tajar_id_periode);
+
+                    // Kirim permintaan ke API
+                    jQuery.ajax({
+                        url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/tambah-data',
+                        type: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                        },
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response){
+                            // show the modal
+                            jQuery('.create-sukses').text(response.message);
+                            Toastify({
+                                node: $('#success-create-notification-content')
+                                    .clone()
+                                    .removeClass("hidden")[0],
+                                duration: 3000,
+                                newWindow: true,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                stopOnFocus: true,
+                            }).showToast();
+
+                            setTimeout(function(){
+                                location.reload();
+                            }, 3000);
+                        },
+                        error: function(xhr, status, error) {
+                            jQuery('.create-gagal').text(error);
+                            Toastify({
+                                node: $('#failed-create-notification-content')
+                                    .clone()
+                                    .removeClass("hidden")[0],
+                                duration: 5000,
+                                newWindow: true,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                stopOnFocus: true,
+                            }).showToast();
+
+                            setTimeout(function(){
+                                location.reload();
+                            }, 5000);
+                        }
+                    });
+                });
+                
+                // Proses Menampilkan Nilai Otomatis untuk ket_ketidakhadirana
+                jQuery('.create-ket-ketidakhadiran').change(function() {
+                    var ket_ketidakhadiran = jQuery(this).val();
+
+                    if (ket_ketidakhadiran !== 'Tidak Ada')
+                    {
+                        jQuery('.create-hari').show();
+                    } else {
+                        jQuery('.create-hari').hide();
+                        jQuery('.create-lainnya').hide();
+                    }
+                    
+                    if (ket_ketidakhadiran === 'Tidak Ada')
+                    {
+                        jQuery.ajax({
+                            url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
+                            type: 'POST',
+                            beforeSend: function(xhr){
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                            },
+                            data: {
+                                ket_ketidakhadiran: ket_ketidakhadiran,
+                            },
+                            success: function(response) {
+                                jQuery('.create-nilai').val(response.nilai);
+                            },
+                            error: function(xhr, status, error){
+                                console.error('Gagal mendapatkan nilai otomatis', error);
+                            }
+                        });
+                    }
+                });
+
+                jQuery('.create-jumlah-hari').change(function() {
+                    var jumlah_hari = jQuery(this).val();
+                    var jumlah_hari_lainnya = jQuery(this).val();
+
+                    if (jumlah_hari === 'Lainnya')
+                    {
+                        jQuery('.create-lainnya').show();   
+                    } else {
+                        jQuery('.create-lainnya').hide();
+                    }
+
+                    // Kirim request nilai ke API getNilai
+                    if (jumlah_hari !== 'Lainnya')
+                    {
+                        jQuery.ajax({
+                            url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
+                            type: 'POST',
+                            beforeSend: function(xhr){
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                            },
+                            data: {
+                                jumlah_hari: jumlah_hari,
+                                jumlah_hari_lainnya: jumlah_hari_lainnya,
+                            },
+                            success: function(response) {
+                                jQuery('.create-nilai').val(response.nilai);
+                            },
+                            error: function(xhr, status, error){
+                                console.error('Gagal mendapatkan nilai otomatis', error);
+                            }
+                        });
+                    } else {
+                        jQuery.ajax({
+                            url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
+                            type: 'POST',
+                            beforeSend: function(xhr) {
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                            },
+                            data: {
+                                jumlah_hari: jumlah_hari,
+                            },
+                            success: function(response){
+                                jQuery('.create-nilai').val(response.nilai);
+                            },
+                            error: function(xhr, status, error){
+                                console.error('Gagal mendapatkan nilai otomatis', error);
+                            }
+                        });
+                    }
+
+                });
+                
                 // Button Update
                 jQuery('#data-table').on('click', '.btn-edit', function(){
                     // show the modal
@@ -1412,7 +1669,6 @@
                     var jumlah_hari_lainnya = jQuery(this).attr("data-jumlah_hari_lainnya");
                     var nilai = jQuery(this).attr("data-nilai");
                     var id_jurusan_nama = jQuery(this).attr("data-id_jurusan_nama");
-                    var id_tajar_semester = jQuery(this).attr("data-id_tajar_semester");
                     var id_tajar_periode = jQuery(this).attr("data-id_tajar_periode");
 
                     // handle edit action
@@ -1423,8 +1679,22 @@
                     jQuery('.update-jumlah-hari-lainnya').val(jumlah_hari_lainnya);
                     jQuery('.update-nilai').val(nilai);
                     jQuery('.update-jurusan').val(id_jurusan_nama);
-                    jQuery('.update-semester').val(id_tajar_semester);
                     jQuery('.update-tahun-ajar').val(id_tajar_periode);
+
+                    // Conditional logic for hiding or showing forms
+                    // if (ket_ketidakhadiran === 'Tidak Ada') 
+                    // {
+                    //     // hide the forms if "Tidak Ada"
+                    //     jQuery('.update-hari').hide();
+                    //     jQuery('.update-lainnya').hide();
+                    // } else if (ket_ketidakhadiran === 'Sakit' || ket_ketidakhadiran === 'Izin' || ket_ketidakhadiran === 'Tanpa Keterangan')
+                    // {
+                    //     jQuery('.update-hari').show();
+                    // } else {
+                    //     // show the forms if it has value other than "Tidak Ada"
+                    //     jQuery('.update-hari').show();
+                    //     jQuery('.update-lainnya').show();
+                    // }
                 })
 
                 // fungsi button update
@@ -1437,7 +1707,6 @@
                     var jumlah_hari_lainnya = jQuery('.update-jumlah-hari-lainnya').val();
                     var nilai = jQuery('.update-nilai').val();
                     var nama_jurusan_id = jQuery('.update-jurusan').val();
-                    var semester_tajar_id = jQuery('.update-semester').val();
                     var periode_tajar_id = jQuery('.update-tahun-ajar').val();
 
                     // Jika opsi 'lainnya' dipilih, gunakan nilai dari form input teks tambahan
@@ -1460,7 +1729,6 @@
                             jumlah_hari_lainnya: jumlah_hari_lainnya,
                             nilai: nilai,
                             jurusan_id: nama_jurusan_id,
-                            tajar_id: semester_tajar_id,
                             tajar_id: periode_tajar_id,
                         },
                         success: function(response){
@@ -1503,40 +1771,43 @@
                     });
                 })
 
-                // jQuery('.update-jumlah-hari').change(function(){
-                //     var jumlah_hari = jQuery(this).val();
-
-                //     jQuery.ajax({
-                //         url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
-                //         type: 'POST',
-                //         beforeSend: function(xhr){
-                //             xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                //         },
-                //         data: {
-                //             jumlah_hari: jumlah_hari
-                //         },
-                //         success: function(response){
-                //             jQuery('.update-nilai').val(response.nilai);
-                //         },
-                //         error: function(xhr, status, error){
-                //             console.error('Gagal mendapatkan nilai otomatis', error);
-                //         }
-                //     });
-                // })
-
                 jQuery('.update-ket-ketidakhadiran').change(function(){
                     var ket_ketidakhadiran = jQuery(this).val();
                     
                     if (ket_ketidakhadiran !== 'Tidak Ada')
                     {
                         jQuery('.update-hari').show();
-                    }
-                    else
-                    {
+                    } else {
                         jQuery('.update-hari').hide();
+                        jQuery('.update-lainnya').hide();
                     }
-                })
 
+                    if (ket_ketidakhadiran === 'Tidak Ada')
+                    {
+                        jQuery.ajax({
+                            url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
+                            type: 'POST',
+                            beforeSend: function(xhr){
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                            },
+                            data: {
+                                ket_ketidakhadiran: ket_ketidakhadiran,
+                            },
+                            success: function(response) {
+                                jQuery('.update-nilai').val(response.nilai);
+                            },
+                            error: function(xhr, status, error){
+                                console.error('Gagal mendapatkan nilai otomatis', error);
+                            }
+                        });
+                    }
+                });
+
+                // jQuery('#data-table').on('click', '.btn-edit', function(){
+                //     jQuery('.update-hari').show();
+                //     jQuery('.update-lainnya').show();
+                // })
+                
                 jQuery('.update-jumlah-hari').change(function(){
                     var jumlah_hari = jQuery(this).val();
                     var jumlah_hari_lainnya = jQuery(this).val();
@@ -1552,12 +1823,6 @@
                         // Sembunyikan form input teks tambahan
                         jQuery('.update-lainnya').hide();
                     }
-
-                    // Jika sebelumnya 'lainnya' dipilih dan sekarang berubah ke opsi lain, set nilai ke 0
-                    // if (previouslySelected === 'Lainnya' && jumlah_hari !== 'Lainnya')
-                    // {
-                    //     jQuery('.update-nilai').val('0 Hari');
-                    // }
                     
                     if (jumlah_hari !== 'Lainnya')
                     {
@@ -1578,10 +1843,6 @@
                                 console.error('Gagal mendapatkan nilai otomatis', error);
                             }
                         });
-
-                        // Simpan nilai yang baru dipilih sebagai nilai sebelumnya untuk pengecekan berikutnya
-                        // previouslySelected = jumlah_hari;
-
                     }
                     else
                     {
@@ -1593,7 +1854,6 @@
                             },
                             data: {
                                 jumlah_hari: jumlah_hari,
-                                // jumlah_hari_lainnya: jumlah_hari_lainnya,
                             },
                             success: function(response){
                                 jQuery('.update-nilai').val(response.nilai);

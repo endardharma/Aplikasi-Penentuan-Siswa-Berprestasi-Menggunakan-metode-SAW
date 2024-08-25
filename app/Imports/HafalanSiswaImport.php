@@ -25,7 +25,7 @@ class HafalanSiswaImport implements ToCollection, WithHeadingRow
             'ket_hafalan' => 'required',
             'nilai' => 'required',
             'jurusan' => 'required',
-            'semester' => 'required',
+            'tahun_ajar' => 'required',
         ];
     }
 
@@ -61,7 +61,6 @@ class HafalanSiswaImport implements ToCollection, WithHeadingRow
                     'ket_hafalan' => $row['keterangan_hafalan'],
                     'nilai' => $row['nilai'],
                     'jurusan' => $jurusan->name,
-                    'semester' => $row['semester'],
                     'tahun_ajar' => $tajar->name,
                 ]);
             }

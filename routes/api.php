@@ -100,7 +100,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     Route::prefix('master-kriteria')->group(function() {
-        Route::get("/list", [MasterkriteriaController::class, 'dataKriteria']);
+        Route::post("/list", [MasterkriteriaController::class, 'dataKriteria']);
         Route::post("/tambah-data", [MasterkriteriaController::class, 'tambahKriteria']);
         Route::put("/update-data/{id}", [MasterkriteriaController::class, 'updateData']);
         Route::delete("/hapus-data/{id}", [MasterkriteriaController::class, 'hapusData']);
@@ -122,9 +122,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get("/export-data/export-xls", [RaporSiswaController::class, 'exportData']);
             Route::get("/export-data/download-template-mipa", [RaporSiswaController::class, 'templateMipa']);
             Route::get("/export-data/download-template-iis", [RaporSiswaController::class, 'templateIis']);
+            Route::post("/tambah-data", [RaporSiswaController::class, 'tambahData']);
             Route::post("/import-data/import-xls", [RaporSiswaController::class, 'importData']);
             Route::put("/update-data/{id}", [RaporSiswaController::class, 'updateData']);
             Route::delete("/hapus-data/{id}", [RaporSiswaController::class, 'deleteData']);
+            Route::delete("/hapus-data-detail/{id}", [RaporSiswaController::class, 'deleteDataDetail']);
         });
 
         Route::prefix('presensi-siswa')->group(function() {
@@ -138,9 +140,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post("/import-data/import-xls", [PresensiSiswaController::class, 'importData']);
             Route::get("/export-data/export-xls", [PresensiSiswaController::class, 'exportData']);
             Route::get("/data-support/siswa", [PresensiSiswaController::class, 'supportSiswa']);
+            Route::post("/tambah-data", [PresensiSiswaController::class, 'tambahData']);
             Route::put("/update-data/{id}", [PresensiSiswaController::class, 'updateData']);
             Route::delete("/hapus-data/{id}", [PresensiSiswaController::class, 'deleteData']);
             Route::post("/get-nilai", [PresensiSiswaController::class, 'getNilai']);
+            Route::post("/get-nilai-ket_ketidakhadiran", [PresensiSiswaController::class, 'getNilaiKetKetidakhadiran']);
         });
 
         Route::prefix('sikap-siswa')->group(function() {
@@ -153,6 +157,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
            Route::get("/export-data/download-template-iis", [SikapSiswaController::class, 'templateIis']);
            Route::post("/import-data/import-xls", [SikapSiswaController::class, 'importData']);
            Route::get("/export-data/export-xls", [SikapSiswaController::class, 'exportData']);
+           Route::post("/tambah-data", [SikapSiswaController::class, 'tambahData']);
            Route::put("/update-data/{id}", [SikapSiswaController::class, 'updateData']);
            Route::delete("/hapus-data/{id}", [SikapSiswaController::class, 'deleteData']);
            Route::post("/get-nilai", [SikapSiswaController::class, 'getNilai']);
@@ -169,6 +174,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get("/export-data/download-template-iis", [PrestasiSiswaController::class, 'templateIis']);
             Route::post("/import-data/import-xls", [PrestasiSiswaController::class, 'importData']);
             Route::get("/export-data/export-xls", [PrestasiSiswaController::class, 'exportData']);
+            Route::post("tambah-data", [PrestasiSiswaController::class, 'tambahData']);
             Route::put("/update-data/{id}", [PrestasiSiswaController::class, 'updateData']);
             Route::delete("/hapus-data/{id}", [PrestasiSiswaController::class, 'deleteData']);
             Route::post("/get-nilai", [PrestasiSiswaController::class, 'getNilai']);
@@ -185,6 +191,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get("/export-data/download-template-iis", [KeterlambatanSiswaController::class, 'templateIis']);
             Route::post("/import-data/import-xls", [KeterlambatanSiswaController::class, 'importData']);
             Route::get("/export-data/export-xls", [KeterlambatanSiswaController::class, 'exportData']);
+            Route::post("/tambah-data", [KeterlambatanSiswaController::class, 'tambahData']);
             Route::put("/update-data/{id}", [KeterlambatanSiswaController::class, 'updateData']);
             Route::delete("/hapus-data/{id}", [KeterlambatanSiswaController::class, 'deleteData']);
             Route::post("/get-nilai", [KeterlambatanSiswaController::class, 'getNilai']);
@@ -200,8 +207,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get("/export-data/download-template-iis", [HafalanSiswaController::class, 'templateIis']);
             Route::get("/export-data/export-xls", [HafalanSiswaController::class, 'exportData']);
             Route::post("/import-data/import-xls", [HafalanSiswaController::class, 'importData']);
+            Route::post("/tambah-data", [HafalanSiswaController::class, 'tambahData']);
             Route::put("/update-data/{id}", [HafalanSiswaController::class, 'updateData']);
             Route::delete("/hapus-data/{id}", [HafalanSiswaController::class, 'deleteData']);
+            Route::delete("/hapus-data-detail/{id}", [HafalanSiswaController::class, 'deleteDataDetail']);
         });
     });
 
@@ -224,7 +233,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post("listMipa", [NilaiPerangkinganController::class, 'listNilaiPerangkinganMipa']);
             Route::post("listIis", [NilaiPerangkinganController::class, 'listNilaiPerangkinganIis']);
             Route::post("list-detail", [NilaiPerangkinganController::class, 'listDetailNilaiPerangkingan']);
-            Route::get("/export-data/export-xls", [NilaiPerangkinganController::class, 'exportData']);
+            Route::get("/export-data/export-xls-mipa", [NilaiPerangkinganController::class, 'exportDataMipa']);
+            Route::get("/export-data/export-xls-iis", [NilaiPerangkinganController::class, 'exportDataIis']);
         });
         
     });

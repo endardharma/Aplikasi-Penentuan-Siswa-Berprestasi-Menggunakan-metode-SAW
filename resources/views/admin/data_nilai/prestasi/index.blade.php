@@ -430,6 +430,7 @@
                         </div>
                     </div> --}}
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <button class="btn btn-primary shadow-md mr-2 btn-tambah">Tambah Data</button>
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
                                 <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-lucide="plus"></i> </span>
@@ -472,7 +473,6 @@
                                     <th>Keterangan Prestasi</th>
                                     <th>Nilai</th>
                                     <th>Jurusan</th>
-                                    <th>Semester</th>
                                     <th>Tahun Ajar</th>
                                     <th>Action</th>
                                 </tr>
@@ -508,7 +508,6 @@
                                                 <th>Keterangan Prestasi</th>
                                                 <th>Nilai</th>
                                                 <th>Jurusan</th>
-                                                <th>Semester</th>
                                                 <th>Tahun Ajar</th>
                                             </tr>
                                         </thead>
@@ -522,6 +521,89 @@
                 </div>
             </div>
             <!-- END: Modal Detail Content -->
+            <!-- BEGIN: Modal Tambah Data Content -->
+            <div id="header-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- BEGIN: Modal Header -->
+                        <div class="modal-header">
+                            <h2 class="font-medium text-base mr-auto">Form Tambah Data Prestasi</h2>
+                            <a href="javascript:;" data-tw-dismiss="modal"><i data-feather="x" class="w-8 h-8 text-gray-500"></i></a>
+                        </div>
+                        <!-- END: Modal Header -->
+                        <!-- BEGIN: Modal Body -->
+                        <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Nama Siswa</label>
+                                <input type="hidden" class="form-control">
+                                <select class="form-select create-nama-siswa">
+                                    <option disabled selected> --- Pilih Nama Siswa --- </option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Keterangan Prestasi</label>
+                                <select class="form-select create-ket-prestasi" required>
+                                    <option disabled selected> --- Pilih Keterangan Prestasi --- </option>
+                                    <option value="Tingkat Internasional Juara 1">Tingkat Internasional Juara 1</option>
+                                    <option value="Tingkat Internasional Juara 2">Tingkat Internasional Juara 2</option>
+                                    <option value="Tingkat Internasional Juara 3">Tingkat Internasional Juara 3</option>
+                                    <option value="Tingkat Nasional Juara 1">Tingkat Nasional Juara 1</option>
+                                    <option value="Tingkat Nasional Juara 2">Tingkat Nasional Juara 2</option>
+                                    <option value="Tingkat Nasional Juara 3">Tingkat Nasional Juara 3</option>
+                                    <option value="Tingkat Provinsi Juara 1">Tingkat Provinsi Juara 1</option>
+                                    <option value="Tingkat Provinsi Juara 2">Tingkat Provinsi Juara 2</option>
+                                    <option value="Tingkat Provinsi Juara 3">Tingkat Provinsi Juara 3</option>
+                                    <option value="Tingkat Kabupaten/Kota Juara 1">Tingkat Kabupaten/Kota Juara 1</option>
+                                    <option value="Tingkat Kabupaten/Kota Juara 2">Tingkat Kabupaten/Kota Juara 2</option>
+                                    <option value="Tingkat Kabupaten/Kota Juara 3">Tingkat Kabupaten/Kota Juara 3</option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Nilai</label>
+                                <input type="number" class="form-control create-nilai" placeholder="Masukkan Nilai Prestasi Siswa" required readonly>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Jurusan</label>
+                                <select class="form-select create-jurusan" required>
+                                    <option disabled selected> --- Pilih Jurusan --- </option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Tahun Ajar</label>
+                                <select class="form-select create-tahun-ajar" required>
+                                    <option disabled selected> --- Pilih Tahun Ajar --- </option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- END: Modal Body -->
+                        <!-- BEGIN: Modal Footer -->
+                        <div class="modal-footer">
+                            <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Batalkan</button>
+                            <button type="button" class="btn btn-primary w-20 btn-simpan">Simpan</button>
+                        </div>
+                        <!-- END: Modal Footer -->
+                    </div>
+                </div>
+            </div>
+            <!-- END: Modal Tambah Data Content -->
+            <!-- BEGIN: Notification Sukses Create prestasi Content -->
+            <div id="success-create-notification-content" class="toastify-content hidden flex">
+                <i class="text-success" data-lucide="check-circle"></i>
+                <div class="ml-4 mr-4">
+                    <div class="font-medium">Berhasil menambahkan data prestasi siswa!</div>
+                    <div class="text-slate-500 mt-1 create-sukses"></div>
+                </div>
+            </div>
+            <!-- END: Notification Sukses Create prestasi Content -->
+            <!-- BEGIN: Notification gagal Create prestasi Content -->
+            <div id="failed-create-notification-content" class="toastify-content hidden flex">
+                <i class="text-danger" data-lucide="x-circle"></i>
+                <div class="ml-4 mr-4">
+                    <div class="font-medium">Gagal menambahkan data prestasi siswa!</div>
+                    <div class="text-slate-500 mt-1 create-gagal"></div>
+                </div>
+            </div>
+            <!-- END: Notification gagal Create prestasi Content -->
             <!-- BEGIN: Modal Content Update -->
             <div id="header-update-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
@@ -573,12 +655,6 @@
                                 </select>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Nama Semester</label>
-                                <select class="form-select update-semester" required>
-                                    <option disabled selected> --- Pilih Nama Semester --- </option>
-                                </select>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Nama Tahun Ajar</label>
                                 <select class="form-select update-tahun-ajar" required>
                                     <option disabled selected> --- Pilih Nama Tahun Ajar --- </option>
@@ -607,7 +683,7 @@
             <!-- END: Notification Content Sukses Update Prestasi -->
             <!-- BEGIN: Notification Content Gagal Update Prestasi -->
             <div id="failed-update-notification-content" class="toastify-content hidden flex">
-                <i class="text-success" data-lucide="x-circle"></i>
+                <i class="text-danger" data-lucide="x-circle"></i>
                 <div class="ml-4 mr-4">
                     <div class="font-medium">Gagal update data nilai prestasi!</div>
                     <div class="text-slate-500 mt-1 update-gagal"></div>
@@ -648,7 +724,7 @@
             <!-- END: Notification Content Sukses hapus Prestasi -->
             <!-- BEGIN: Notification Content Gagal hapus Prestasi -->
             <div id="failed-hapus-notification-content" class="toastify-content hidden flex">
-                <i class="text-success" data-lucide="x-circle"></i>
+                <i class="text-danger" data-lucide="x-circle"></i>
                 <div class="ml-4 mr-4">
                     <div class="font-medium">Gagal hapus data nilai prestasi!</div>
                     <div class="text-slate-500 mt-1 hapus-gagal"></div>
@@ -715,7 +791,7 @@
             <!-- END: Notification Sukses Import Data prestasi Siswa Content -->
             <!-- BEGIN: Notification Gagal Import Data prestasi Siswa Content -->
             <div id="failed-import-notification-content" class="toastify-content hidden flex">
-                <i class="text-success" data-lucide="x-circle"></i> 
+                <i class="text-danger" data-lucide="x-circle"></i> 
                 <div class="ml-4 mr-4">
                     <div class="font-medium">Gagal import data prestasi siswa!</div>
                     <div class="text-slate-500 mt-1 import-gagal"></div>
@@ -1096,13 +1172,12 @@
                             { data: 'ket_prestasi', className: 'text-center' },
                             { data: 'nilai', className: 'text-center' },
                             { data: 'jurusan', className: 'text-center' },
-                            { data: 'semester', className: 'text-center' },
                             { data: 'tahun_ajar', className: 'text-center' },
                             {
                                 data: null,
                                 render: function(data, type, row){
                                     // Create Action Buttons
-                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-ket_prestasi="' + data.ket_prestasi + '" data-nilai="' + data.nilai + '" data-id_jurusan_nama="' + data.id_jurusan_nama + '" data-id_tajar_semester="' + data.id_tajar_semester + '" data-id_tajar_periode="' + data.id_tajar_periode + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-ket_prestasi="' + data.ket_prestasi + '" data-nilai="' + data.nilai + '" data-id_jurusan_nama="' + data.id_jurusan_nama + '" data-id_tajar_periode="' + data.id_tajar_periode + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
                                     var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
 
                                     // Combine the Buttons
@@ -1135,7 +1210,6 @@
                 //         { data: 'ket_prestasi', className: 'text-center'},
                 //         { data: 'nilai', className: 'text-center'},
                 //         { data: 'jurusan', className: 'text-center'},
-                //         { data: 'semester', className: 'text-center'},
                 //         { data: 'tahun_ajar', className: 'text-center'},
                 //     ],
                 //     "drawCalllback": function(settings){
@@ -1167,6 +1241,13 @@
                     jQuery('.template-element').show();
                     jQuery('.btn-import').show();
                 });
+
+                jQuery('.btn-tambah').click(function(){
+                    // show the modal
+                    const el = document.querySelector('#header-footer-modal-preview');
+                    const modal = tailwind.Modal.getOrCreateInstance(el);
+                    modal.show();
+                });
                 
                 // Fungsi button sortBy
                 loadDataTable();
@@ -1185,16 +1266,16 @@
                 }).then(response => response.json()).then(data => {
 
                     var select = jQuery('.import-tajar');
-                    var selectUpdateSemester = jQuery('.update-semester');
                     var selectUpdatePeriode = jQuery('.update-tahun-ajar');
+                    var selectCreatePeriode = jQuery('.create-tahun-ajar');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item){
                         for (let i = 0; i < item.length; i++)
                         {
                             select.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
-                            selectUpdateSemester.append('<option value="' + item[i].id + '">' + item[i].semester + '</option>');
                             selectUpdatePeriode.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
+                            selectCreatePeriode.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -1213,6 +1294,7 @@
                     var selectJurusan = jQuery('.form-jurusan');
                     var selectUpdateNama = jQuery('.update-jurusan');
                     var selectImportJurusan = jQuery('.import-jurusan');
+                    var selectCreateJurusan = jQuery('.create-jurusan');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
@@ -1221,12 +1303,82 @@
                             selectUpdateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                             selectJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                             selectImportJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            selectCreateJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
                         }
                     });
                 }).catch(error => {
                     console.error('Error:', error);
                 });
 
+                // Button Simpan
+                jQuery('.btn-simpan').click(function(){
+                    // show the modal
+                    event.preventDefault();
+
+                    // get form data
+                    var siswa_id_nama = jQuery('.create-nama-siswa').val();
+                    var ket_prestasi = jQuery('.create-ket-prestasi').val();
+                    var nilai = jQuery('.create-nilai').val();
+                    var jurusan_id_nama = jQuery('.create-jurusan').val();
+                    var tajar_id_periode = jQuery('.create-tahun-ajar').val();
+
+                    var formData = new FormData();
+                    formData.append('siswa_id', siswa_id_nama);
+                    formData.append('ket_prestasi', ket_prestasi);
+                    formData.append('nilai', nilai);
+                    formData.append('jurusan_id', jurusan_id_nama);
+                    formData.append('tajar_id', tajar_id_periode);
+
+                    // Kirim permintaan ke API
+                    jQuery.ajax({
+                        url: 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/tambah-data',
+                        type: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                        },
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response){
+                            // show the modal
+                            jQuery('.create-sukses').text(response.message);
+                            Toastify({
+                                node: $('#success-create-notification-content')
+                                    .clone()
+                                    .removeClass("hidden")[0],
+                                duration: 3000,
+                                newWindow: true,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                stopOnFocus: true,
+                            }).showToast();
+
+                            setTimeout(function(){
+                                location.reload();
+                            }, 3000);
+                        },
+                        error: function(xhr, status, error) {
+                            jQuery('.create-gagal').text(error);
+                            Toastify({
+                                node: $('#failed-create-notification-content')
+                                    .clone()
+                                    .removeClass("hidden")[0],
+                                duration: 5000,
+                                newWindow: true,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                stopOnFocus: true,
+                            }).showToast();
+
+                            setTimeout(function(){
+                                location.reload();
+                            }, 5000);
+                        }
+                    });
+                });
+                
                 // Data Support Siswa
                 var url = 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/data-support/siswa';
                 fetch(url, {
@@ -1237,6 +1389,7 @@
                 }).then(response => response.json()).then(data => {
                     // panggil element select
                     var selectUpdateNama = jQuery('.update-nama-siswa');
+                    var selectCreateNama = jQuery('.create-nama-siswa');
 
                     // iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item){
@@ -1244,12 +1397,36 @@
                         {
                             // isi data dengan nilai dalam database
                             selectUpdateNama.append('<option value="' + item[i].id + '"> ' + item[i].name + ' </option>')
+                            selectCreateNama.append('<option value="' + item[i].id + '"> ' + item[i].name + ' </option>')
                         }
                     });
                 }).catch(error => {
                     console.error('Error: ', error);
-                })
+                });
 
+                // Jika button-select create-ket-prestasi di klik, maka button-select create-nilai akan terisi otomatis
+                jQuery('.create-ket-prestasi').change(function(){
+                    var ket_prestasi = jQuery(this).val();
+
+                    jQuery.ajax({
+                        url: 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/get-nilai',
+                        type: 'POST',
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                        },
+                        data: {
+                            ket_prestasi: ket_prestasi,
+                        },
+                        success: function(response){
+                            jQuery('.create-nilai').val(response.nilai);
+                        },
+                        error: function(xhr, status, error){
+                            console.error('Gagal mendapatkan nilai otomatis', error);
+                        }
+                    });
+                });
+
+                // Button Edit
                 jQuery('#data-table').on('click', '.btn-edit', function(){
                     // show the modal
                     const el = document.querySelector('#header-update-footer-modal-preview');
@@ -1261,7 +1438,6 @@
                     var ket_prestasi = jQuery(this).attr("data-ket_prestasi");
                     var nilai = jQuery(this).attr("data-nilai");
                     var id_jurusan_nama = jQuery(this).attr("data-id_jurusan_nama");
-                    var id_tajar_semester = jQuery(this).attr("data-id_tajar_semester");
                     var id_tajar_periode = jQuery(this).attr("data-id_tajar_periode");
 
                     jQuery('.update-id').val(id);
@@ -1269,7 +1445,6 @@
                     jQuery('.update-ket-prestasi').val(ket_prestasi);
                     jQuery('.update-nilai').val(nilai);
                     jQuery('.update-jurusan').val(id_jurusan_nama);
-                    jQuery('.update-semester').val(id_tajar_semester);
                     jQuery('.update-tahun-ajar').val(id_tajar_periode);
                     
                 })
@@ -1297,6 +1472,7 @@
                     });
                 })
                 
+                // Button Update
                 jQuery('.btn-update').click(function(){
                     // ajax update
                     var id = jQuery('.update-id').val();
@@ -1304,7 +1480,6 @@
                     var ket_prestasi = jQuery('.update-ket-prestasi').val();
                     var nilai = jQuery('.update-nilai').val();
                     var nama_jurusan_id = jQuery('.update-jurusan').val();
-                    var semester_tajar_id = jQuery('.update-semester').val();
                     var periode_tajar_id = jQuery('.update-tahun-ajar').val();
 
                     // kirim ppermintaan pembaruan produk ke API
@@ -1319,7 +1494,6 @@
                             ket_prestasi : ket_prestasi,
                             nilai : nilai,
                             jurusan_id : nama_jurusan_id,
-                            tajar_id : semester_tajar_id,
                             tajar_id : periode_tajar_id,
                         },
                         success: function(response){

@@ -36,15 +36,10 @@ class SikapSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
                 $jurusan_id = $s->kelas->jurusan->id ?? null;
                 if ($jurusan_id === $jurusanMipa)
                 {
-                    foreach($tajar as $t)
-                    {
-                        $item = [];
-                        $item['nama_siswa'] = $s->name;
-                        $item['ket_sikap'] = 'Isi dengan pilihan yang sesuai (Sangat Baik, Baik, Cukup, Tidak Baik, Sangat Tidak Baik)';
-                        $item['nilai'] = 'Isi dengan angka yang sesuai (5, 4, 3, 2, 1)';
-                        $item['semester'] = $t->semester;
-                        $data[] = $item;
-                    }
+                    $item = [];
+                    $item['nama_siswa'] = $s->name;
+                    $item['ket_sikap'] = 'Isi dengan pilihan yang sesuai (Sangat Baik, Baik, Cukup, Tidak Baik, Sangat Tidak Baik)';
+                    $data[] = $item;
                 }
             }
         }
@@ -55,7 +50,7 @@ class SikapSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:D1'; // All headers
+                $cellRange = 'A1:B1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -85,8 +80,6 @@ class SikapSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, Wit
         return [
             'Nama Siswa',
             'Keterangan Sikap',
-            'Nilai',
-            'Semester',
         ];
     }
 }

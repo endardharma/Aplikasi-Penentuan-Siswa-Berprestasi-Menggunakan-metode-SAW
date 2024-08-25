@@ -11,6 +11,7 @@ use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\TahunAjar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Excel as ExcelExcel;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -118,11 +119,13 @@ class HafalanSiswaController extends Controller
         // Hitung Keseluruhan
         $hitung = HafalanSiswa::where('siswa_id', $siswaId)->count();
 
-        $hafalan = Hafalansiswa::with(['siswa'])
+        $hafalan = Hafalansiswa::with(['siswa', 'jurusan', 'tajar'])
             ->where('siswa_id', $siswaId)
             ->when($search, function ($query, $search) {
                 return $query->where('ket_hafalan','LIKE','%'.$search.'%')
-                        ->orWhere('nilai','LIKE','%'.$search.'%');
+                        ->orWhere('nilai','LIKE','%'.$search.'%')
+                        ->orWhere('jurusan_id','LIKE','%'.$search.'%')
+                        ->orWhere('tajar_id','LIKE','%'.$search.'%');
             })
             ->orderBy($orderColumn, $dir)
             ->skip($start)
@@ -137,6 +140,10 @@ class HafalanSiswaController extends Controller
             $item['nama_siswa'] = $h->siswa->name ?? '';
             $item['ket_hafalan'] = $h->ket_hafalan;
             $item['nilai'] = $h->nilai;
+            $item['id_jurusan_nama'] = $h->jurusan_id;
+            $item['jurusan'] = $h->jurusan->name ?? '';
+            $item['id_tajar_periode'] = $h->tajar_id;
+            $item['tahun_ajar'] = $h->tajar->periode ?? '';
             $data[] = $item; 
         }
 
@@ -199,6 +206,35 @@ class HafalanSiswaController extends Controller
         ], 201);
     }
 
+    public function tambahData(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'siswa_id' => 'required',
+            'ket_hafalan' => 'required',
+            'nilai' => 'required',
+            'jurusan_id' => 'required',
+            'tajar_id' => 'required',
+        ]);
+
+        if ($validator->fails()){
+            return response()->json($validator->errors(), 400);
+        };
+
+        $hafalan = new HafalanSiswa();
+        $hafalan->siswa_id = $request->siswa_id;
+        $hafalan->ket_hafalan = $request->ket_hafalan;
+        $hafalan->nilai = $request->nilai;
+        $hafalan->jurusan_id = $request->jurusan_id;
+        $hafalan->tajar_id = $request->tajar_id;
+
+        $hafalan->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambahkan data nilai hafalan siswa',
+        ], 201);
+    }
+
     public function updateData(Request $request, $id)
     {
         $find = HafalanSiswa::where('id', $id)->first();
@@ -215,6 +251,8 @@ class HafalanSiswaController extends Controller
             $request->siswa_id != null ? $find->siswa_id = $request->siswa_id : true;
             $request->ket_hafalan != null ? $find->ket_hafalan = $request->ket_hafalan : true;
             $request->nilai != null ? $find->nilai = $request->nilai : true;
+            $request->jurusan_id != null ? $find->jurusan_id = $request->jurusan_id : true;
+            $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
             $find->save();
 
             return response()->json([
@@ -238,6 +276,40 @@ class HafalanSiswaController extends Controller
         else
         {
             $hapus = HafalanSiswa::where('siswa_id', $find->id)->delete();
+
+            if($hapus)
+            {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Berhasil melakukan hapus data nilai hafalan siswa',
+                ], 201);
+            }
+            else
+            {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat menghapus data hafalan siswa',
+                ], 400);
+            }
+        }
+    }
+
+    public function deleteDataDetail($id)
+    {
+        // $find = HafalanSiswa::find($id);
+        $find = HafalanSiswa::where('id', $id)->first();
+
+        if(!$find)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hapus data gagal! data tidak ditemukan',
+            ], 400);
+        }
+        else
+        {
+            // $hapus = HafalanSiswa::where('siswa_id', $find->id)->delete();
+            $hapus = HafalanSiswa::where('id', $id)->delete();
 
             if($hapus)
             {
@@ -298,7 +370,6 @@ class HafalanSiswaController extends Controller
             $item['ket_hafalan'] = $h->ket_hafalan;
             $item['nilai'] = $h->nilai;
             $item['jurusan'] = $h->jurusan->name ?? '';
-            $item['semester'] = $h->tajar->semester ?? '';
             $item['tahun_ajar'] = $h->tajar->periode ?? '';
             $data[] = $item;
         }

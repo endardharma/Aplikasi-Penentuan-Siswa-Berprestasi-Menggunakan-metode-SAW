@@ -174,7 +174,7 @@ License: You must have a valid license purchased only from themeforest(the above
                 <div class="side-nav__devider my-6"></div>
                 <ul>
                     <li class="desktop-dashboard">
-                        <a href="{{ route('dashboard') }}" class="side-menu side-menu--active">
+                        <a href="{{ route('dashboard') }}" class="side-menu ">
                             <div class="side-menu__icon"> <i data-lucide="airplay"></i> </div>
                             <div class="side-menu__title"> Dashboard </div>
                         </a>
@@ -210,7 +210,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         </a>
                     </li>
                     <li class="desktop-kriteria">
-                        <a href="{{ route('masterkriteria') }}" class="side-menu">
+                        <a href="{{ route('masterkriteria') }}" class="side-menu side-menu--active">
                             <div class="side-menu__icon"> <i data-lucide="list"></i> </div>
                             <div class="side-menu__title"> Data Kriteria </div>
                         </a>
@@ -427,6 +427,9 @@ License: You must have a valid license purchased only from themeforest(the above
                         <button class="btn btn-primary shadow-md mr-2 btn-tambah">Tambah Data</button>
                     </div>
                 </div>
+                <ol class="breadcrumb">
+                    <li id="warning-notification-content" class="breadcrumb-item active" aria-current="page"></li>
+                </ol>
                 <!-- BEGIN: HTML Table Data -->
                 <div class="intro-y box p-5 mt-5">
                     <div class="overflow-x-auto scrollbar-hidden">
@@ -522,6 +525,15 @@ License: You must have a valid license purchased only from themeforest(the above
                 </div>
             </div>
             <!-- END: Notification Gagal Tambah Master Kriteria Content -->
+            <!-- BEGIN: Notification Warning Bobot Kriteria Content -->
+            <div id="warning-notification-content" class="toastify-content hidden flex">
+                <i class="text-failed" data-lucide="x-circle"></i> 
+                <div class="ml-4 mr-4">
+                    <div class="font-medium">Total bobot melebihi 100%! Harap periksa kembali.</div>
+                    <div class="text-slate-500 mt-1 pesan-warning"></div>
+                </div>
+            </div>
+            <!-- END: Notification Gagal Tambah Master Kriteria Content -->
             <!-- BEGIN: Modal Content -->
             <div id="header-update-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
@@ -611,7 +623,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             </div>
                             <div class="px-5 pb-8 text-center">
                                 <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">Batal</button>
-                                <button type="button" class="btn btn-danger w-24 btn-iya">Hapus</button>
+                                <button type="button" class="btn btn-danger w-24 hapus-btn">Hapus</button>
                             </div>
                         </div>
                     </div>
@@ -1040,8 +1052,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                 location.reload();
                             }, 3000); // 3000 milliseconds = 3 seconds
                         },
-                        error: function(xhr, status, error) {
+                         error: function(xhr, status, error) {
                             // Show the modal
+                            var response = xhr.responseJson;
                             jQuery('.pesan-gagal').text(error);
                             Toastify({
                                 node: $("#failed-notification-content")
@@ -1062,84 +1075,170 @@ License: You must have a valid license purchased only from themeforest(the above
                     });
                 })
 
-                // Panggil List Data Master Ajar
-                var url = 'http://127.0.0.1:8000/api/master-kriteria/list';
-                fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
+                // Panggil List Data Master Kriteria
+                // var url = 'http://127.0.0.1:8000/api/master-kriteria/list';
+                // fetch(url, {
+                //     method: 'GET',
+                //     headers: {
+                //         'Authorization': 'Bearer ' + token
+                //     }
+                // }).then(response => response.json()).then(data => {
+                //     if (data.warning) {
+                //         Toastify({
+                //             node: $("#warning-notification-content")
+                //                 .clone()
+                //                 .removeClass("hidden")[0],
+                //             duration: 5000,
+                //             newWindow: true,
+                //             close: true,
+                //             gravity: "top",
+                //             position: "right",
+                //             stopOnFocus: true,
+                //         }).showToast();
+                //     }
+
+                //     // Panggil fungsi untuk mengisi data ke dalam tbody DataTable
+                //     populateDataTable(data);
+
+                // });
+
+                // function populateDataTable(data) {
+                //     var tableBody = jQuery("#data-body");
+
+                //     // Bersihkan isi tbody sebelum mengisi dengan data baru
+                //     tableBody.empty();
+
+                //     var rowDataArray = []; // Variabel untuk menyimpan objek baris
+                    
+                //     // Perulangan menggunakan jQuery.each()
+                //     jQuery.each(data, function(index, item) {
+                //         for (let i = 0; i < item.length; i++) {
+                //             // // Create an object with the desired properties
+                //             var rowData = {
+                //                 id: item[i].id,
+                //                 kode: item[i].kode,
+                //                 name: item[i].name,
+                //                 atribut: item[i].atribut,
+                //                 bobot_percent: item[i].bobot_percent,
+                //                 bobot: item[i].bobot,
+                //                 kurikulum: item[i].kurikulum,
+                //             };
+
+                //             // Push the object to the data array
+                //             rowDataArray.push(rowData);
+                //         }
+                //     });
+
+                //     var dataTable = jQuery('#data-table').DataTable();
+                //     if (dataTable) {
+                //         // Destroy DataTable
+                //         dataTable.destroy();
+                //     }
+
+                //     // Initialize DataTable
+                //     var table = jQuery('#data-table').DataTable({
+                //         data: rowDataArray,
+                //         columns: [
+                //             { data: 'id', className: 'text-center' },
+                //             { data: 'kode', className: 'text-center' },
+                //             { data: 'name', className: 'text-center' },
+                //             { data: 'atribut', className: 'text-center' },
+                //             { data: 'bobot_percent', className: 'text-center' },
+                //             { data: 'kurikulum', className: 'text-center' },
+                //             {
+                //                 data: null,
+                //                 render: function (data, type, row) {
+
+                //                     // Create action buttons
+                //                     var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-kode="' + data.kode + '" data-name="' + data.name + '" data-atribut="' + data.atribut + '" data-bobot="' + data.bobot + '" data-kurikulum="' + data.kurikulum + '"><i data-feather="edit" class="w-4 h-4"></i></button>';
+                //                     var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4"></i></button>';
+
+                //                     // Combine the buttons
+                //                     var actions = editBtn + ' || ' + deleteBtn;
+                //                     return actions;
+                //                 }
+                //             }
+                //         ],
+                //         "drawCallback": function( settings ) {
+                //             feather.replace();
+                //         }
+                //     });
+                // }
+
+                // Datatable list Cabang
+                jQuery('#data-table').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": "http://127.0.0.1:8000/api/master-kriteria/list",
+                        "type": "POST",
+                        "dataType": "json",
+                        "headers": {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        "dataSrc": function (json) {
+                            var totalBobot = 0;
+
+                            // Loop through the data to calculate total bobot
+                            json.data.forEach(function (item) {
+                                totalBobot += parseFloat(item.bobot_percent);
+                            });
+
+                            // Check if totalBobot exceeds 100%
+                            // if (totalBobot > 100) {
+                            //     // Show the warning notification content using Toastify
+                            //     Toastify({
+                            //         node: $("#warning-notification-content").clone().removeClass('hidden')[0], // Cloning and removing 'hidden'
+                            //         duration: 3000,
+                            //         gravity: "top",
+                            //         position: "right",
+                            //         backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                            //         stopOnFocus: true, 
+                            //     }).showToast();
+                            // }
+                            var warningElement = $('#warning-notification-content');
+                            if (totalBobot > 100) {
+                                // Show the warning notification by setting the text and making it visible
+                                warningElement.text('*Total bobot melebihi 100%! Harap periksa kembali.');
+                                warningElement.addClass('text-danger');
+                                warningElement.css('color', 'red'); // Optional: add a class to style the warning
+                            } else {
+                                // Clear the warning message when total bobot is valid
+                                warningElement.text('');
+                                warningElement.removeClass('text-danger');
+                            }
+
+                            return json.data;
+                        }
+                    },
+                    "columns": [
+                        { data: 'id', className: 'text-center' },
+                        { data: 'kode', className: 'text-center' },
+                        { data: 'name', className: 'text-center' },
+                        { data: 'atribut', className: 'text-center' },
+                        { data: 'bobot_percent', className: 'text-center' },
+                        { data: 'kurikulum', className: 'text-center' },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+
+                                // Create action buttons
+                                var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-kode="' + data.kode + '" data-name="' + data.name + '" data-atribut="' + data.atribut + '" data-bobot="' + data.bobot + '" data-kurikulum="' + data.kurikulum + '"><i data-feather="edit" class="w-4 h-4"></i></button>';
+                                var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4"></i></button>';
+
+                                // Combine the buttons
+                                var actions = editBtn + ' || ' + deleteBtn;
+                                return actions;
+                            }
+                        }
+                    ],
+                    "drawCallback": function(settings) {
+                        feather.replace();
                     }
-                }).then(response => response.json()).then(data => {
-                        // Panggil fungsi untuk mengisi data ke dalam tbody DataTable
-                        populateDataTable(data);
-                }).catch(error => {
-                    console.log(error);
                 });
 
-                function populateDataTable(data) {
-                    var tableBody = jQuery("#data-body");
-
-                    // Bersihkan isi tbody sebelum mengisi dengan data baru
-                    tableBody.empty();
-
-                    var rowDataArray = []; // Variabel untuk menyimpan objek baris
-
-                    // Perulangan menggunakan jQuery.each()
-                    jQuery.each(data, function(index, item) {
-                        for (let i = 0; i < item.length; i++) {
-                            // // Create an object with the desired properties
-                            var rowData = {
-                                id: item[i].id,
-                                kode: item[i].kode,
-                                name: item[i].name,
-                                atribut: item[i].atribut,
-                                bobot_percent: item[i].bobot_percent,
-                                bobot: item[i].bobot,
-                                kurikulum: item[i].kurikulum,
-                            };
-
-                            // Push the object to the data array
-                            rowDataArray.push(rowData);
-                        }
-                    });
-
-                    var dataTable = jQuery('#data-table').DataTable();
-                    if (dataTable) {
-                        // Destroy DataTable
-                        dataTable.destroy();
-                    }
-
-                    // Initialize DataTable
-                    var table = jQuery('#data-table').DataTable({
-                        data: rowDataArray,
-                        columns: [
-                            { data: 'id', className: 'text-center' },
-                            { data: 'kode', className: 'text-center' },
-                            { data: 'name', className: 'text-center' },
-                            { data: 'atribut', className: 'text-center' },
-                            { data: 'bobot_percent', className: 'text-center' },
-                            { data: 'kurikulum', className: 'text-center' },
-                            {
-                                data: null,
-                                render: function (data, type, row) {
-
-                                    // Create action buttons
-                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-kode="' + data.kode + '" data-name="' + data.name + '" data-atribut="' + data.atribut + '" data-bobot="' + data.bobot + '" data-kurikulum="' + data.kurikulum + '"><i data-feather="edit" class="w-4 h-4"></i></button>';
-                                    var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4"></i></button>';
-
-                                    // Combine the buttons
-                                    var actions = editBtn + ' || ' + deleteBtn;
-                                    return actions;
-                                }
-                            }
-                        ],
-                        "drawCallback": function( settings ) {
-                            feather.replace();
-                        }
-                    });
-
-                    // Handle button click events
-                    jQuery('#data-table').on('click', '.btn-edit', function() {
+                // Handle button click events
+                jQuery('#data-table').on('click', '.btn-edit', function() {
                         // Show Modal
                         const el = document.querySelector("#header-update-footer-modal-preview");
                         const modal = tailwind.Modal.getOrCreateInstance(el);
@@ -1271,7 +1370,6 @@ License: You must have a valid license purchased only from themeforest(the above
                             });
                         });
                     });
-                }
 
                 function logout(name) {
                     document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

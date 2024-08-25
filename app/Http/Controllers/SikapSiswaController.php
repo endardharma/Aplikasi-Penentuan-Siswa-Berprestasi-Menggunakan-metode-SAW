@@ -11,6 +11,7 @@ use App\Models\MasterSiswa;
 use App\Models\SikapSiswa;
 use App\Models\TahunAjar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SikapSiswaController extends Controller
@@ -51,7 +52,6 @@ class SikapSiswaController extends Controller
                 });
             })
             ->when(empty($jurusanId) || $jurusanId == '-1', function ($q) {
-
             })
             ->when($search, function ($query) use ($search) {
                 $query->whereHas('tajar', function ($q) use ($search) {
@@ -153,6 +153,35 @@ class SikapSiswaController extends Controller
         ], 200);
     }
 
+    public function tambahData(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'siswa_id' => 'required',
+            'ket_sikap' => 'required',
+            'nilai' => 'required',
+            'jurusan_id' => 'required',
+            'tajar_id' => 'required',
+        ]);
+
+        if ($validator->fails()){
+            return response()->json($validator->errors(), 400);
+        };
+
+        $sikap = new SikapSiswa();
+        $sikap->siswa_id = $request->siswa_id;
+        $sikap->ket_sikap = $request->ket_sikap;
+        $sikap->nilai = $this->getNilaiBasedOnSikap($request->ket_sikap);
+        $sikap->jurusan_id = $request->jurusan_id;
+        $sikap->tajar_id = $request->tajar_id;
+
+        $sikap->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambahkan data nilai sikap siswa',
+        ], 201);
+    }
+
     public function updateData(Request $request, $id)
     {
         $find = SikapSiswa::where('id', $id)->first();
@@ -170,7 +199,6 @@ class SikapSiswaController extends Controller
             $request->ket_sikap != null ? $find->ket_sikap = $request->ket_sikap : true;
             $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnSikap($request->ket_sikap) : true; // Nilai otomatis berdasarkan keterangan sikap
             $request->jurusan_id != null ? $find->jurusan_id = $request->jurusan_id : true;
-            $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
             $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
             $find->save();
 
@@ -309,7 +337,9 @@ class SikapSiswaController extends Controller
         $selectedTahunAjar = $request->input('selected_tahun_ajar');
         $selectedJurusan = $request->input('selected_jurusan');
 
-        Excel::import(new SikapSiswaImport($selectedTahunAjar, $selectedJurusan), $file);
+        Excel::import(new SikapSiswaImport($selectedTahunAjar, $selectedJurusan, function($ket_sikap){
+            return $this->getNilaiBasedOnSikap($ket_sikap);
+        }), $file);
 
         return response()->json([
             'success' => true,
@@ -329,7 +359,6 @@ class SikapSiswaController extends Controller
             $item['ket_sikap'] = $s->ket_sikap;
             $item['nilai'] = $s->nilai;
             $item['jurusan'] = $s->jurusan->name ?? '';
-            $item['semester'] = $s->tajar->semester ?? '';
             $item['tahun_ajar'] = $s->tajar->periode ?? '';
             $data[] = $item;
         }

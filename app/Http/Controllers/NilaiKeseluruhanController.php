@@ -94,6 +94,47 @@ class NilaiKeseluruhanController extends Controller
             $item['tahun_ajar'] = $s->tajar->periode ?? '';
 
             $data[] = $item;
+
+            // save data nilai keseluruhan
+            $kriteria = MasterKriteria::pluck('id', 'name');
+
+            foreach($kriteria as $namaKriteria => $kriteriaId){
+                $nilai = 0;
+
+                switch($namaKriteria)
+                {
+                    case 'Nilai Raport':
+                        $nilai = $s->rapor->where('jurusan_id', $s->kelas->jurusan_id)->average('nilai');
+                    break;
+                    case 'Presensi':
+                        $nilai = $s->presensi->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+                    break;
+                    case 'Sikap':
+                        $nilai = $s->sikap->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+                    break;
+                    case 'Prestasi':
+                        $nilai = $s->prestasi->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+                    break;
+                    case 'Keterlambatan Masuk Sekolah':
+                        $nilai = $s->keterlambatan->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+                    break;
+                    case 'Hafalan Juz Al-Quran':
+                        $nilai = $s->hafalan->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+                    break;
+                }
+
+                NilaiKeseluruhan::updateOrCreate(
+                    [
+                        'siswa_id' => $s->id,
+                        'tajar_id' => $s->tajar->id,
+                        'jurusan_id' => $s->kelas->jurusan_id,
+                        'kriteria_id' => $kriteriaId,
+                    ],
+                    [
+                        'nilai' => $nilai,
+                    ]
+                );
+            }
         }
         
         return response()->json([
@@ -105,103 +146,155 @@ class NilaiKeseluruhanController extends Controller
     }
 
     // Eloquent ORM 2 Di Pakai
+    // public function listDetailNilaiKeseluruhan(Request $request)
+    // {
+    //     $siswaId = $request->input('siswa_id');
+
+    //     $start = $request->start;
+    //     $limit = $request->length;
+    //     $search = $request->input('search')['value'];
+
+    //     // Hitung total keseluruhan data tanpa paginasi dan pencarian
+    //     $totalData = MasterSiswa::where('id', $siswaId)->count();
+
+    //     // Query untuk mendapatkan nilai akhir dengan nama kriteria
+    //     $query = MasterSiswa::with(['rapor', 'presensi', 'sikap', 'prestasi', 'keterlambatan', 'hafalan', 'kelas.jurusan', 'tajar'])
+    //         ->where('id', $siswaId)
+    //         ->when($search, function ($query) use ($search) {
+    //             $query->where('name', 'LIKE', "%{$search}%")
+    //                 ->orWhereHas('jurusan', function ($q) use ($search) {
+    //                     $q->where('name', 'LIKE', "%{$search}%");
+    //                 })
+    //                 ->orWhereHas('tajar', function ($q) use ($search) {
+    //                     $q->where('periode', 'LIKE', "%{$search}%")
+    //                         ->orWhere('semester', 'LIKE', "%{$search}%");
+    //                 });
+    //         })
+    //         ->orderBy('id');
+
+    //     // Hitung total keseluruhan data sesuai dengan kriteria pencarian
+    //     $totalFiltered = $query->count();
+
+    //     // Pagination
+    //     $siswaList = $query->skip($start)->take($limit)->get();
+
+    //     $data = $siswaList->flatMap(function ($siswa) {
+    //         $nilaiKriteria = [];
+
+    //         // Ambil nama dan id kriteria dari table master_kriterias
+    //         $kriteria = MasterKriteria::pluck('id', 'name');
+
+    //         foreach ($kriteria as $namaKriteria => $kriteriaId) {
+    //             // Ambil nilai dari tabel nilai yang sesuai dengan kriteria
+    //             $nilai = 0;
+
+    //             // Cek jurusan siswa
+    //             $jurusan = $siswa->kelas->jurusan->name;
+
+    //             switch ($namaKriteria)
+    //             {
+    //                 case 'Nilai Raport':
+    //                     $nilai = $siswa->rapor->where('jurusan_id', $siswa->kelas->jurusan_id)->average('nilai');
+    //                     break;
+    //                 case 'Presensi':
+    //                     $nilai = $siswa->presensi->where('jurusan_id', $siswa->kelas->jurusan_id)->sum('nilai');
+    //                     break;
+    //                 case 'Sikap':
+    //                     $nilai = $siswa->sikap->where('jurusan_id', $siswa->kelas->jurusan_id)->sum('nilai');
+    //                     break;
+    //                 case 'Prestasi':
+    //                     $nilai = $siswa->prestasi->where('jurusan_id', $siswa->kelas->jurusan_id)->sum('nilai');
+    //                     break;
+    //                 case 'Keterlambatan Masuk Sekolah':
+    //                     $nilai = $siswa->keterlambatan->where('jurusan_id', $siswa->kelas->jurusan_id)->sum('nilai');
+    //                     break;
+    //                 case 'Hafalan Juz Al-Quran':
+    //                     $nilai = $siswa->hafalan->where('jurusan_id', $siswa->kelas->jurusan_id)->sum('nilai');
+    //                     break;
+    //             }
+
+    //             $nilaiKriteria[] = [
+    //                 'id' => $siswa->id,
+    //                 'nama_siswa' => $siswa->name,
+    //                 'nama_kriteria' => $namaKriteria,
+    //                 'nilai' => $nilai,
+    //                 'jurusan' => $jurusan
+    //             ];
+
+    //             NilaiKeseluruhan::updateOrCreate(
+    //                 [
+    //                     'siswa_id' => $siswa->id,
+    //                     'tajar_id' => $siswa->tajar->id,
+    //                     'jurusan_id' => $siswa->kelas->jurusan_id,
+    //                     'kriteria_id' => $kriteriaId,
+    //                 ],
+    //                 [
+    //                     'nilai' => $nilai,
+    //                 ]
+    //             );
+    //         }
+    //         return $nilaiKriteria;
+    //     });
+
+    //     return response()->json([
+    //         // 'draw' => $request->draw,
+    //         'draw' => intval($request->draw),
+    //         'recordsTotal' => $totalData,
+    //         'recordsFiltered' => $totalFiltered,
+    //         'data' => $data,
+    //     ], 200);
+    // }
+    
+    // COBA
     public function listDetailNilaiKeseluruhan(Request $request)
     {
         $siswaId = $request->input('siswa_id');
 
+        $columns = [
+            0 => 'id',
+            1 => 'tajar_id',
+            2 => 'siswa_id',
+            3 => 'kriteria_id',
+        ];
+
         $start = $request->start;
         $limit = $request->length;
+        $orderColumn = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
 
-        // Hitung total keseluruhan data tanpa paginasi dan pencarian
-        $totalData = MasterSiswa::where('id', $siswaId)->count();
+        $hitung = NilaiKeseluruhan::where('siswa_id', $siswaId)->count();
 
-        // Query untuk mendapatkan nilai akhir dengan nama kriteria
-        $query = MasterSiswa::with(['rapor', 'presensi', 'sikap', 'prestasi', 'keterlambatan', 'hafalan', 'kelas.jurusan', 'tajar'])
-            ->where('id', $siswaId)
-            ->when($search, function ($query) use ($search) {
-                $query->where('name', 'LIKE', "%{$search}%")
-                    ->orWhereHas('jurusan', function ($q) use ($search) {
-                        $q->where('name', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('tajar', function ($q) use ($search) {
-                        $q->where('periode', 'LIKE', "%{$search}%")
-                            ->orWhere('semester', 'LIKE', "%{$search}%");
-                    });
-            })
-            ->orderBy('id');
+        $nilaiKeseluruhan = NilaiKeseluruhan::with(['siswa', 'kriteria'])
+        ->where('siswa_id', $siswaId)
+        ->when($search, function ($query, $search){
+            return $query->where('kriteria_id', 'LIKE', '%'.$search.'%');
+        })
+        ->orderby($orderColumn, $dir)
+        ->skip($start)
+        ->take($limit)
+        ->get();
 
-        // Hitung total keseluruhan data sesuai dengan kriteria pencarian
-        $totalFiltered = $query->count();
-
-        // Pagination
-        $siswaList = $query->skip($start)->take($limit)->get();
-
-        $data = $siswaList->flatMap(function ($siswa) {
-            $nilaiKriteria = [];
-
-            // Ambil nama dan id kriteria dari table master_kriterias
-            $kriteria = MasterKriteria::pluck('id', 'name');
-
-            foreach ($kriteria as $namaKriteria => $kriteriaId) {
-                // Ambil nilai dari tabel nilai yang sesuai dengan kriteria
-                $nilai = 0;
-
-                // Cek jurusan siswa
-                $jurusan = $siswa->kelas->jurusan->name;
-
-                switch ($namaKriteria)
-                {
-                    case 'Nilai Raport':
-                        $nilai = $siswa->rapor->where('jurusan_id', $siswa->kelas->jurusan_id)->average('nilai');
-                        break;
-                    case 'Presensi':
-                        $nilai = $siswa->presensi->where('jurusan_id', $siswa->kelas->jurusan_id)->sum('nilai');
-                        break;
-                    case 'Sikap':
-                        $nilai = $siswa->sikap->where('jurusan_id', $siswa->kelas->jurusan_id)->sum('nilai');
-                        break;
-                    case 'Prestasi':
-                        $nilai = $siswa->prestasi->where('jurusan_id', $siswa->kelas->jurusan_id)->sum('nilai');
-                        break;
-                    case 'Keterlambatan Masuk Sekolah':
-                        $nilai = $siswa->keterlambatan->where('jurusan_id', $siswa->kelas->jurusan_id)->sum('nilai');
-                        break;
-                    case 'Hafalan Juz Al-Quran':
-                        $nilai = $siswa->hafalan->where('jurusan_id', $siswa->kelas->jurusan_id)->sum('nilai');
-                        break;
-                }
-
-                $nilaiKriteria[] = [
-                    'id' => $siswa->id,
-                    'nama_siswa' => $siswa->name,
-                    'nama_kriteria' => $namaKriteria,
-                    'nilai' => $nilai,
-                    'jurusan' => $jurusan
-                ];
-
-                NilaiKeseluruhan::updateOrCreate(
-                    [
-                        'siswa_id' => $siswa->id,
-                        'tajar_id' => $siswa->tajar->id,
-                        'jurusan_id' => $siswa->kelas->jurusan_id,
-                        'kriteria_id' => $kriteriaId,
-                    ],
-                    [
-                        'nilai' => $nilai,
-                    ]
-                );
-            }
-            return $nilaiKriteria;
-        });
+        $data = array();
+        foreach ($nilaiKeseluruhan as $n)
+        {
+            $item = [
+                'id' => $n->id,
+                'id_siswa_nama' => $n->siswa_id,
+                'nama_siswa' => $n->siswa->name ?? '',
+                'id_kriteria_nama' => $n->kriteria_id,
+                'nama_kriteria' => $n->kriteria->name ?? '',
+                'nilai' => $n->nilai,
+            ];
+            $data[] = $item;
+        }
 
         return response()->json([
-            // 'draw' => $request->draw,
             'draw' => intval($request->draw),
-            'recordsTotal' => $totalData,
-            'recordsFiltered' => $totalFiltered,
+            'recordsTotal' => $hitung,
+            'recordsFiltered' => $hitung,
             'data' => $data,
-        ], 200);
+        ], 201);
     }
     
     public function exportData()

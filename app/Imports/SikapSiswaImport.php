@@ -22,18 +22,19 @@ class SikapSiswaImport implements ToCollection, WithHeadingRow
             'ket_sikap' => 'required',
             'nilai' => 'required',
             'jurusan' => 'required',
-            'semester' => 'required',
             'tahun_ajar' => 'required',
         ];
     }
 
     protected $selectedTahunAjar;
     protected $selectedJurusan;
+    protected $nilaiCallback;
 
-    public function __construct($selectedTahunAjar, $selectedJurusan)
+    public function __construct($selectedTahunAjar, $selectedJurusan, $nilaiCallback)
     {
         $this->selectedTahunAjar = $selectedTahunAjar;
         $this->selectedJurusan = $selectedJurusan;
+        $this->nilaiCallback = $nilaiCallback;
     }
 
     public function collection (Collection $rows)
@@ -41,24 +42,23 @@ class SikapSiswaImport implements ToCollection, WithHeadingRow
         foreach ($rows as $row)
         {
             $tajar = TahunAjar::find($this->selectedTahunAjar);
-            // $siswa = MasterSiswa::where('name','LIKE','%'.$row['nama_siswa'].'%')->first();
-            // $jurusan = MasterJurusanSiswa::where('name','LIKE','%'.$row['jurusan'].'%')->first();
+
             $siswa = MasterSiswa::where('name', $row['nama_siswa'])->first();
             $jurusan = MasterJurusanSiswa::find($this->selectedJurusan);
 
             if ($tajar && $siswa && $jurusan)
             {
+                $nilai = call_user_func($this->nilaiCallback, $row['keterangan_sikap']);
                 SikapSiswa::updateOrCreate([
                     'tajar_id' => $tajar->id,
                     'siswa_id' => $siswa->id,
                     'jurusan_id' => $jurusan->id,
-                    'nilai' => $row['nilai'],
+                    'nilai' => $nilai,
                 ],[
                     'nama_siswa' => $row['nama_siswa'],
                     'ket_sikap' => $row['keterangan_sikap'],
-                    'nilai' => $row['nilai'],
+                    'nilai' => $nilai,
                     'jurusan' => $jurusan->name,
-                    'semester' => $row['semester'],
                     'tahun_ajar' => $tajar->name,
                 ]);
             }

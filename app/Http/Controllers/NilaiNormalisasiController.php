@@ -442,7 +442,8 @@ class NilaiNormalisasiController extends Controller
                 $normalisasi[] = [
                     'id' => $s->id,
                     'nama_siswa' => $s->name,
-                    'nilai_normalisasi' => $nilaiNormalisasi,
+                    // 'nilai_normalisasi' => $nilaiNormalisasi,
+                    'nilai_normalisasi' => number_format($nilaiNormalisasi ?? 0, 3), // mengambil 3 angka di belakang koma
                     'nama_kriteria' => $kriteria->name,
                 ];
             }
@@ -657,7 +658,8 @@ class NilaiNormalisasiController extends Controller
                 $normalisasi[] = [
                     'id' => $s->id,
                     'nama_siswa' => $s->name,
-                    'nilai_normalisasi' => $nilaiNormalisasi,
+                    // 'nilai_normalisasi' => $nilaiNormalisasi,
+                    'nilai_normalisasi' => number_format($nilaiNormalisasi ?? 0, 3), // mengambil 3 angka di belakang koma
                     'nama_kriteria' => $kriteria->name,
                 ];
             }

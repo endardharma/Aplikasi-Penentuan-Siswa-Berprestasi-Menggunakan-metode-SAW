@@ -11,6 +11,7 @@ use App\Models\MasterSiswa;
 use App\Models\PrestasiSiswa;
 use App\Models\TahunAjar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Excel as ExcelExcel;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -152,6 +153,35 @@ class PrestasiSiswaController extends Controller
     //     ], 200);
     // }
 
+    public function tambahData(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'siswa_id' => 'required',
+            'ket_prestasi' => 'required',
+            'nilai' => 'required',
+            'jurusan_id' => 'required',
+            'tajar_id' => 'required',
+        ]);
+
+        // response error validation
+        if ($validator->fails()){
+            return response()->json($validator->errors(), 400);
+        }
+
+        $prestasi = new PrestasiSiswa();
+        $prestasi->siswa_id = $request->siswa_id;
+        $prestasi->ket_prestasi = $request->ket_prestasi;
+        $prestasi->nilai = $this->getNilaiBasedOnPrestasi($request->ket_prestasi);
+        $prestasi->jurusan_id = $request->jurusan_id;
+        $prestasi->tajar_id = $request->tajar_id;
+        $prestasi->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambahkan data nilai prestasi siswa',
+        ], 201);
+    }
+
     public function updateData(Request $request, $id)
     {
         $find = PrestasiSiswa::where('id', $id)->first();
@@ -169,7 +199,6 @@ class PrestasiSiswaController extends Controller
             $request->ket_prestasi != null ? $find->ket_prestasi = $request->ket_prestasi : true;
             $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnPrestasi($request->ket_prestasi) : true; // Nilai Otomatis berdasarkan keterangan prestaasi (getNilai)
             $request->jurusan_id != null ? $find->jurusan_id = $request->jurusan_id : true;
-            $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
             $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
             $find->save();
 
@@ -317,7 +346,9 @@ class PrestasiSiswaController extends Controller
         $selectedTahunAjar = $request->input('selected_tahun_ajar');
         $selectedJurusan = $request->input('selected_jurusan');
 
-        Excel::import(new PrestasiSiswaImport($selectedTahunAjar, $selectedJurusan), $file);
+        Excel::import(new PrestasiSiswaImport($selectedTahunAjar, $selectedJurusan, function($ket_prestasi){
+            return $this->getNilaiBasedOnPrestasi($ket_prestasi);
+        }), $file);
 
         return response()->json([
             'success' => true,
@@ -336,7 +367,6 @@ class PrestasiSiswaController extends Controller
             $item['ket_prestasi'] = $p->ket_prestasi;
             $item['nilai'] = $p->nilai;
             $item['jurusan'] = $p->jurusan->name ?? '';
-            $item['semester'] = $p->tajar->name ?? '';
             $item['tahun_ajar'] = $p->tajar->periode ?? '';
             $data[] = $item;
         }

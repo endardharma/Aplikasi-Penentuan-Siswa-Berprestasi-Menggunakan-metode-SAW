@@ -12,6 +12,7 @@ use App\Models\MasterSiswa;
 use App\Models\PresensiSiswa;
 use App\Models\TahunAjar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class PresensiSiswaController extends Controller
@@ -384,10 +385,13 @@ class PresensiSiswaController extends Controller
 
         // Proses data import
         $file = $request->file('excel');
+
         $selectedTahunAjar = $request->input('selected_tahun_ajar');
         $selectedJurusan = $request->input('selected_jurusan');
 
-        Excel::import(new PresensiSiswaImport($selectedTahunAjar, $selectedJurusan), $file);
+        Excel::import(new PresensiSiswaImport($selectedTahunAjar, $selectedJurusan, function($jumlah_hari, $ket_ketidakhadiran){
+            return $this->getNilaiBasedOnJumlahHari($jumlah_hari, $ket_ketidakhadiran);
+        }), $file);
 
         return response()->json([
             'success' => true,
@@ -395,6 +399,51 @@ class PresensiSiswaController extends Controller
         ], 201);
     }
 
+    public function tambahData(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'siswa_id' => 'required',
+            'ket_ketidakhadiran' => 'required',
+            'jumlah_hari' => 'required_if:ket_ketidakhadiran,!=,Tidak Ada',
+            'jumlah_hari_lainnya' => 'required_if:jumlah_hari,lainnya',
+            'nilai' => 'required',
+            'jurusan_id' => 'required',
+            'tajar_id' => 'required',
+        ]);
+
+        // response error validation
+        if ($validator->fails()){
+            return response()->json($validator->errors(), 400);
+        };
+
+        $presensi = new PresensiSiswa();
+        $presensi->siswa_id = $request->siswa_id;
+        $presensi->ket_ketidakhadiran = $request->ket_ketidakhadiran;
+
+        if ($request->ket_ketidakhadiran === 'Tidak Ada') {
+            $presensi->jumlah_hari = '0 Hari';
+            $presensi->jumlah_hari_lainnya = '0 Hari';
+            $presensi->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari, $request->ket_ketidakhadiran);
+        } else {
+            $presensi->jumlah_hari = $request->jumlah_hari;
+            $presensi->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari, $request->ket_ketidakhadiran);
+            
+            if ($request->jumlah_hari !== 'lainnya') {
+                $presensi->jumlah_hari_lainnya = $request->jumlah_hari_lainnya;
+                $presensi->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari_lainnya, $request->ket_ketidakhadiran);
+            }
+        }
+        
+        $presensi->jurusan_id = $request->jurusan_id;
+        $presensi->tajar_id = $request->tajar_id;
+        $presensi->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambahkan data nilai ketidakhadiran siswa',
+        ], 201);
+    }
+    
     public function updateData(Request $request, $id)
     {
         $find = PresensiSiswa::where('id',$id)->first();
@@ -410,27 +459,27 @@ class PresensiSiswaController extends Controller
         {
             $request->siswa_id != null ? $find->siswa_id = $request->siswa_id : true;
             $request->ket_ketidakhadiran != null ? $find->ket_ketidakhadiran = $request->ket_ketidakhadiran : true;
-            $request->jumlah_hari != null ? $find->jumlah_hari = $request->jumlah_hari : true;
             
-            // $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari) : true; // nilai otomatis berdasarkan jumlah hari
-            
-            if ($request->jumlah_hari !== 'lainnya')
+            // if ($request->jumlah_hari === 'lainnya')
+            if ($request->ket_ketidakhadiran === 'Tidak Ada')
             {
+                $find->jumlah_hari = '0 Hari';
+                $find->jumlah_hari_lainnya = '0 Hari';
+                $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari, $request->ket_ketidakhadiran) : true; // nilai otomatis berdasarkan jumlah hari
+            } else {
                 $request->jumlah_hari != null ? $find->jumlah_hari = $request->jumlah_hari : true;
-                $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari) : true; // nilai otomatis berdasarkan jumlah hari
+                $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari, $request->ket_ketidakhadiran): true;
+
+                if ($request->jumlah_hari !== 'lainnya') {
+                    $request->jumlah_hari_lainnya != null ? $find->jumlah_hari_lainnya = $request->jumlah_hari_lainnya : true;
+                    $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari_lainnya, $request->ket_ketidakhadiran): true;
+                }
             }
-            else
-            {
-                $request->jumlah_hari_lainnya != null ? $find->jumlah_hari_lainnya = $request->jumlah_hari_lainnya : true;
-                $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnJumlahHari($request->jumlah_hari_lainnya) : true; // nilai otomatis berdasarkan jumlah hari
-            }
-     
+            
             $request->jurusan_id != null ? $find->jurusan_id = $request->jurusan_id : true;
-            $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
             $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
 
             $find->save();
-            // dd($find)->toArray();
 
             return response()->json([
                 'success' => true,
@@ -442,21 +491,31 @@ class PresensiSiswaController extends Controller
     public function getNilai(Request $request)
     {
         $jumlah_hari = $request->jumlah_hari;
+        $ket_ketidakhadiran = $request->ket_ketidakhadiran;
         
-        $nilai = $this->getNilaiBasedOnJumlahHari($jumlah_hari);
+        // $nilai = $this->getNilaiBasedOnJumlahHari($jumlah_hari);
+        $nilai = $this->getNilaiBasedOnJumlahHari($jumlah_hari, $ket_ketidakhadiran);
 
-        return response()->json(['nilai' => $nilai], 200);
+        return response()->json([
+            'nilai' => $nilai
+        ], 200);
     }
 
-    private function getNilaiBasedOnJumlahHari($jumlah_hari)
+    private function getNilaiBasedOnJumlahHari($jumlah_hari, $ket_ketidakhadiran)
     {
-        $nilaiMapping = [
+       $nilaiMapping = [
+            'Tidak Ada' => 5,
             '0 Hari' => 5,
             '1 Hari' => 4,
             '2 Hari' => 3,
             '3 Hari' => 2,
             '4 Hari' => 1,
         ];
+
+        if ($ket_ketidakhadiran === 'Tidak Ada')
+        {
+            return $nilaiMapping['Tidak Ada'];
+        }
 
         return $nilaiMapping[$jumlah_hari] ?? 0; // Nilai default jika jumlah hari tidak ditemukan / jumlah hari melebihi 4 hari
     }
@@ -493,7 +552,7 @@ class PresensiSiswaController extends Controller
         }
     }
 
-    public function exportData()
+    public function exportDataMipa()
     {
         $presensi = PresensiSiswa::all();
         $data = array();
@@ -509,6 +568,25 @@ class PresensiSiswaController extends Controller
             $data[] = $item;
         }
         // dd($data)->toArray();
-        return Excel::download(new PresensiSiswaExport($data), 'Data-Presensi-Siswa.xlsx');
+        return Excel::download(new PresensiSiswaExport($data), 'Data-Presensi-Siswa-Mipa.xlsx');
+    }
+
+    public function exportDataIis()
+    {
+        $presensi = PresensiSiswa::all();
+        $data = array();
+        foreach($presensi as $p)
+        {
+            $item['id'] = $p->id;
+            $item['tahun_ajar'] = $p->tajar->periode ?? '';
+            $item['jurusan'] = $p->jurusan->name ?? '';
+            $item['nama_siswa'] = $p->siswa->name ?? '';
+            $item['ket_ketidakhadiran'] = $p->ket_ketidakhadiran;
+            $item['jumlah_hari'] = $p->jumlah_hari;
+            $item['nilai'] = $p->nilai;
+            $data[] = $item;
+        }
+        // dd($data)->toArray();
+        return Excel::download(new PresensiSiswaExport($data), 'Data-Presensi-Siswa-Iis.xlsx');
     }
 }

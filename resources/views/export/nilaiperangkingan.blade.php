@@ -8,7 +8,6 @@
             <th style="width: 200px; text-align:center"><b>Nama Siswa</b></th>
             <th style="width: 200px; text-align:center"><b>Nilai Akhir</b></th>
             <th style="width: 200px; text-align:center"><b>Jurusan</b></th>
-            <th style="width: 200px; text-align:center"><b>Semester</b></th>
             <th style="width: 200px; text-align:center"><b>Tahun Ajar</b></th>
         </tr>
         <tr>
@@ -27,7 +26,6 @@
             <td style="text-align:left;"> {{ $d['nama_siswa'] }} </td>
             <td style="text-align:left;">{{ $d['nilai_akhir'] }} </td>
             <td style="text-align:left;">{{ $d['jurusan'] }} </td>
-            <td style="text-align:left;">{{ $d['semester'] }} </td>
             <td style="text-align:left;"> {{ $d['tahun_ajar'] }} </td>
         </tr>
         @endforeach

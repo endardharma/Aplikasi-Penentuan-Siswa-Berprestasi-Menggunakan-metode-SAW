@@ -41,23 +41,16 @@ class RaporSiswaTemplateIis implements FromArray, WithHeadings, ShouldAutoSize, 
                     {
                         foreach ($mapel as $m)
                         {
-                            if ($tajar->isNotEmpty())
-                            {
-                                foreach ($tajar as $t)
-                                {
-                                    $item = [];
-                                    $item['nama_siswa'] = $s->name;
-                                    $item['nama_mapel'] = $m->name;
-                                    $item['kelompok'] = $m->kelompok;
-                                    $item['type'] = $m->type;
-                                    $item['nilai'] = 'Isi nilai dengan angka';
+                            $item = [];
+                            $item['nama_siswa'] = $s->name;
+                            $item['nama_mapel'] = $m->name;
+                            $item['kelompok'] = $m->kelompok;
+                            $item['type'] = $m->type;
+                            $item['nilai'] = 'Isi nilai dengan angka';
 
-                                    $jurusanSiswa = MasterJurusanSiswa::find($m->jurusan_id);
+                            $jurusanSiswa = MasterJurusanSiswa::find($m->jurusan_id);
 
-                                    $item['semester'] = $t->semester;
-                                    $data[] = $item;
-                                }
-                            }
+                            $data[] = $item;
                         }
                     }
                 }
@@ -70,7 +63,7 @@ class RaporSiswaTemplateIis implements FromArray, WithHeadings, ShouldAutoSize, 
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:G1'; // All Headers
+                $cellRange = 'A1:F1'; // All Headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -102,7 +95,6 @@ class RaporSiswaTemplateIis implements FromArray, WithHeadings, ShouldAutoSize, 
             'Kelompok',
             'Tipe',
             'Nilai',
-            'Semester',
         ];
     }
 }

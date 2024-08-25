@@ -11,6 +11,7 @@ use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\TahunAjar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Excel as ExcelExcel;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -211,6 +212,34 @@ class KeterlambatanSiswaController extends Controller
         ], 201);
     }
 
+    public function tambahData(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'siswa_id' => 'required',
+            'jumlah_keterlambatan' => 'required',
+            'nilai' => 'required',
+            'jurusan_id' => 'required',
+            'tajar_id' => 'required',
+        ]); 
+
+        if ($validator->fails()){
+            return response()->json($validator->errors(), 400);
+        };
+
+        $keterlambatan = new KeterlambatanSiswa();
+        $keterlambatan->siswa_id = $request->siswa_id;
+        $keterlambatan->jumlah_keterlambatan = $request->jumlah_keterlambatan;
+        $keterlambatan->nilai = $this->getNilaiBasedOnKeterlambatan($request->jumlah_keterlambatan);
+        $keterlambatan->jurusan_id = $request->jurusan_id;
+        $keterlambatan->tajar_id = $request->tajar_id;
+        $keterlambatan->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambahkan data keterlambatan siswa',
+        ], 201);
+    }
+
     public function updateData(Request $request, $id)
     {
         $find = KeterlambatanSiswa::where('id', $id)->first();
@@ -316,7 +345,9 @@ class KeterlambatanSiswaController extends Controller
         $selectedTahunAjar = $request->input('selected_tahun_ajar');
         $selectedJurusan = $request->input('selected_jurusan');
         
-        Excel::import(new KeterlambatanSiswaImport($selectedTahunAjar, $selectedJurusan), $file);
+        Excel::import(new KeterlambatanSiswaImport($selectedTahunAjar, $selectedJurusan, function($jumlah_keterlambatan){
+            return $this->getNilaiBasedOnKeterlambatan($jumlah_keterlambatan);
+        }), $file);
 
         return response()->json([
             'success' => true,
@@ -335,7 +366,6 @@ class KeterlambatanSiswaController extends Controller
             $item['jumlah_keterlambatan'] = $k->jumlah_keterlambatan;
             $item['nilai'] = $k->nilai;
             $item['jurusan'] = $k->jurusan->name ?? '';
-            $item['semester'] = $k->tajar->semester ?? '';
             $item['tahun_ajar'] = $k->tajar->periode ?? '';
             $data[] = $item;
         }

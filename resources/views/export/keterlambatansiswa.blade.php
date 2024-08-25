@@ -9,7 +9,6 @@
             <th style="width: 200px; text-align:center"><b>Jumlah Keterlambatan</b></th>
             <th style="width: 200px; text-align:center"><b>Nilai</b></th>
             <th style="width: 200px; text-align:center"><b>Jurusan</b></th>
-            <th style="width: 200px; text-align:center"><b>Semester</b></th>
             <th style="width: 200px; text-align:center"><b>Tahun Ajar</b></th>
         </tr>
         <tr>
@@ -30,7 +29,6 @@
             <td style="text-align:left;">{{ $d['jumlah_keterlambatan'] }} </td>
             <td style="text-align:left;">{{ $d['nilai'] }} </td>
             <td style="text-align:left;">{{ $d['jurusan'] }} </td>
-            <td style="text-align:left;">{{ $d['semester'] }} </td>
             <td style="text-align:left;"> {{ $d['tahun_ajar'] }} </td>
         </tr>
         @endforeach

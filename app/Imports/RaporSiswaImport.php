@@ -28,7 +28,6 @@ class RaporSiswaImport implements ToCollection, WithHeadingRow
             'type' => 'required',
             'nilai' => 'required',
             'jurusan' => 'required',
-            'semester' => 'required',
             'tahun_ajar' => 'required',
         ];
     }    
@@ -111,7 +110,6 @@ class RaporSiswaImport implements ToCollection, WithHeadingRow
                     'type' => $row['tipe'],
                     'nilai' => $row['nilai'],
                     'jurusan' => $jurusan->name,
-                    'semester' => $row['semester'],
                     'tahun_ajar' => $tajar->name,
                 ]);
             }

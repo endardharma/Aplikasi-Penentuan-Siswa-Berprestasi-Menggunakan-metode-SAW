@@ -13,6 +13,7 @@ use App\Models\MasterSiswa;
 use App\Models\RaporSiswa;
 use App\Models\TahunAjar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 use function PHPSTORM_META\map;
@@ -24,6 +25,7 @@ class RaporSiswaController extends Controller
         return view('admin.data_nilai.rapor.index');
     }
 
+    // FIX
     public function listRapor(Request $request)
     {
         $columns = [
@@ -81,27 +83,8 @@ class RaporSiswaController extends Controller
         foreach($siswa as $s)
         {
             $item['id'] = $s->id;
-
-            // $item['id_siswa_nama'] = $s->siswa_id;
             $item['nama_siswa'] = $s->name ?? '';
-
-            // $item['id_mapel_nama'] = $r->mapel_id;
-            // $item['nama_mapel'] = $r->mapel->name ?? '';
-
-            // $item['id_mapel_kelompok'] = $r->mapel_id;
-            // $item['kelompok'] = $r->mapel->kelompok ?? '';
-            
-            // $item['id_mapel_type'] = $r->mapel_id;
-            // $item['type'] = $r->mapel->type ?? '';
-            
-            // $item['nilai'] = $r->nilai;
-
-            // $item['id_jurusan_nama'] = $s->jurusan_id;
             $item['jurusan'] = $s->jurusan->name ?? '';
-
-            $item['id_tajar_semester'] = $s->tajar_id;
-            $item['semester'] = $s->tajar->semester ?? '';
-
             $item['id_tajar_tahun'] = $s->tajar_id;
             $item['tahun_ajar'] = $s->tajar->periode ?? '';
 
@@ -116,6 +99,76 @@ class RaporSiswaController extends Controller
         ],200);
     }
 
+    // COBA - COBA [24/08/2024]
+    // public function listRapor(Request $request)
+    // {
+    //     $columns = [
+    //         0 => 'id',
+    //         1 => 'tajar_id',
+    //         2 => 'siswa_id',
+    //         3 => 'jurusan_id',
+    //     ];
+
+    //     $start = $request->start;
+    //     $limit = $request->length;
+    //     $orderColumnIndex = $request->input('order.0.column');
+    //     $orderColumn = isset($columns[$orderColumnIndex]) ? $columns [$orderColumnIndex] : 'id';
+    //     $dir = $request->input('order.0.dir');
+    //     $search = $request->input('search')['value'];
+    //     $jurusanId = $request->input('jurusan_id');
+
+    //     $totalData = RaporSiswa::count();
+
+    //     $query = RaporSiswa::with('tajar', 'siswa', 'jurusan')
+    //         ->when($jurusanId && $jurusanId != '-1', function ($q) use ($jurusanId){
+    //             $q->whereHas('jurusan', function ($query) use ($jurusanId) {
+    //                 $query->where('jurusan_id', $jurusanId);
+    //             });
+    //         })
+    //         ->when(empty($jurusanId) || $jurusanId == '-1', function ($q) {
+    //         })
+    //         ->when($search, function ($query) use ($search) {
+    //             $query->whereHas('tajar', function ($q) use ($search) {
+    //                 $q->where('periode', 'LIKE', '%'.$search.'%');
+    //             })
+    //             ->orWhereHas('siswa', function ($q) use ($search) {
+    //                 $q->where('name', 'LIKE', '%'.$search.'%');
+    //             })
+    //             ->orWhereHas('jurusan', function ($q) use ($search) {
+    //                 $q->where('name','LIKE','%'.$search.'%');
+    //             });
+    //         });
+
+    //         $totalFiltered = $query->count();
+
+    //         $rapor = $query
+    //             ->orderBy($orderColumn, $dir)
+    //             ->skip($start)
+    //             ->take($limit)
+    //             ->get();
+
+    //         $data = array();
+    //         foreach($rapor as $r)
+    //         {
+    //             $item['id'] = $r->id;
+    //             $item['nama_siswa'] = $r->siswa->name ?? '';
+    //             $item['id_siswa_nama'] = $r->siswa_id;
+    //             $item['jurusan'] = $r->jurusan->name ?? '';
+    //             $item['id_tajar_semester'] = $r->tajar_id;
+    //             $item['semester'] = $r->tajar->semester ?? '';
+    //             $item['id_tajar_periode'] = $r->tajar_id;
+    //             $item['tahun_ajar'] = $r->tajar->periode ?? '';
+    //             $data[] = $item;
+    //         }
+
+    //         return response()->json([
+    //             'draw' => $request->draw,
+    //             'recordsTotal' => $totalData,
+    //             'recordsFiltered' => $totalFiltered,
+    //             'data' => $data,
+    //         ], 200);
+    // }
+    
     // public function listRaporDetail(Request $request)
     // {
 
@@ -193,11 +246,13 @@ class RaporSiswaController extends Controller
         // Hitung keseluruhan
         $hitung = RaporSiswa::where('siswa_id', $siswaId)->count();
     
-        $rapor = RaporSiswa::with(['siswa', 'mapel'])
+        $rapor = RaporSiswa::with(['siswa', 'mapel', 'jurusan', 'tajar'])
             ->where('siswa_id', $siswaId)
             ->when($search, function ($query, $search) {
                 return $query->where('tajar_id', 'LIKE', '%'.$search.'%')
-                                ->orWhere('mapel_id', 'LIKE', '%'.$search.'%');
+                                ->orWhere('mapel_id', 'LIKE', '%'.$search.'%')
+                                ->orWhere('jurusan_id', 'LIKE', '%'.$search.'%')
+                                ->orWhere('tajar_id', 'LIKE', '%'.$search.'%');
             })
             ->orderby($orderColumn, $dir)
             ->skip($start)
@@ -217,6 +272,10 @@ class RaporSiswaController extends Controller
                 'id_mapel_type' => $r->mapel_id,
                 'type' => $r->mapel->type ?? '',
                 'nilai' => $r->nilai,
+                'id_jurusan_nama' => $r->jurusan_id,
+                'jurusan' => $r->jurusan->name ?? '',
+                'id_tajar_periode' => $r->tajar_id,
+                'tahun_ajar' => $r->tajar->periode ?? '',
             ];
             
             $data[] = $item;
@@ -331,6 +390,36 @@ class RaporSiswaController extends Controller
         ],201);
     }
 
+    public function tambahData(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'siswa_id' => 'required',
+            'mapel_id' => 'required',
+            'nilai' => 'required',
+            'jurusan_id' => 'required',
+            'tajar_id' => 'required',
+        ]);
+
+        if ($validator->fails()){
+            return response()->json($validator->errors(), 400);
+        };
+
+        $rapor = new RaporSiswa();
+        $rapor->siswa_id = $request->siswa_id;
+        $rapor->mapel_id = $request->mapel_id;
+        $rapor->nilai = $request->nilai;
+        $rapor->jurusan_id = $request->jurusan_id;
+        $rapor->tajar_id = $request->tajar_id;
+
+        $rapor->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambahkan data nilai rapor siswa',
+        ], 201);
+        
+    }
+
     public function updateData(Request $request, $id)
     {
         $find = RaporSiswa::where('id',$id)->first();
@@ -346,9 +435,9 @@ class RaporSiswaController extends Controller
         {
             $request->siswa_id != null ? $find->siswa_id = $request->siswa_id : true;
             $request->mapel_id != null ? $find->mapel_id = $request->mapel_id : true;
-            $request->mapel_id != null ? $find->mapel_id = $request->mapel_id : true;
-            $request->mapel_id != null ? $find->mapel_id = $request->mapel_id : true;
             $request->nilai != null ? $find->nilai = $request->nilai : true;
+            $request->jurusan_id != null ? $find->jurusan_id = $request->jurusan_id : true;
+            $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
             $find->save();
 
             return response()->json([
@@ -358,6 +447,7 @@ class RaporSiswaController extends Controller
         }
     }
 
+    // Hapus Semua Data by Id Siswa
     public function deleteData($id)
     {
         $find = MasterSiswa::find($id);
@@ -390,6 +480,39 @@ class RaporSiswaController extends Controller
             }
         }
     }
+
+    // Hapus Semua Data by Id Siswa
+    public function deleteDataDetail($id)
+    {
+        $find = RaporSiswa::where('id', $id)->first();
+
+        if (!$find)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Update data gagal!, data tidak ditemukan',
+            ], 400);
+        }
+        else
+        {
+            $hapus = RaporSiswa::where('id', $id)->delete();
+
+            if ($hapus)
+            {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Berhasil menghapus data nilai rapor siswa',
+                ], 201);
+            }
+            else
+            {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat menghapus data nilai rapor siswa',
+                ], 400);
+            }
+        }
+    }
     
     public function exportData(Request $request)
     {
@@ -404,7 +527,6 @@ class RaporSiswaController extends Controller
             $item['type'] = $r->mapel->type ?? '';
             $item['nilai'] = $r->nilai;
             $item['jurusan'] = $r->jurusan->name ?? '';
-            $item['semester'] = $r->tajar->name ?? '';
             $item['tahun_ajar'] = $r->tajar->periode ?? '';
             $data[] = $item;
         }

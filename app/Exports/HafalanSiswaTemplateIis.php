@@ -44,18 +44,12 @@ class HafalanSiswaTemplateIis implements FromArray, WithHeadings, ShouldAutoSize
                 if ($jurusan_id === $jurusanMipa)
                 {
                     foreach ($ket_hafalan_list as $ket_hafalan) {
-                        foreach ($tajar as $t) {
-                            $item = [];
-                            $item['nama_siswa'] = $s->name;
-                            $item['ket_hafalan'] = $ket_hafalan;
-                            $item['nilai'] = 'Isi nilai dengan angka';
-    
-                            // $item['jurusan'] = $s->jurusan ? $s->jurusan->name : 'Jurusan tidak ditemukan';
-    
-                            $item['semester'] = $t->semester;
-    
-                            $data[] = $item;
-                        }
+                        $item = [];
+                        $item['nama_siswa'] = $s->name;
+                        $item['ket_hafalan'] = $ket_hafalan;
+                        $item['nilai'] = 'Isi nilai dengan angka';
+
+                        $data[] = $item;
                     }
                 }
             }
@@ -98,7 +92,6 @@ class HafalanSiswaTemplateIis implements FromArray, WithHeadings, ShouldAutoSize
             'Nama Siswa',
             'Keterangan Hafalan',
             'Nilai',
-            'Semester',
         ];
     }
 }

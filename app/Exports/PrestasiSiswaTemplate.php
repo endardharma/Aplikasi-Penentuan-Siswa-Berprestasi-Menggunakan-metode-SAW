@@ -36,15 +36,10 @@ class PrestasiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
                 $jurusan_id = $s->kelas->jurusan->id ?? null;
                 if ($jurusan_id === $jurusanMipa)
                 {
-                    foreach ($tajar as $t)
-                    {
-                        $item = [];
-                        $item['nama_siswa'] = $s->name;
-                        $item['ket_prestasi'] = 'Isi dengan pilihan prestasi yang sesuai (Tingkat Internasional Juara 1/2/3, Tingkat Nasional Juara 1/2/3, Tingkat Provinsi Juara 1/2/3, Tingkat Kabupaten/Kota Juara 1/2/3, Tidak Ada)';
-                        $item['nilai'] = 'Isi dengan angka yang sesuai dengan keterangan prestasi (12 = untuk Tingkat Internasional Juara 1, 11 = untuk Tingkat Internasional Juara 2, dst Hingga angka 0)';
-                        $item['semester'] = $t->semester;
-                        $data[] = $item;   
-                    }
+                    $item = [];
+                    $item['nama_siswa'] = $s->name;
+                    $item['ket_prestasi'] = 'Isi dengan pilihan prestasi yang sesuai (Tingkat Internasional Juara 1/2/3, Tingkat Nasional Juara 1/2/3, Tingkat Provinsi Juara 1/2/3, Tingkat Kabupaten/Kota Juara 1/2/3, Tidak Ada)';
+                    $data[] = $item;   
                 }
             }
         }
@@ -55,7 +50,7 @@ class PrestasiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:D1'; // All headers
+                $cellRange = 'A1:B1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -85,8 +80,6 @@ class PrestasiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
         return [
             'Nama Siswa',
             'Keterangan Prestasi',
-            'Nilai',
-            'Semester',
         ];
     }
     

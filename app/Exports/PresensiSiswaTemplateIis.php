@@ -35,17 +35,12 @@ class PresensiSiswaTemplateIis implements FromArray, WithHeadings, ShouldAutoSiz
                 $jurusan_id = $s->kelas->jurusan->id ?? null;
                 if ($jurusan_id === $jurusanIis)
                 {
-                    foreach ($tajar as $t)
-                    {
-                        $item = [];
-                        $item['nama_siswa'] = $s->name;
-                        $item['ket_ketidakhadira'] = 'Isi dengan Tidak Ada/Sakit/Izin/Tanpa Keterangan';
-                        $item['jumlah_hari'] = 'Isi dengan angka berapa hari tidak masuk';
-                        $item['jumlah_hari_lainnya'] = 'Isi dengan angka berapa hari tidak masuk yang melebihi 4 hari';
-                        $item['nilai'] = 'Isi nilai dengan angka(0 - 5) sesuai dengan jumlah hari';
-                        $item['semester'] = $t->semester;
-                        $data[] = $item;
-                    }
+                    $item = [];
+                    $item['nama_siswa'] = $s->name;
+                    $item['ket_ketidakhadira'] = 'Isi dengan Tidak Ada/Sakit/Izin/Tanpa Keterangan';
+                    $item['jumlah_hari'] = 'Isi dengan angka berapa hari tidak masuk';
+                    $item['jumlah_hari_lainnya'] = 'Isi dengan angka berapa hari tidak masuk yang melebihi 4 hari';
+                    $data[] = $item;
                 }
             }
         }
@@ -56,7 +51,7 @@ class PresensiSiswaTemplateIis implements FromArray, WithHeadings, ShouldAutoSiz
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:F1'; // All headers
+                $cellRange = 'A1:D1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -89,8 +84,6 @@ class PresensiSiswaTemplateIis implements FromArray, WithHeadings, ShouldAutoSiz
             'Keterangan Ketidakhadiran',
             'Jumlah Hari',
             'Jumlah Hari Lainnya',
-            'Nilai',
-            'Semester',
         ];
     }
 }
