@@ -13,6 +13,7 @@ use App\Models\PresensiSiswa;
 use App\Models\PrestasiSiswa;
 use App\Models\RaporSiswa;
 use App\Models\SikapSiswa;
+use App\Models\TahunAjar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -43,6 +44,7 @@ class NilaiKeseluruhanController extends Controller
         $dir = $request->input('order.0.dir');
         $search = $request->input('search')['value'];
         $jurusanId = $request->input('jurusan_id');
+        $tajarId = $request->input('tajar_id');
         $kelasId = $request->input('kelas_id');
     
         // Hitung total keseluruhan data tanpa paginasi dan pencarian
@@ -68,6 +70,22 @@ class NilaiKeseluruhanController extends Controller
             })
             ->when($kelasId, function ($q) use ($kelasId) {
                 $q->where('kelas_id', $kelasId);
+            })
+            ->when($tajarId && $tajarId != '-1', function ($q) use ($tajarId) {
+                $q->whereHas('jurusan', function ($query) use ($tajarId){
+                    $query->where('jurusan_id', $tajarId);
+                });
+            })
+            ->when(empty($tajarid) || $tajarId == '-1', function ($q) {
+            })    
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('jurusan', function ($q) use ($search) {
+                    $q->where('name','LIKE','%'.$search.'%');
+                })
+                ->orWhereHas('tajar', function ($q) use ($search) {
+                    $q->where('periode','LIKE','%'.$search.'%')
+                    ->orWhere('semester','LIKE','%'.$search.'%');
+                });
             });
     
         // Hitung total keseluruhan data sesuai dengan kriteria pencarian
@@ -104,22 +122,65 @@ class NilaiKeseluruhanController extends Controller
                 switch($namaKriteria)
                 {
                     case 'Nilai Raport':
-                        $nilai = $s->rapor->where('jurusan_id', $s->kelas->jurusan_id)->average('nilai');
+                        // $nilai = $s->rapor->where('jurusan_id', $s->kelas->jurusan_id)->average('nilai');
+                         // dihitung berdasarkan periode
+                         $nilai = $s->rapor->where('jurusan_id', $s->kelas->jurusan_id)
+                         ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
+                         ->average('nilai');
                     break;
                     case 'Presensi':
-                        $nilai = $s->presensi->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+                        // $nilai = $s->presensi->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+                        
+                        // $nilai = $s->presensi->where('jurusan_id', $s->kelas->jurusan_id)
+                        // ->map(function($presensi) {
+                        //     // Mengambil nilai konversi dari relasi konversi_ketidakhadirans
+                        //     return $presensi->konversiKetidakhadiran->nilai_konversi;
+                        // })
+                        // ->sum();
+
+                        // dihitung berdasarkan periode
+                        $nilai = $s->presensi->where('jurusan_id', $s->kelas->jurusan_id)
+                        ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
+                        ->map(function($presensi) {
+                            return $presensi->konversiKetidakhadiran->nilai_konversi;
+                        })
+                        ->sum();
+                       
                     break;
                     case 'Sikap':
-                        $nilai = $s->sikap->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+                        // $nilai = $s->sikap->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+                        $nilai = $s->sikap->where('jurusan_id', $s->kelas->jurusan_id)
+                        ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
+                        ->map(function($sikap) {
+                            // Mengambil nilai konversi dari relasi konversi_ketidakhadirans
+                            return $sikap->konversiSikap->nilai_konversi;
+                        })
+                        ->sum();
                     break;
                     case 'Prestasi':
-                        $nilai = $s->prestasi->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+                        // $nilai = $s->prestasi->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+                        $nilai = $s->prestasi->where('jurusan_id', $s->kelas->jurusan_id)
+                        ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
+                        ->map(function($prestasi) {
+                            // Mengambil nilai konversi dari relasi konversi_ketidakhadirans
+                            return $prestasi->konversiPrestasi->nilai_konversi;
+                        })
+                        ->sum();
                     break;
                     case 'Keterlambatan Masuk Sekolah':
-                        $nilai = $s->keterlambatan->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+                        // $nilai = $s->keterlambatan->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+                        $nilai = $s->keterlambatan->where('jurusan_id', $s->kelas->jurusan_id)
+                        ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
+                        ->map(function($keterlambatan) {
+                            // Mengambil nilai konversi dari relasi konversi_ketidakhadirans
+                            return $keterlambatan->konversiKeterlambatan->nilai_konversi;
+                        })
+                        ->sum();
                     break;
                     case 'Hafalan Juz Al-Quran':
-                        $nilai = $s->hafalan->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+                        $nilai = $s->hafalan->where('jurusan_id', $s->kelas->jurusan_id)
+                        ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
+                        ->sum('nilai');
                     break;
                 }
 
@@ -326,6 +387,23 @@ class NilaiKeseluruhanController extends Controller
         {
             $item['id'] = $j->id;
             $item['name'] = $j->name;
+            $data[] = $item;
+        }
+
+        return response()->json([
+            'data' => $data,
+        ], 201);
+    }
+
+    public function supportTajar()
+    {
+        $tajar = TahunAjar::all();
+        $data = array();
+
+        foreach ($tajar as $t)
+        {
+            $item['id'] = $t->id;
+            $item['periode'] = $t->periode;
             $data[] = $item;
         }
 

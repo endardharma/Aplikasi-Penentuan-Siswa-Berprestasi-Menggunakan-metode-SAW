@@ -45,7 +45,7 @@ class PresensiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
                     $item['nama_siswa'] = $s->name;
                     $item['ket_ketidakhadira'] = 'Isi dengan Tidak Ada/Sakit/Izin/Tanpa Keterangan';
                     $item['jumlah_hari'] = 'Isi dengan angka berapa hari tidak masuk';
-                    $item['jumlah_hari_lainnya'] = 'Isi dengan angka berapa hari tidak masuk yang melebihi 4 hari';
+                    // $item['jumlah_hari_lainnya'] = 'Isi dengan angka berapa hari tidak masuk yang melebihi 4 hari';
                     $data[] = $item;
                 }
             }
@@ -57,7 +57,7 @@ class PresensiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:D1'; // All headers
+                $cellRange = 'A1:C1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
 
                 $styleArray = [
@@ -89,7 +89,7 @@ class PresensiSiswaTemplate implements FromArray, WithHeadings, ShouldAutoSize, 
             'Nama Siswa',
             'Keterangan Ketidakhadiran',
             'Jumlah Hari',
-            'Jumlah Hari Lainnya',
+            // 'Jumlah Hari Lainnya',
         ];
     }
 }

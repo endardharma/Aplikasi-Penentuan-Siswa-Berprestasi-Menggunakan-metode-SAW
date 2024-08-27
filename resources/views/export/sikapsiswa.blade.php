@@ -18,7 +18,6 @@
             <th style="text-align: center; background-color:#3c8dbc; color:white">4</th>
             <th style="text-align: center; background-color:#3c8dbc; color:white">5</th>
             <th style="text-align: center; background-color:#3c8dbc; color:white">6</th>
-            <th style="text-align: center; background-color:#3c8dbc; color:white">7</th>
         </tr>
     </thead>
     <tbody>

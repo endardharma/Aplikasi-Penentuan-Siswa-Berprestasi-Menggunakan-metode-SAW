@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\KonversiPrestasi;
 use App\Models\MasterJurusan;
 use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
@@ -29,13 +30,13 @@ class PrestasiSiswaImport implements ToCollection, WithHeadingRow
     
     protected $selectedTahunAjar;
     protected $selectedJurusan;
-    protected $nilaiCallback;
+    // protected $nilaiCallback;
 
-    public function __construct($selectedTahunAjar, $selectedJurusan, $nilaiCallback)
+    public function __construct($selectedTahunAjar, $selectedJurusan)
     {
         $this->selectedTahunAjar = $selectedTahunAjar;
         $this->selectedJurusan = $selectedJurusan;
-        $this->nilaiCallback = $nilaiCallback;
+        // $this->nilaiCallback = $nilaiCallback;
     }
 
     public function collection(Collection $rows)
@@ -47,19 +48,20 @@ class PrestasiSiswaImport implements ToCollection, WithHeadingRow
             $tajar = TahunAjar::find($this->selectedTahunAjar);
             $siswa = MasterSiswa::where('name', $row['nama_siswa'])->first();
             $jurusan = MasterJurusanSiswa::find($this->selectedJurusan);
+            $konversiPrestasi = KonversiPrestasi::where('ket_prestasi', $row['keterangan_prestasi'])->first();
 
-            if($tajar && $siswa && $jurusan)
+            if($tajar && $siswa && $jurusan && $konversiPrestasi)
             {
-                $nilai = call_user_func($this->nilaiCallback, $row['keterangan_prestasi']);
+                // $nilai = call_user_func($this->nilaiCallback, $row['keterangan_prestasi']);
                 $prestasi = PrestasiSiswa::updateOrCreate([
                     'tajar_id' => $tajar->id,
                     'siswa_id' => $siswa->id,
                     'jurusan_id' => $jurusan->id,
-                    'nilai' => $nilai,
+                    'konversi_prestasi_id' => $konversiPrestasi->id,
                 ], [
+                    'konversi_prestasi_id' => $konversiPrestasi->id,
                     'nama_siswa' => $row['nama_siswa'],
                     'ket_prestasi' => $row['keterangan_prestasi'],
-                    'nilai' => $nilai,
                     'jurusan' => $jurusan->name,
                     'tahun_ajar' => $tajar->name,
                 ]);

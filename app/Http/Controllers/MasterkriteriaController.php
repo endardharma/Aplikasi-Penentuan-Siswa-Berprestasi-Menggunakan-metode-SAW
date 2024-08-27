@@ -114,6 +114,17 @@ class MasterkriteriaController extends Controller
             'kurikulum' => 'required',
         ]);
 
+        // cek total bobot
+        $totalBobot = MasterKriteria::where('kurikulum', $request->kurikulum)->sum('bobot') + $request->bobot;
+
+        if ($totalBobot > 100)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menambahkan data, total bobot tidak boleh lebih dari 100%',
+            ], 400);
+        }
+
         //response error validation
         if($validator->fails()){
             return response()->json($validator->errors(), 400);

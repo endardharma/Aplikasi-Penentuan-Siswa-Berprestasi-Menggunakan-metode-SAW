@@ -540,19 +540,10 @@
                                 </select>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Jumlah Keterlambatan Siswa</label>
+                                <label for="modal-form-2" class="form-label">Jumlah Keterlambatan Siswa dan Nilai </label>
                                 <select class="form-select create-jumlah-keterlambatan" required>
-                                    <option disabled selected> --- Pilih jumlah Keterlambatan --- </option>
-                                    <option value="0 Kali">0 Kali</option>
-                                    <option value="1-2 Kali">1-2 Kali</option>
-                                    <option value="3-4 Kali">3-4 Kali</option>
-                                    <option value="5-6 Kali">5-6 Kali</option>
-                                    <option value="> 7 Kali">> 7 Kali</option>
+                                    <option disabled selected> --- Pilih Jumlah Keterlambatan dan Nilai --- </option>
                                 </select>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Nilai</label>
-                                <input type="number" class="form-control create-nilai" placeholder="Masukkan Nilai Keterlambatan Siswa" required readonly>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Jurusan</label>
@@ -618,19 +609,10 @@
                                 </select>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Jumlah Keterlambatan</label>
+                                <label for="modal-form-2" class="form-label">Jumlah Keterlambatan dan Nilai</label>
                                 <select class="form-select update-jumlah-keterlambatan" required>
-                                    <option disabled selected> --- Pilih jumlah Keterlambatan --- </option>
-                                    <option value="0 Kali">0 Kali</option>
-                                    <option value="1-2 Kali">1-2 Kali</option>
-                                    <option value="3-4 Kali">3-4 Kali</option>
-                                    <option value="5-6 Kali">5-6 Kali</option>
-                                    <option value="> 7 Kali">> 7 Kali</option>
+                                    <option disabled selected> --- Pilih Jumlah Keterlambatan dan Nilai --- </option>
                                 </select>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Nilai</label>
-                                <input type="number" class="form-control update-nilai" placeholder="Masukkan Nilai Keterlambatan Siswa" required readonly>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Jurusan</label>
@@ -1166,7 +1148,7 @@
                                 data: null,
                                 render: function(data, type, row){
                                     // Create action buttons
-                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-jumlah_keterlambatan="' + data.jumlah_keterlambatan + '" data-nilai="' + data.nilai + '" data-id_jurusan_nama="' + data.id_jurusan_nama + '" data-id_tajar_periode="' + data.id_tajar_periode +'"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-id_konversi_keterlambatan_jumlah="' + data.id_konversi_keterlambatan_jumlah + '" data-nilai="' + data.nilai + '" data-id_jurusan_nama="' + data.id_jurusan_nama + '" data-id_tajar_periode="' + data.id_tajar_periode +'"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
                                     var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
 
                                     // Combine the buttons
@@ -1293,6 +1275,30 @@
                     console.error('Error: ', error);
                 });
 
+                // Data Support Konversi Keterlambatan
+                var url = 'http://127.0.0.1:8000/api/data-nilai/keterlambatan-siswa/data-support/konversi-keterlambatan';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }).then(response => response.json()).then(data => {
+                    var selectUpdateJumlah = jQuery('.update-jumlah-keterlambatan');
+                    var selectCreateJumlah = jQuery('.create-jumlah-keterlambatan');
+
+                    // iterasi melalui data dan membuat objek untuk setiap entri
+                    jQuery.each(data, function(index, item){
+                        for (let i = 0; i < item.length; i++)
+                        {
+                            // isi data dengan nilai dalam database
+                            selectUpdateJumlah.append('<option value="' + item[i].id + '">' + item[i].jumlah_keterlambatan + ' - ' + item[i].nilai_konversi + '</option>')
+                            selectCreateJumlah.append('<option value="' + item[i].id + '">' + item[i].jumlah_keterlambatan + ' - ' + item[i].nilai_konversi + '</option>')
+                        }
+                    });
+                }).catch(error => {
+                    console.error('Error: ', error);
+                });
+
                 // Data Support jurusan
                 var url = 'http://127.0.0.1:8000/api/data-nilai/keterlambatan-siswa/data-support/jurusan';
                 fetch(url, {
@@ -1328,15 +1334,13 @@
 
                     // get form data
                     var siswa_id_nama = jQuery('.create-nama-siswa').val();
-                    var jumlah_keterlambatan = jQuery('.create-jumlah-keterlambatan').val();
-                    var nilai = jQuery('.create-nilai').val();
+                    var konversi_keterlambatan_id_jumlah = jQuery('.create-jumlah-keterlambatan').val();
                     var jurusan_id_nama = jQuery('.create-jurusan').val();
                     var tajar_id_periode = jQuery('.create-tahun-ajar').val();
 
                     var formData = new FormData();
                     formData.append('siswa_id', siswa_id_nama);
-                    formData.append('jumlah_keterlambatan', jumlah_keterlambatan);
-                    formData.append('nilai', nilai);
+                    formData.append('konversi_keterlambatan_id', konversi_keterlambatan_id_jumlah);
                     formData.append('jurusan_id', jurusan_id_nama);
                     formData.append('tajar_id', tajar_id_periode);
 
@@ -1391,26 +1395,26 @@
                 });
 
                 // menampilkan nilai terisi otomatis
-                jQuery('.create-jumlah-keterlambatan').change(function(){
-                    var jumlah_keterlambatan = jQuery(this).val();
+                // jQuery('.create-jumlah-keterlambatan').change(function(){
+                //     var jumlah_keterlambatan = jQuery(this).val();
 
-                    jQuery.ajax({
-                        url: 'http://127.0.0.1:8000/api/data-nilai/keterlambatan-siswa/get-nilai',
-                        type: 'POST',
-                        beforeSend: function(xhr) {
-                            xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                        },
-                        data: {
-                            jumlah_keterlambatan: jumlah_keterlambatan,
-                        },
-                        success: function(response){
-                            jQuery('.create-nilai').val(response.nilai);
-                        },
-                        error: function(xhr, status, error){
-                            console.error('Gagal mendapatkan nilai otomatis', error);
-                        }
-                    });
-                });
+                //     jQuery.ajax({
+                //         url: 'http://127.0.0.1:8000/api/data-nilai/keterlambatan-siswa/get-nilai',
+                //         type: 'POST',
+                //         beforeSend: function(xhr) {
+                //             xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                //         },
+                //         data: {
+                //             jumlah_keterlambatan: jumlah_keterlambatan,
+                //         },
+                //         success: function(response){
+                //             jQuery('.create-nilai').val(response.nilai);
+                //         },
+                //         error: function(xhr, status, error){
+                //             console.error('Gagal mendapatkan nilai otomatis', error);
+                //         }
+                //     });
+                // });
                 
                 // Fungsi Button Update (1)
                 jQuery('#data-table').on('click', '.btn-edit', function(){
@@ -1421,48 +1425,45 @@
 
                     var id = jQuery(this).attr("data-id");
                     var id_siswa_nama = jQuery(this).attr("data-id_siswa_nama");
-                    var jumlah_keterlambatan = jQuery(this).attr("data-jumlah_keterlambatan");
-                    var nilai = jQuery(this).attr("data-nilai");
+                    var id_konversi_keterlambatan_jumlah = jQuery(this).attr("data-id_konversi_keterlambatan_jumlah");
                     var id_jurusan_nama = jQuery(this).attr("data-id_jurusan_nama");
                     var id_tajar_periode = jQuery(this).attr("data-id_tajar_periode");
 
                     jQuery('.update-id').val(id);
                     jQuery('.update-nama-siswa').val(id_siswa_nama);
-                    jQuery('.update-jumlah-keterlambatan').val(jumlah_keterlambatan);
-                    jQuery('.update-nilai').val(nilai);
+                    jQuery('.update-jumlah-keterlambatan').val(id_konversi_keterlambatan_jumlah);
                     jQuery('.update-jurusan').val(id_jurusan_nama);
                     jQuery('.update-tahun-ajar').val(id_tajar_periode);
                     
                 })
 
-                jQuery('.update-jumlah-keterlambatan').change(function(){
-                    var jumlah_keterlambatan = jQuery(this).val();
+                // jQuery('.update-jumlah-keterlambatan').change(function(){
+                //     var jumlah_keterlambatan = jQuery(this).val();
 
-                    jQuery.ajax({
-                        url: 'http://127.0.0.1:8000/api/data-nilai/keterlambatan-siswa/get-nilai',
-                        type: 'POST',
-                        beforeSend: function(xhr){
-                            xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                        },
-                        data: {
-                            jumlah_keterlambatan: jumlah_keterlambatan,
-                        },
-                        success: function(response){
-                            jQuery('.update-nilai').val(response.nilai);
-                        },
-                        error: function(xhr, status, erro){
-                            console.error('Gagal mendapatkan nilai otomatis', error);
-                        }
-                    });
-                })
+                //     jQuery.ajax({
+                //         url: 'http://127.0.0.1:8000/api/data-nilai/keterlambatan-siswa/get-nilai',
+                //         type: 'POST',
+                //         beforeSend: function(xhr){
+                //             xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                //         },
+                //         data: {
+                //             jumlah_keterlambatan: jumlah_keterlambatan,
+                //         },
+                //         success: function(response){
+                //             jQuery('.update-nilai').val(response.nilai);
+                //         },
+                //         error: function(xhr, status, erro){
+                //             console.error('Gagal mendapatkan nilai otomatis', error);
+                //         }
+                //     });
+                // })
                 
                 // Fungsi Button Update (2)
                 jQuery('.btn-update').click(function(){
                     // ajax update
                     var id = jQuery('.update-id').val();
                     var nama_siswa_id = jQuery('.update-nama-siswa').val();
-                    var jumlah_keterlambatan = jQuery('.update-jumlah-keterlambatan').val();
-                    var nilai = jQuery('.update-nilai').val();
+                    var jumlah_konversi_keterlambatan_id = jQuery('.update-jumlah-keterlambatan').val();
                     var nama_jurusan_id = jQuery('.update-jurusan').val();
                     var periode_tajar_id = jQuery('.update-tahun-ajar').val();
 
@@ -1475,8 +1476,7 @@
                         },
                         data: {
                             siswa_id: nama_siswa_id,
-                            jumlah_keterlambatan: jumlah_keterlambatan,
-                            nilai: nilai,
+                            konversi_keterlambatan_id: jumlah_konversi_keterlambatan_id,
                             jurusan_id: nama_jurusan_id,
                             tajar_id: periode_tajar_id,
                         },

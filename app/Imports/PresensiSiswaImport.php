@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\KonversiKetidakhadiran;
 use App\Models\MasterJurusan;
 use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
@@ -25,7 +26,6 @@ class PresensiSiswaImport implements ToCollection, WithHeadingRow
             'nama_siswa' => 'required',
             'ket_ketidakhadiran' => 'required',
             'jumlah_hari' => 'required',
-            'jumlah_hari_lainnya' => 'required',
             'nilai' => 'required',
             'jurusan' => 'required',
             'tahun_ajar' => 'required',
@@ -34,13 +34,13 @@ class PresensiSiswaImport implements ToCollection, WithHeadingRow
 
     protected $selectedTahunAjar;
     protected $selectedJurusan;
-    protected $nilaiCallback;
+    // protected $nilaiCallback;
 
-    public function __construct($selectedTahunAjar, $selectedJurusan, $nilaiCallback)
+    public function __construct($selectedTahunAjar, $selectedJurusan)
     {
         $this->selectedTahunAjar = $selectedTahunAjar;
         $this->selectedJurusan = $selectedJurusan;
-        $this->nilaiCallback = $nilaiCallback;
+        // $this->nilaiCallback = $nilaiCallback;
     }
 
     public function collection(Collection $rows)
@@ -52,30 +52,31 @@ class PresensiSiswaImport implements ToCollection, WithHeadingRow
             // $jurusan = MasterJurusanSiswa::where('name','LIKE','%'.$row['jurusan'].'%')->first();
             // $siswa = MasterSiswa::where('name','LIKE','%'.$row['nama_siswa'].'%')->first();
             $siswa = MasterSiswa::where('name', $row['nama_siswa'])->first();
+            $konversiKetidakhadiran = KonversiKetidakhadiran::where('ket_ketidakhadiran', $row['keterangan_ketidakhadiran'])
+            ->where('jumlah_hari', $row['jumlah_hari'])
+            ->first();;
             $tajar = TahunAjar::find($this->selectedTahunAjar);
             $jurusan = MasterJurusanSiswa::find($this->selectedJurusan);
 
-            if($tajar && $jurusan && $siswa)
+            if($tajar && $jurusan && $siswa && $konversiKetidakhadiran)
             {
-                $nilai = call_user_func($this->nilaiCallback, $row['jumlah_hari'], $row['keterangan_ketidakhadiran']);
+                // $nilai = call_user_func($this->nilaiCallback, $row['jumlah_hari'], $row['keterangan_ketidakhadiran']);
                 PresensiSiswa::updateOrCreate([
                     'tajar_id' => $tajar->id,
                     'siswa_id' => $siswa->id,
                     'jurusan_id' => $jurusan->id,
-                    'nilai' => $nilai,
+                    'konversi_ketidakhadiran_id' => $konversiKetidakhadiran->id
                 ], [
-                    'tajar_id' => $tajar->id,
-                    'siswa_id' => $siswa->id,
-                    'jurusan_id' => $jurusan->id,
+                    'konversi_ketidakhadiran_id' => $konversiKetidakhadiran->id,
                     'nama_siswa' => $row['nama_siswa'],
                     'ket_ketidakhadiran' => $row['keterangan_ketidakhadiran'],
-                    'jumlah_hari' => $row['jumlah_hari'],
-                    'jumlah_hari_lainnya' => $row['jumlah_hari_lainnya'],
-                    'nilai' => $nilai,
+                    'jumlah_har' => $row['jumlah_hari'],
                     'jurusan' => $jurusan->name,
                     'tahun_ajar' => $tajar->name,
                 ]);
             }
         }
+        // dd($row)->toArray();
+
     }
 }

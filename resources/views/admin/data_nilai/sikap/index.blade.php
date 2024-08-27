@@ -609,17 +609,8 @@
                             <div class="col-span-12 sm:col-span-12 create-hari">
                                 <label for="modal-form-2" class="form-label">Keterangan Sikap</label>
                                 <select class="form-select create-ket-sikap" required>
-                                    <option disabled selected> --- Pilih Keterangan Sikap --- </option>
-                                    <option value="Sangat Baik">Sangat Baik</option>
-                                    <option value="Baik">Baik</option>
-                                    <option value="Cukup">Cukup</option>
-                                    <option value="Tidak Baik">Tidak Baik</option>
-                                    <option value="Sangat Tidak Baik">Sangat Tidak Baik</option>
+                                    <option disabled selected> --- Pilih Keterangan Sikap dan Nilai --- </option>
                                 </select>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Nilai</label>
-                                <input type="number" class="form-control create-nilai" placeholder="Masukkan Nilai Keterangan Sikap Siswa" required readonly>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Jurusan</label>
@@ -689,17 +680,8 @@
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Keterangan Sikap</label>
                                 <select id="ket_sikap" class="form-select update-ket-sikap">
-                                    <option disabled selected> --- Pilih Nama Siswa --- </option>
-                                    <option value="Sangat Baik">Sangat Baik</option>
-                                    <option value="Baik">Baik</option>
-                                    <option value="Cukup">Cukup</option>
-                                    <option value="Tidak Baik">Tidak Baik</option>
-                                    <option value="Sangat Tidak Baik">Sangat Tidak Baik</option>
+                                    <option disabled selected> --- Pilih Keterangan Sikap dan Nilai --- </option>
                                 </select>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-1" class="form-label">Nilai</label>
-                                <input id="nilai" type="number" class="form-control update-nilai" placeholder="Masukkan Nilai Presensi Siswa" required readonly>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Jurusan</label>
@@ -1186,6 +1168,30 @@
                 }).catch(error => {
                     console.error('Error: ', error);
                 });
+                
+                // Data support konversi sikap
+                var url = 'http://127.0.0.1:8000/api/data-nilai/sikap-siswa/data-support/konversi-sikap';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }).then(response => response.json()).then(data => {
+                    // panggil element select
+                    var selectUpdateSikap = jQuery('.update-ket-sikap');
+                    var selectCreateSikap = jQuery('.create-ket-sikap');
+
+                    // iterasi melalui data dan membuat objek untuk setipa entri
+                    jQuery.each(data, function(index, item) {
+                        for (let i = 0; i < item.length; i++){
+                            // isi data dengan nilai dalam database
+                            selectUpdateSikap.append('<option value="' + item[i].id + '">' + item[i].ket_sikap + ' - ' + item[i].nilai_konversi + '</option>');
+                            selectCreateSikap.append('<option value="' + item[i].id + '">' + item[i].ket_sikap + ' - ' + item[i].nilai_konversi +'</option>');
+                        }
+                    });
+                }).catch(error => {
+                    console.error('Error: ', error);
+                });
 
                 // Data support jurusan
                 var url = 'http://127.0.0.1:8000/api/data-nilai/sikap-siswa/data-support/jurusan';
@@ -1247,7 +1253,7 @@
                                 data: null,
                                 render: function(data, type, row){
                                     // Create action buttons
-                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-ket_sikap="' + data.ket_sikap + '" data-nilai="' + data.nilai + '" data-id_jurusan_nama="' + data.id_jurusan_nama + '" data-id_tajar_periode="' + data.id_tajar_periode + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-id_konversi_sikap_keterangan="' + data.id_konversi_sikap_keterangan + '" data-nilai="' + data.nilai + '" data-id_jurusan_nama="' + data.id_jurusan_nama + '" data-id_tajar_periode="' + data.id_tajar_periode + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
                                     var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
 
                                     // Combine the button
@@ -1263,29 +1269,29 @@
                 }
 
                 // datatable list nilai presensi sikap
-                jQuery('#data-table-detail').dataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": "http://127.0.0.1:8000/api/data-nilai/sikap-siswa/list-detail",
-                        "dataType": "json",
-                        "type": "POST",
-                        "headers": {
-                            'Authorization': 'Bearer ' + token
-                        }
-                    },
-                    "columns": [
-                        { data: 'id', className: 'text-center' },
-                        { data: 'nama_siswa', className: 'text-center' },
-                        { data: 'ket_sikap', className: 'text-center' },
-                        { data: 'nilai', className: 'text-center' },
-                        { data: 'jurusan', className: 'text-center' },
-                        { data: 'tahun_ajar', className: 'text-center' },
-                    ],
-                    "drawCallback": function(settings){
-                        feather.replace();
-                    }
-                });
+                // jQuery('#data-table-detail').dataTable({
+                //     "processing": true,
+                //     "serverSide": true,
+                //     "ajax": {
+                //         "url": "http://127.0.0.1:8000/api/data-nilai/sikap-siswa/list-detail",
+                //         "dataType": "json",
+                //         "type": "POST",
+                //         "headers": {
+                //             'Authorization': 'Bearer ' + token
+                //         }
+                //     },
+                //     "columns": [
+                //         { data: 'id', className: 'text-center' },
+                //         { data: 'nama_siswa', className: 'text-center' },
+                //         { data: 'ket_sikap', className: 'text-center' },
+                //         { data: 'nilai', className: 'text-center' },
+                //         { data: 'jurusan', className: 'text-center' },
+                //         { data: 'tahun_ajar', className: 'text-center' },
+                //     ],
+                //     "drawCallback": function(settings){
+                //         feather.replace();
+                //     }
+                // });
 
                 jQuery('.modal-detail').click(function() {
                     // show the modal
@@ -1394,15 +1400,13 @@
 
                     // Get Form Data
                     var siswa_id_nama = jQuery('.create-nama-siswa').val();
-                    var ket_sikap = jQuery('.create-ket-sikap').val();
-                    var nilai = jQuery('.create-nilai').val();
+                    var konversi_sikap_id_keterangan = jQuery('.create-ket-sikap').val();
                     var jurusan_id_nama = jQuery('.create-jurusan').val();
                     var tajar_id_periode = jQuery('.create-tahun-ajar').val();
 
                     var formData = new FormData();
                     formData.append('siswa_id', siswa_id_nama);
-                    formData.append('ket_sikap', ket_sikap);
-                    formData.append('nilai', nilai);
+                    formData.append('konversi_sikap_id', konversi_sikap_id_keterangan);
                     formData.append('jurusan_id', jurusan_id_nama);
                     formData.append('tajar_id', tajar_id_periode);
 
@@ -1456,26 +1460,26 @@
                     });
                 });
 
-                jQuery('.create-ket-sikap').change(function(){
-                    var ket_sikap = jQuery(this).val();
+                // jQuery('.create-ket-sikap').change(function(){
+                //     var ket_sikap = jQuery(this).val();
 
-                    jQuery.ajax({
-                        url: 'http://127.0.0.1:8000/api/data-nilai/sikap-siswa/get-nilai',
-                        type: 'POST',
-                        beforeSend: function(xhr) {
-                            xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                        },
-                        data: {
-                            ket_sikap: ket_sikap,
-                        },
-                        success: function(response){
-                            jQuery('.create-nilai').val(response.nilai);
-                        },
-                        error:function(xhr, status, error){
-                            console.error('Gagal mendapatkan nilai otomatis', error);
-                        }
-                    });
-                });
+                //     jQuery.ajax({
+                //         url: 'http://127.0.0.1:8000/api/data-nilai/sikap-siswa/get-nilai',
+                //         type: 'POST',
+                //         beforeSend: function(xhr) {
+                //             xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                //         },
+                //         data: {
+                //             ket_sikap: ket_sikap,
+                //         },
+                //         success: function(response){
+                //             jQuery('.create-nilai').val(response.nilai);
+                //         },
+                //         error:function(xhr, status, error){
+                //             console.error('Gagal mendapatkan nilai otomatis', error);
+                //         }
+                //     });
+                // });
                 
                 jQuery('#data-table').on('click', '.btn-edit', function() {
                     // show the modal
@@ -1485,7 +1489,7 @@
 
                     var id = jQuery(this).attr("data-id");
                     var id_siswa_nama = jQuery(this).attr("data-id_siswa_nama");
-                    var ket_sikap = jQuery(this).attr("data-ket_sikap");
+                    var id_konversi_sikap_keterangan = jQuery(this).attr("data-id_konversi_sikap_keterangan");
                     var nilai = jQuery(this).attr("data-nilai");
                     var id_jurusan_nama = jQuery(this).attr("data-id_jurusan_nama");
                     var id_tajar_periode = jQuery(this).attr("data-id_tajar_periode");
@@ -1493,8 +1497,7 @@
                     // handle edit action
                     jQuery('.update-id').val(id);
                     jQuery('.update-nama-siswa').val(id_siswa_nama);
-                    jQuery('.update-ket-sikap').val(ket_sikap);
-                    jQuery('.update-nilai').val(nilai);
+                    jQuery('.update-ket-sikap').val(id_konversi_sikap_keterangan);
                     jQuery('.update-jurusan').val(id_jurusan_nama);
                     jQuery('.update-tahun-ajar').val(id_tajar_periode);
                 })
@@ -1504,8 +1507,7 @@
                     // ajax update
                     var id = jQuery('.update-id').val();
                     var nama_siswa_id = jQuery('.update-nama-siswa').val();
-                    var ket_sikap = jQuery('.update-ket-sikap').val();
-                    var nilai = jQuery('.update-nilai').val();
+                    var keterangan_konversi_sikap_id = jQuery('.update-ket-sikap').val();
                     var nama_jurusan_id = jQuery('.update-jurusan').val();
                     var periode_tajar_id = jQuery('.update-tahun-ajar').val();
 
@@ -1518,8 +1520,7 @@
                         },
                         data: {
                             siswa_id : nama_siswa_id,
-                            ket_sikap : ket_sikap,
-                            nilai : nilai,
+                            konversi_sikap_id : keterangan_konversi_sikap_id,
                             jurusan_id : nama_jurusan_id,
                             tajar_id : periode_tajar_id,
                         },
@@ -1565,26 +1566,26 @@
                 })
 
                 // Mendapatkan nilai otomatis berdasarkan keterangan sikap
-                jQuery('.update-ket-sikap').change(function(){
-                    var ket_sikap = jQuery(this).val();
+                // jQuery('.update-ket-sikap').change(function(){
+                //     var ket_sikap = jQuery(this).val();
 
-                    jQuery.ajax({
-                        url: 'http://127.0.0.1:8000/api/data-nilai/sikap-siswa/get-nilai',
-                        type: 'POST',
-                        beforeSend: function(xhr){
-                            xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                        },
-                        data: {
-                            ket_sikap: ket_sikap
-                        },
-                        success: function(response){
-                            jQuery('.update-nilai').val(response.nilai);
-                        },
-                        error: function(xhr, status, error){
-                            console.error('Gagal mendapatkan nilai otomatis', error);
-                        }
-                    });
-                })
+                //     jQuery.ajax({
+                //         url: 'http://127.0.0.1:8000/api/data-nilai/sikap-siswa/get-nilai',
+                //         type: 'POST',
+                //         beforeSend: function(xhr){
+                //             xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                //         },
+                //         data: {
+                //             ket_sikap: ket_sikap
+                //         },
+                //         success: function(response){
+                //             jQuery('.update-nilai').val(response.nilai);
+                //         },
+                //         error: function(xhr, status, error){
+                //             console.error('Gagal mendapatkan nilai otomatis', error);
+                //         }
+                //     });
+                // })
                 
                 // fungsi button delete
                 jQuery('#data-table').on('click', '.btn-delete', function(){

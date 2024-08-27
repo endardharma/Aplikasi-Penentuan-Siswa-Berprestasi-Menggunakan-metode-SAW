@@ -10,7 +10,8 @@ class PresensiSiswa extends Model
 {
     use HasFactory;
     protected $table = 'presensi_siswas';
-    protected $fillable = ['tajar_id','siswa_id','jurusan_id','ket_ketidakhadiran','jumlah_hari','jumlah_hari_lainnya','nilai'];
+    // protected $fillable = ['tajar_id','siswa_id','jurusan_id','ket_ketidakhadiran','jumlah_hari','jumlah_hari_lainnya','nilai'];
+    protected $fillable = ['tajar_id','siswa_id','jurusan_id','konversi_ketidakhadiran_id','nilai'];
 
     public function hitung()
     {
@@ -31,6 +32,9 @@ class PresensiSiswa extends Model
     {
         return $this->belongsTo(MasterJurusanSiswa::class, 'jurusan_id');
     }
-
     
+    public function konversiKetidakhadiran(): BelongsTo
+    {
+        return $this->belongsTo(KonversiKetidakhadiran::class, 'konversi_ketidakhadiran_id');
+    }
 }

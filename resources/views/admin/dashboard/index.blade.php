@@ -202,6 +202,41 @@ License: You must have a valid license purchased only from themeforest(the above
                             <div class="side-menu__title"> Data Kriteria </div>
                         </a>
                     </li>
+                    <li class="desktop-datakriteria">
+                        <a href="javascript:;" class="side-menu">
+                            <div class="side-menu__icon"><i data-lucide="align-justify"></i></div>
+                            <div class="side-menu__title">
+                                Konversi Nilai Kriteria
+                                <div class="side-menu__sub-icon"><i data-lucide="chevron-down"></i></div>
+                            </div>
+                        </a>
+                        <ul class="">
+                            <li class="desktop-konversi-presensi">
+                                <a href="{{ route('data_kriteria.presensi' )}}" class="side-menu">
+                                    <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                                    <div class="side-menu__title"> Presensi </div>
+                                </a>
+                            </li>
+                            <li class="desktop-konversi-sikap">
+                                <a href="{{ route('data_kriteria.sikap' )}}" class="side-menu">
+                                    <div class="side-menu__icon"><i data-lucide="thumbs-up"></i></div>
+                                    <div class="side-menu__title"> Sikap </div>
+                                </a>
+                            </li>
+                            <li class="desktop-konversi-prestasi">
+                                <a href="{{ route('data_kriteria.prestasi' )}}" class="side-menu">
+                                    <div class="side-menu__icon"><i data-lucide="activity"></i></div>
+                                    <div class="side-menu__title"> Prestasi </div>
+                                </a>
+                            </li>
+                            <li class="desktop-konversi-keterlambatan">
+                                <a href="{{ route('data_kriteria.keterlambatan' )}}" class="side-menu">
+                                    <div class="side-menu__icon"><i data-lucide="calendar"></i></div>
+                                    <div class="side-menu__title"> Keterlambatan </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="desktop-datanilai">
                         <a href="javascript:;" class="side-menu">
                             <div class="side-menu__icon"> <i data-lucide="book-open"></i> </div>

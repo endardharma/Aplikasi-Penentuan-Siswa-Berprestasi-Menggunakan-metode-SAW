@@ -8,6 +8,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HafalanSiswaController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KeterlambatanSiswaController;
+use App\Http\Controllers\KonversiKeterlambatanController;
+use App\Http\Controllers\KonversiKetidakhadiranController;
+use App\Http\Controllers\KonversiPrestasiController;
+use App\Http\Controllers\KonversiSikapController;
 use App\Http\Controllers\MasterkriteriaController;
 use App\Http\Controllers\MastermapelController;
 use App\Http\Controllers\MastertajarController;
@@ -20,6 +24,8 @@ use App\Http\Controllers\RaporController;
 use App\Http\Controllers\RaporSiswaController;
 use App\Http\Controllers\SikapSiswaController;
 use App\Models\KeterlambatanSiswa;
+use App\Models\KonversiKetidakhadiran;
+use App\Models\KonversiSikap;
 use App\Models\MasterGuru;
 use Illuminate\Support\Facades\Route;
 
@@ -106,10 +112,33 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete("/hapus-data/{id}", [MasterkriteriaController::class, 'hapusData']);
     });
 
-    Route::prefix('penilaian')->group(function() {
-        
+    Route::prefix('data-kriteria')->group(function() {
+        Route::prefix('konversi-presensi')->group(function() {
+            Route::post("/list", [KonversiKetidakhadiranController::class, 'listKonversiKetidakhadiran']);
+            Route::post("/tambah-data", [KonversiKetidakhadiranController::class, 'tambahData']);
+            Route::put("/update-data/{id}", [KonversiKetidakhadiranController::class, 'updateData']);
+            Route::delete("/hapus-data/{id}", [KonversiKetidakhadiranController::class, 'deleteData']);
+        });
+        Route::prefix('konversi-sikap')->group(function(){
+            Route::post("/list", [KonversiSikapController::class, 'listKonversiSikap']);
+            Route::post("/tambah-data", [KonversiSikapController::class, 'tambahData']);
+            Route::put("/update-data/{id}", [KonversiSikapController::class, 'updateData']);
+            Route::delete("/hapus-data/{id}", [KonversiSikapController::class, 'hapusData']);
+        });
+        Route::prefix('konversi-prestasi')->group(function(){
+            Route::post("/list", [KonversiPrestasiController::class, 'listKonversiPrestasi']);
+            Route::post("/tambah-data", [KonversiPrestasiController::class, 'tambahData']);
+            Route::put("/update-data/{id}", [KonversiPrestasiController::class, 'updateData']);
+            Route::delete("/hapus-data/{id}", [KonversiPrestasiController::class, 'hapusData']);
+        });
+        Route::prefix('konversi-keterlambatan')->group(function(){
+            Route::post("/list", [KonversiKeterlambatanController::class, 'listKonversiKeterlambatan']);
+            Route::post("/tambah-data", [KonversiKeterlambatanController::class, 'tambahData']);
+            Route::put("/update-data/{id}", [KonversiKeterlambatanController::class, 'updateData']);
+            Route::delete("/hapus-data/{id}", [KonversiKeterlambatanController::class, 'hapusData']);
+        });
     });
-
+    
     Route::prefix('data-nilai')->group(function () {
         Route::prefix('rapor-siswa')->group(function () {
             Route::get("/test", [RaporSiswaController::class, 'testRapor']); // Test Api untuk template dan detail rapor
@@ -135,6 +164,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post("/list-detail", [PresensiSiswaController::class, 'listDetailPresensi']);
             Route::get("/data-support/tajar", [PresensiSiswaController::class, 'supportTajar']);
             Route::get("/data-support/jurusan", [PresensiSiswaController::class, 'supportJurusan']);
+            Route::get("/data-support/konversi-ketidakhadiran", [PresensiSiswaController::class, 'supportKonversiKetidakhadiran']);
             Route::get("/export-data/download-template-mipa", [PresensiSiswaController::class, 'templateMipa']);
             Route::get("/export-data/download-template-iis", [PresensiSiswaController::class, 'templateIis']);
             Route::post("/import-data/import-xls", [PresensiSiswaController::class, 'importData']);
@@ -151,6 +181,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
            Route::get("/data-support/tajar", [SikapSiswaController::class, 'supportTajar']);
            Route::get("/data-support/siswa", [SikapSiswaController::class, 'supportSiswa']);
            Route::get("/data-support/jurusan", [SikapSiswaController::class, 'supportJurusan']);
+           Route::get("/data-support/konversi-sikap", [SikapSiswaController::class, 'supportKonversiSikap']);
            Route::post("/list", [SikapSiswaController::class, 'listSikap']); 
            Route::post("/list-detail", [SikapSiswaController::class, 'listDetailSikap']); 
            Route::get("/export-data/download-template-mipa", [SikapSiswaController::class, 'templateMipa']);
@@ -168,6 +199,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get("/data-support/tajar", [PrestasiSiswaController::class, 'supportTajar']);
             Route::get("/data-support/siswa", [PrestasiSiswaController::class, 'supportSiswa']);
             Route::get("/data-support/jurusan", [PrestasiSiswaController::class, 'supportJurusan']);
+            Route::get("/data-support/konversi-prestasi", [PrestasiSiswaController::class, 'supportKonversiPrestasi']);
             Route::post("list", [PrestasiSiswaController::class, 'listPrestasi']);
             Route::post("list-detail", [PrestasiSiswaController::class, 'listDetailPrestasi']);
             Route::get("/export-data/download-template-mipa", [PrestasiSiswaController::class, 'templateMipa']);
@@ -180,13 +212,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post("/get-nilai", [PrestasiSiswaController::class, 'getNilai']);
         });
 
-
         Route::prefix('keterlambatan-siswa')->group(function() {
             Route::post("list", [KeterlambatanSiswaController::class, 'listKeterlambatan']);
             Route::post("list-detail", [KeterlambatanSiswaController::class, 'listDetailKeterlambatan']);
             Route::get("/data-support/tajar", [KeterlambatanSiswaController::class, 'supportTajar']);
             Route::get("/data-support/siswa", [KeterlambatanSiswaController::class, 'supportSiswa']);
             Route::get("/data-support/jurusan", [KeterlambatanSiswaController::class, 'supportJurusan']);
+            Route::get("/data-support/konversi-keterlambatan", [KeterlambatanSiswaController::class, 'supportKonversiKeterlambatan']);
             Route::get("/export-data/download-template-mipa", [KeterlambatanSiswaController::class, 'templateMipa']);
             Route::get("/export-data/download-template-iis", [KeterlambatanSiswaController::class, 'templateIis']);
             Route::post("/import-data/import-xls", [KeterlambatanSiswaController::class, 'importData']);
@@ -220,6 +252,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post("list-detail", [NilaiKeseluruhanController::class, 'listDetailNilaiKeseluruhan']);
             Route::get("/export-data/export-xls", [NilaiKeseluruhanController::class, 'exportData']);
             Route::get("/data-support/jurusan", [NilaiKeseluruhanController::class, 'supportJurusan']);
+            Route::get("/data-support/tajar", [NilaiKeseluruhanController::class, 'supportTajar']);
         });
 
         Route::prefix('nilai-normalisasi')->group(function() {
@@ -235,6 +268,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post("list-detail", [NilaiPerangkinganController::class, 'listDetailNilaiPerangkingan']);
             Route::get("/export-data/export-xls-mipa", [NilaiPerangkinganController::class, 'exportDataMipa']);
             Route::get("/export-data/export-xls-iis", [NilaiPerangkinganController::class, 'exportDataIis']);
+            Route::get("/data-support/tajar-mipa", [NilaiPerangkinganController::class, 'supportTajarMipa']);
+            Route::get("/data-support/tajar-iis", [NilaiPerangkinganController::class, 'supportTajarIis']);
         });
         
     });

@@ -71,7 +71,13 @@ class MasterSiswa extends Model
         return $this->hasMany(NilaiKeseluruhan::class, 'siswa_id')->orderby('id', 'asc');
     
     }
+
     public function perangkingan()
+    {
+        return $this->hasMany(NilaiPerangkingan::class, 'siswa_id')->orderby('id', 'asc');
+    }
+
+    public function konversiKetidakhadiran()
     {
         return $this->hasMany(NilaiPerangkingan::class, 'siswa_id')->orderby('id', 'asc');
     }

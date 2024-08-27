@@ -7,6 +7,10 @@ use App\Http\Controllers\AutentikasiController;
 use App\Http\Controllers\HafalanSiswaController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KeterlambatanSiswaController;
+use App\Http\Controllers\KonversiKeterlambatanController;
+use App\Http\Controllers\KonversiKetidakhadiranController;
+use App\Http\Controllers\KonversiPrestasiController;
+use App\Http\Controllers\KonversiSikapController;
 use App\Http\Controllers\MasterkriteriaController;
 use App\Http\Controllers\MastermapelController;
 use App\Http\Controllers\MastertajarController;
@@ -18,6 +22,8 @@ use App\Http\Controllers\PresensiSiswaController;
 use App\Http\Controllers\PrestasiSiswaController;
 use App\Http\Controllers\RaporController;
 use App\Http\Controllers\SikapSiswaController;
+use App\Models\KonversiKeterlambatan;
+use App\Models\KonversiKetidakhadiran;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,6 +51,11 @@ Route::get('/aplikasi/master-jurusan',[JurusanController::class, 'index'])->name
 Route::get('/aplikasi/master-mapel',[MastermapelController::class, 'index'])->name('masterpelajaran');
 Route::get('/aplikasi/master-tajar',[MastertajarController::class, 'index'])->name('mastertajar');
 Route::get('/aplikasi/master-kriteria',[MasterkriteriaController::class, 'index'])->name('masterkriteria');
+
+Route::get('/aplikasi/data-kriteria/konversi-ketidakhadiran', [KonversiKetidakhadiranController::class, 'index'])->name('data_kriteria.presensi');
+Route::get('/aplikasi/data-kriteria/konversi-sikap', [KonversiSikapController::class, 'index'])->name('data_kriteria.sikap');
+Route::get('/aplikasi/data-kriteria/konversi-prestasi', [KonversiPrestasiController::class, 'index'])->name('data_kriteria.prestasi');
+Route::get('/aplikasi/data-kriteria/konversi-keterlambatan', [KonversiKeterlambatanController::class, 'index'])->name('data_kriteria.keterlambatan');
 
 Route::get('/aplikasi/data-nilai/rapor',[RaporController::class, 'index'])->name('data_nilai.rapor');
 Route::get('/aplikasi/data-nilai/presensi', [PresensiSiswaController::class, 'index'])->name('data_nilai.presensi');

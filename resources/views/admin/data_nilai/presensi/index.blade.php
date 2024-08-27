@@ -471,7 +471,6 @@
                                     <th>Nama Siswa</th>
                                     <th>Keterangan Ketidakhadiran</th>
                                     <th>Jumlah Hari</th>
-                                    <th>Jumlah Hari Lainnya</th>
                                     <th>Nilai</th>
                                     <th>Jurusan</th>
                                     <th>Tahun Ajar</th>
@@ -610,32 +609,24 @@
                                 <label for="modal-form-2" class="form-label">Keterangan Ketidakhadiran</label>
                                 <select class="form-select create-ket-ketidakhadiran" required>
                                     <option disabled selected> --- Pilih Keterangan Ketidakhadiran --- </option>
-                                    <option value="Tidak Ada">Tidak Ada</option>
-                                    <option value="Sakit">Sakit</option>
-                                    <option value="Izin">Izin</option>
-                                    <option value="Tanpa Keterangan">Tanpa Keterangan</option>
                                 </select>
                             </div>
-                            <div class="col-span-12 sm:col-span-12 create-hari">
+                            {{-- <div class="col-span-12 sm:col-span-12 create-hari">
                                 <label for="modal-form-2" class="form-label">Jumlah Hari</label>
                                 <select class="form-select create-jumlah-hari" required>
                                     <option disabled selected> --- Pilih Jumlah Hari --- </option>
-                                    <option value="0 Hari">0 hari</option>
-                                    <option value="1 Hari">1 Hari</option>
-                                    <option value="2 Hari">2 Hari</option>
-                                    <option value="3 Hari">3 Hari</option>
-                                    <option value="4 Hari">4 Hari</option>
-                                    <option value="Lainnya">Lainnya</option>
                                 </select>
                             </div>
                             <div class="col-span-12 sm:col-span-12 create-lainnya">
                                 <label for="modal-form-2" class="form-label">Jumlah hari Lainnya</label>
-                                <input type="text" class="form-control create-jumlah-hari-lainnya" placeholder="Masukkan Jumlah Hari yang Lebih dari 4 Hari contoh: 7 Hari" required>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
+                                <select class="form-select create-jumlah-hari-lainnya" required>
+                                    <option disabled selected> --- Pilih Jumlah Hari Lainnya --- </option>
+                                </select>
+                            </div> --}}
+                            {{-- <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Nilai</label>
                                 <input type="number" class="form-control create-nilai" placeholder="Masukkan Nilai Ketidakhadiran Siswa" required readonly>
-                            </div>
+                            </div> --}}
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Jurusan</label>
                                 <select class="form-select create-jurusan" required>
@@ -703,33 +694,24 @@
                                 <label for="modal-form-2" class="form-label">Keterangan Ketidakhadiran</label>
                                 <select class="form-select update-ket-ketidakhadiran" required>
                                     <option disabled selected> --- Pilih Keterangan Ketidakhadiran --- </option>
-                                    <option value="Tidak Ada">Tidak Ada</option>
-                                    <option value="Sakit">Sakit</option>
-                                    <option value="Izin">Izin</option>
-                                    <option value="Tanpa Keterangan">Tanpa Keterangan</option>
                                 </select>
                             </div>
-                            <div class="col-span-12 sm:col-span-12 update-hari">
+                            {{-- <div class="col-span-12 sm:col-span-12 update-hari">
                                 <label for="modal-form-2" class="form-label">Jumlah Hari</label>
-                                {{-- <input type="number" class="form-control update-jumlah-hari" placeholder="Masukkan Jumlah Hari" required --}}
                                 <select class="form-select update-jumlah-hari" required> 
                                     <option disabled selected> -- Pilih Jumlah Hari -- </option>
-                                    <option value="0 Hari">0 Hari</option>
-                                    <option value="1 Hari">1 Hari</option>
-                                    <option value="2 Hari">2 Hari</option>
-                                    <option value="3 Hari">3 Hari</option>
-                                    <option value="4 Hari">4 Hari</option>
-                                    <option value="Lainnya">Lainnya</option>
                                 </select>
                             </div>
                             <div class="col-span-12 sm:col-span-12 update-lainnya">
                                 <label for="modal-form-2" class="form-label">Jumlah Hari Lainnya</label>
-                                <input type="text" class="form-control update-jumlah-hari-lainnya" placeholder="Masukkan Jumlah Hari Lebih dari 4 Hari" required>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
+                                <select class="form-select update-jumlah-hari-lainnya" required>
+                                    <option disabled selected> --- Pilih Jumlah Hari Lainnya --- </option>
+                                </select>
+                            </div> --}}
+                            {{-- <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Nilai</label>
                                 <input type="number" class="form-control update-nilai" placeholder="Masukkan Nilai Ketidakhadiran Siswa" required readonly>
-                            </div>
+                            </div> --}}
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Jurusan</label>
                                 <select class="form-select update-jurusan" required>
@@ -1229,6 +1211,40 @@
                 }).catch(error => {
                     console.error('Error:', error);
                 });
+
+                // Data support nilai konversi ketidakhadiran
+                var url = 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/data-support/konversi-ketidakhadiran';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }).then(response => response.json()).then(data => {
+                    var selectCreateKetidakhadiran = jQuery('.create-ket-ketidakhadiran');
+                    var selectCreateJumlahHari = jQuery('.create-jumlah-hari');
+                    var selectCreateJumlahHariLainnya = jQuery('.create-jumlah-hari-lainnya');
+                    var selectCreateNilai = jQuery('.create-nilai');
+                    var selectUpdateKetidakhadiran = jQuery('.update-ket-ketidakhadiran');
+                    var selectUpdateJumlahHari = jQuery('.update-jumlah-hari');
+                    var selectUpdateJumlahHariLainnya = jQuery('.update-jumlah-hari-lainnya');
+                    var selectUpdateNilai = jQuery('.update-nilai')
+
+                    jQuery.each(data, function(index, item) {
+                        for (let i = 0; i < item.length; i++)
+                        {
+                            selectCreateKetidakhadiran.append('<option value="' + item[i].id + '">' + item[i].ket_ketidakhadiran + ' - ' + item[i].jumlah_hari + ' - ' + item[i].nilai_konversi + '</option>');
+                            selectCreateJumlahHari.append('<option value="' + item[i].id + '">' + item[i].jumlah_hari + '</option>');
+                            selectCreateJumlahHariLainnya.append('<option value="' + item[i].id + '">' + item[i].jumlah_hari_lainnya + '</option>');
+                            selectUpdateKetidakhadiran.append('<option value="' + item[i].id + '">' + item[i].ket_ketidakhadiran + ' - ' + item[i].jumlah_hari + ' - ' + item[i].nilai_konversi + '</option>');
+                            selectUpdateJumlahHari.append('<option value="' + item[i].id + '">' + item[i].jumlah_hari + '</option>');
+                            selectUpdateJumlahHariLainnya.append('<option value="' + item[i].id + '">' + item[i].jumlah_hari_lainnya + '</option>');
+                            selectCreateNilai.append('<option value="' + item[i].id + '">' + item[i].nilai + '</option>');
+                            selectUpdateNilai.append('<option value="' + item[i].id + '">' + item[i].nilai + '</option>');
+                        }
+                    });
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
                 
                 // Datatable list nilai presensi siswa
                 function loadDataTable (jurusanId = '')
@@ -1260,7 +1276,6 @@
                             { data: 'nama_siswa', className: 'text-center'},
                             { data: 'ket_ketidakhadiran', className: 'text-center'},
                             { data: 'jumlah_hari', className: 'text-center'},
-                            { data: 'jumlah_hari_lainnya', className: 'text-center'},
                             { data: 'nilai', className: 'text-center'},
                             { data: 'jurusan', className: 'text-center'},
                             { data: 'tahun_ajar', className: 'text-center'},
@@ -1268,7 +1283,7 @@
                                 data: null,
                                 render: function (data, type, row){
                                     // Create action buttons
-                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id +'" data-id_siswa_nama="' + data.id_siswa_nama + '" data-ket_ketidakhadiran="' +data.ket_ketidakhadiran +'" data-jumlah_hari="' +data.jumlah_hari +'" data-jumlah_hari_lainnya="' +data.jumlah_hari_lainnya +'" data-nilai="' +data.nilai +'" data-id_jurusan_nama="' +data.id_jurusan_nama + '" data-id_tajar_periode="' +data.id_tajar_periode +'"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id +'" data-id_siswa_nama="' + data.id_siswa_nama + '" data-id_konversi_ketidakhadiran_keterangan="' +data.id_konversi_ketidakhadiran_keterangan +'" data-id_konversi_ketidakhadiran_jumlah_hari="' +data.id_konversi_ketidakhadiran_jumlah_hari +'" data-id_konversi_ketidakhadiran_nilai="' +data.id_konversi_ketidakhadiran_nilai +'" data-id_jurusan_nama="' +data.id_jurusan_nama + '" data-id_tajar_periode="' +data.id_tajar_periode +'"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
                                     var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
 
 
@@ -1285,31 +1300,31 @@
                 }
 
                 // DataTable Detail List Presensi Siswa
-                jQuery('#data-table-detail').DataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": "http://127.0.0.1:8000/api/data-nilai/presensi-siswa/list-detail",
-                        "dataType": "json",
-                        "type": "POST",
-                        "headers": {
-                            'Authorization': 'Bearer ' + token
-                        }
-                    },
-                    "columns": [
-                        { data: 'id', className: 'text-center'},
-                        { data: 'nama_siswa', className: 'text-center'},
-                        // { data: 'ket_ketidakhadiran', className: 'text-center'},
-                        // { data: 'jumlah_hari', className: 'text-center'},
-                        // { data: 'jumlah_hari_lainnya', className: 'text-center'},
-                        // { data: 'nilai', className: 'text-center'},
-                        { data: 'jurusan', className: 'text-center'},
-                        { data: 'tahun_ajar', className: 'text-center'},
-                    ],
-                    "drawCallback": function(settings){
-                        feather.replace();
-                    }
-                });
+                // jQuery('#data-table-detail').DataTable({
+                //     "processing": true,
+                //     "serverSide": true,
+                //     "ajax": {
+                //         "url": "http://127.0.0.1:8000/api/data-nilai/presensi-siswa/list-detail",
+                //         "dataType": "json",
+                //         "type": "POST",
+                //         "headers": {
+                //             'Authorization': 'Bearer ' + token
+                //         }
+                //     },
+                //     "columns": [
+                //         { data: 'id', className: 'text-center'},
+                //         { data: 'nama_siswa', className: 'text-center'},
+                //         // { data: 'ket_ketidakhadiran', className: 'text-center'},
+                //         // { data: 'jumlah_hari', className: 'text-center'},
+                //         // { data: 'jumlah_hari_lainnya', className: 'text-center'},
+                //         // { data: 'nilai', className: 'text-center'},
+                //         { data: 'jurusan', className: 'text-center'},
+                //         { data: 'tahun_ajar', className: 'text-center'},
+                //     ],
+                //     "drawCallback": function(settings){
+                //         feather.replace();
+                //     }
+                // });
 
                 //SortBy Button
                 loadDataTable();
@@ -1493,30 +1508,97 @@
                 })
 
                 // Button Simpan
+                // jQuery('.btn-simpan').click(function(){
+                //     // show the modal
+                //     event.preventDefault(); // Prevent default form submission
+
+                //     // Get form data
+                //     var siswa_id_nama = jQuery('.create-nama-siswa').val();
+                //     var id_konversi_ketidakhadiran_keterangan = jQuery('.create-ket-ketidakhadiran').val();
+                //     var id_konversi_ketidakhadiran_jumlah_hari = jQuery('.create-jumlah-hari').val();
+                //     var id_konversi_ketidakhadiran_nilai = jQuery('.create-nilai').val();
+                //     var jurusan_id_nama = jQuery('.create-jurusan').val();
+                //     var tajar_id_periode = jQuery('.create-tahun-ajar').val();
+
+                //     // if (jumlah_hari === 'lainnya')
+                //     // {
+                //     //     jumlah_hari = jumlah_hari_lainnya
+                //     // }
+
+                //     var formData = new FormData();
+                //     formData.append('siswa_id', siswa_id_nama);
+                //     formData.append('ket_ketidakhadiran', id_konversi_ketidakhadiran_keterangan);
+                //     formData.append('jumlah_hari', id_konversi_ketidakhadiran_jumlah_hari);
+                //     formData.append('nilai', id_konversi_ketidakhadiran_nilai);
+                //     formData.append('jurusan_id', jurusan_id_nama);
+                //     formData.append('tajar_id', tajar_id_periode);
+
+                //     // Kirim permintaan ke API
+                //     jQuery.ajax({
+                //         url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/tambah-data',
+                //         type: 'POST',
+                //         headers: {
+                //             'Authorization': 'Bearer ' + token,
+                //         },
+                //         data: formData,
+                //         processData: false,
+                //         contentType: false,
+                //         success: function(response){
+                //             // show the modal
+                //             jQuery('.create-sukses').text(response.message);
+                //             Toastify({
+                //                 node: $('#success-create-notification-content')
+                //                     .clone()
+                //                     .removeClass("hidden")[0],
+                //                 duration: 3000,
+                //                 newWindow: true,
+                //                 close: true,
+                //                 gravity: "top",
+                //                 position: "right",
+                //                 stopOnFocus: true,
+                //             }).showToast();
+
+                //             setTimeout(function(){
+                //                 location.reload();
+                //             }, 3000);
+                //         },
+                //         error: function(xhr, status, error) {
+                //             jQuery('.create-gagal').text(error);
+                //             Toastify({
+                //                 node: $('#failed-create-notification-content')
+                //                     .clone()
+                //                     .removeClass("hidden")[0],
+                //                 duration: 5000,
+                //                 newWindow: true,
+                //                 close: true,
+                //                 gravity: "top",
+                //                 position: "right",
+                //                 stopOnFocus: true,
+                //             }).showToast();
+
+                //             setTimeout(function(){
+                //                 // location.reload();
+                //             }, 5000);
+                //         }
+                //     });
+                // });
+                
+                // REVISI
                 jQuery('.btn-simpan').click(function(){
                     // show the modal
                     event.preventDefault(); // Prevent default form submission
 
                     // Get form data
                     var siswa_id_nama = jQuery('.create-nama-siswa').val();
-                    var ket_ketidakhadiran = jQuery('.create-ket-ketidakhadiran').val();
-                    var jumlah_hari = jQuery('.create-jumlah-hari').val();
-                    var jumlah_hari_lainnya = jQuery('.create-jumlah-hari-lainnya').val();
-                    var nilai = jQuery('.create-nilai').val();
+                    var konversi_ketidakhadiran_id_keterangan = jQuery('.create-ket-ketidakhadiran').val();
+                    // var id_konversi_ketidakhadiran_nilai = jQuery('.create-nilai').val();
                     var jurusan_id_nama = jQuery('.create-jurusan').val();
                     var tajar_id_periode = jQuery('.create-tahun-ajar').val();
 
-                    if (jumlah_hari === 'lainnya')
-                    {
-                        jumlah_hari = jumlah_hari_lainnya
-                    }
-
                     var formData = new FormData();
                     formData.append('siswa_id', siswa_id_nama);
-                    formData.append('ket_ketidakhadiran', ket_ketidakhadiran);
-                    formData.append('jumlah_hari', jumlah_hari);
-                    formData.append('jumlah_hari_lainnya', jumlah_hari_lainnya);
-                    formData.append('nilai', nilai);
+                    formData.append('konversi_ketidakhadiran_id', konversi_ketidakhadiran_id_keterangan);
+                    // formData.append('nilai', id_konversi_ketidakhadiran_nilai);
                     formData.append('jurusan_id', jurusan_id_nama);
                     formData.append('tajar_id', tajar_id_periode);
 
@@ -1564,96 +1646,96 @@
                             }).showToast();
 
                             setTimeout(function(){
-                                location.reload();
+                                // location.reload();
                             }, 5000);
                         }
                     });
                 });
                 
                 // Proses Menampilkan Nilai Otomatis untuk ket_ketidakhadirana
-                jQuery('.create-ket-ketidakhadiran').change(function() {
-                    var ket_ketidakhadiran = jQuery(this).val();
+                // jQuery('.create-ket-ketidakhadiran').change(function() {
+                //     var id_konversi_ketidakhadiran_keterangan = jQuery(this).val();
 
-                    if (ket_ketidakhadiran !== 'Tidak Ada')
-                    {
-                        jQuery('.create-hari').show();
-                    } else {
-                        jQuery('.create-hari').hide();
-                        jQuery('.create-lainnya').hide();
-                    }
+                //     // if (id_konversi_ketidakhadiran_keterangan !== 'Tidak Ada')
+                //     // {
+                //     //     jQuery('.create-hari').show();
+                //     // } else {
+                //     //     jQuery('.create-hari').hide();
+                //     //     jQuery('.create-lainnya').hide();
+                //     // }
                     
-                    if (ket_ketidakhadiran === 'Tidak Ada')
-                    {
-                        jQuery.ajax({
-                            url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
-                            type: 'POST',
-                            beforeSend: function(xhr){
-                                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                            },
-                            data: {
-                                ket_ketidakhadiran: ket_ketidakhadiran,
-                            },
-                            success: function(response) {
-                                jQuery('.create-nilai').val(response.nilai);
-                            },
-                            error: function(xhr, status, error){
-                                console.error('Gagal mendapatkan nilai otomatis', error);
-                            }
-                        });
-                    }
-                });
+                //     if (id_konversi_ketidakhadiran_keterangan === 'Tidak Ada')
+                //     {
+                //         jQuery.ajax({
+                //             url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
+                //             type: 'POST',
+                //             beforeSend: function(xhr){
+                //                 xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                //             },
+                //             data: {
+                //                 id_konversi_ketidakhadiran_keterangan: id_konversi_ketidakhadiran_keterangan,
+                //             },
+                //             success: function(response) {
+                //                 jQuery('.create-nilai').val(response.nilai);
+                //             },
+                //             error: function(xhr, status, error){
+                //                 console.error('Gagal mendapatkan nilai otomatis', error);
+                //             }
+                //         });
+                //     }
+                // });
 
-                jQuery('.create-jumlah-hari').change(function() {
-                    var jumlah_hari = jQuery(this).val();
-                    var jumlah_hari_lainnya = jQuery(this).val();
+                // jQuery('.create-jumlah-hari').change(function() {
+                //     var id_konversi_ketidakhadiran_jumlah_hari = jQuery(this).val();
+                //     var id_konversi_ketidakhadiran_jumlah_hari_lainnya = jQuery(this).val();
 
-                    if (jumlah_hari === 'Lainnya')
-                    {
-                        jQuery('.create-lainnya').show();   
-                    } else {
-                        jQuery('.create-lainnya').hide();
-                    }
+                //     if (id_konversi_ketidakhadiran_jumlah_hari === 'Lainnya')
+                //     {
+                //         jQuery('.create-lainnya').show();   
+                //     } else {
+                //         jQuery('.create-lainnya').hide();
+                //     }
 
-                    // Kirim request nilai ke API getNilai
-                    if (jumlah_hari !== 'Lainnya')
-                    {
-                        jQuery.ajax({
-                            url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
-                            type: 'POST',
-                            beforeSend: function(xhr){
-                                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                            },
-                            data: {
-                                jumlah_hari: jumlah_hari,
-                                jumlah_hari_lainnya: jumlah_hari_lainnya,
-                            },
-                            success: function(response) {
-                                jQuery('.create-nilai').val(response.nilai);
-                            },
-                            error: function(xhr, status, error){
-                                console.error('Gagal mendapatkan nilai otomatis', error);
-                            }
-                        });
-                    } else {
-                        jQuery.ajax({
-                            url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
-                            type: 'POST',
-                            beforeSend: function(xhr) {
-                                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                            },
-                            data: {
-                                jumlah_hari: jumlah_hari,
-                            },
-                            success: function(response){
-                                jQuery('.create-nilai').val(response.nilai);
-                            },
-                            error: function(xhr, status, error){
-                                console.error('Gagal mendapatkan nilai otomatis', error);
-                            }
-                        });
-                    }
+                //     // Kirim request nilai ke API getNilai
+                //     if (id_konversi_ketidakhadiran_jumlah_hari !== 'Lainnya')
+                //     {
+                //         jQuery.ajax({
+                //             url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
+                //             type: 'POST',
+                //             beforeSend: function(xhr){
+                //                 xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                //             },
+                //             data: {
+                //                 id_konversi_ketidakhadiran_jumlah_hari: id_konversi_ketidakhadiran_jumlah_hari,
+                //                 id_konversi_ketidakhadiran_jumlah_hari_lainnya: id_konversi_ketidakhadiran_jumlah_hari_lainnya,
+                //             },
+                //             success: function(response) {
+                //                 jQuery('.create-nilai').val(response.nilai);
+                //             },
+                //             error: function(xhr, status, error){
+                //                 console.error('Gagal mendapatkan nilai otomatis', error);
+                //             }
+                //         });
+                //     } else {
+                //         jQuery.ajax({
+                //             url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
+                //             type: 'POST',
+                //             beforeSend: function(xhr) {
+                //                 xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                //             },
+                //             data: {
+                //                 id_konversi_ketidakhadiran_jumlah_hari: id_konversi_ketidakhadiran_jumlah_hari,
+                //             },
+                //             success: function(response){
+                //                 jQuery('.create-nilai').val(response.nilai);
+                //             },
+                //             error: function(xhr, status, error){
+                //                 console.error('Gagal mendapatkan nilai otomatis', error);
+                //             }
+                //         });
+                //     }
 
-                });
+                // });
                 
                 // Button Update
                 jQuery('#data-table').on('click', '.btn-edit', function(){
@@ -1664,20 +1746,14 @@
 
                     var id = jQuery(this).attr("data-id");
                     var id_siswa_nama = jQuery(this).attr("data-id_siswa_nama");
-                    var ket_ketidakhadiran = jQuery(this).attr("data-ket_ketidakhadiran");
-                    var jumlah_hari = jQuery(this).attr("data-jumlah_hari");
-                    var jumlah_hari_lainnya = jQuery(this).attr("data-jumlah_hari_lainnya");
-                    var nilai = jQuery(this).attr("data-nilai");
+                    var id_konversi_ketidakhadiran_keterangan = jQuery(this).attr("data-id_konversi_ketidakhadiran_keterangan");
                     var id_jurusan_nama = jQuery(this).attr("data-id_jurusan_nama");
                     var id_tajar_periode = jQuery(this).attr("data-id_tajar_periode");
 
                     // handle edit action
                     jQuery('.update-id').val(id);
                     jQuery('.update-nama-siswa').val(id_siswa_nama);
-                    jQuery('.update-ket-ketidakhadiran').val(ket_ketidakhadiran);
-                    jQuery('.update-jumlah-hari').val(jumlah_hari);
-                    jQuery('.update-jumlah-hari-lainnya').val(jumlah_hari_lainnya);
-                    jQuery('.update-nilai').val(nilai);
+                    jQuery('.update-ket-ketidakhadiran').val(id_konversi_ketidakhadiran_keterangan);
                     jQuery('.update-jurusan').val(id_jurusan_nama);
                     jQuery('.update-tahun-ajar').val(id_tajar_periode);
 
@@ -1702,18 +1778,15 @@
                     // ajax update
                     var id = jQuery('.update-id').val();
                     var nama_siswa_id = jQuery('.update-nama-siswa').val();
-                    var ket_ketidakhadiran = jQuery('.update-ket-ketidakhadiran').val();
-                    var jumlah_hari = jQuery('.update-jumlah-hari').val();
-                    var jumlah_hari_lainnya = jQuery('.update-jumlah-hari-lainnya').val();
-                    var nilai = jQuery('.update-nilai').val();
+                    var keterangan_konversi_ketidakhadiran_id = jQuery('.update-ket-ketidakhadiran').val();
                     var nama_jurusan_id = jQuery('.update-jurusan').val();
                     var periode_tajar_id = jQuery('.update-tahun-ajar').val();
 
                     // Jika opsi 'lainnya' dipilih, gunakan nilai dari form input teks tambahan
-                    if (jumlah_hari === 'lainnya')
-                    {
-                        jumlah_hari = jumlah_hari_lainnya
-                    }                    
+                    // if (jumlah_hari_id === 'lainnya')
+                    // {
+                    //     jumlah_hari_id = jumlah_hari_lainnya_id
+                    // }                    
                     
                     // kirim permintaan pembaruan produk ke API
                     jQuery.ajax({
@@ -1724,10 +1797,7 @@
                         },
                         data: {
                             siswa_id: nama_siswa_id,
-                            ket_ketidakhadiran: ket_ketidakhadiran,
-                            jumlah_hari: jumlah_hari,
-                            jumlah_hari_lainnya: jumlah_hari_lainnya,
-                            nilai: nilai,
+                            konversi_ketidakhadiran_id: keterangan_konversi_ketidakhadiran_id,
                             jurusan_id: nama_jurusan_id,
                             tajar_id: periode_tajar_id,
                         },
@@ -1771,102 +1841,102 @@
                     });
                 })
 
-                jQuery('.update-ket-ketidakhadiran').change(function(){
-                    var ket_ketidakhadiran = jQuery(this).val();
+                // jQuery('.update-ket-ketidakhadiran').change(function(){
+                //     var id_konversi_ketidakhadiran_keterangan = jQuery(this).val();
                     
-                    if (ket_ketidakhadiran !== 'Tidak Ada')
-                    {
-                        jQuery('.update-hari').show();
-                    } else {
-                        jQuery('.update-hari').hide();
-                        jQuery('.update-lainnya').hide();
-                    }
+                //     if (id_konversi_ketidakhadiran_keterangan !== 'Tidak Ada')
+                //     {
+                //         jQuery('.update-hari').show();
+                //     } else {
+                //         jQuery('.update-hari').hide();
+                //         jQuery('.update-lainnya').hide();
+                //     }
 
-                    if (ket_ketidakhadiran === 'Tidak Ada')
-                    {
-                        jQuery.ajax({
-                            url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
-                            type: 'POST',
-                            beforeSend: function(xhr){
-                                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                            },
-                            data: {
-                                ket_ketidakhadiran: ket_ketidakhadiran,
-                            },
-                            success: function(response) {
-                                jQuery('.update-nilai').val(response.nilai);
-                            },
-                            error: function(xhr, status, error){
-                                console.error('Gagal mendapatkan nilai otomatis', error);
-                            }
-                        });
-                    }
-                });
+                //     if (id_konversi_ketidakhadiran_keterangan === 'Tidak Ada')
+                //     {
+                //         jQuery.ajax({
+                //             url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
+                //             type: 'POST',
+                //             beforeSend: function(xhr){
+                //                 xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                //             },
+                //             data: {
+                //                 id_konversi_ketidakhadiran_keterangan: id_konversi_ketidakhadiran_keterangan,
+                //             },
+                //             success: function(response) {
+                //                 jQuery('.update-nilai').val(response.nilai);
+                //             },
+                //             error: function(xhr, status, error){
+                //                 console.error('Gagal mendapatkan nilai otomatis', error);
+                //             }
+                //         });
+                //     }
+                // });
 
                 // jQuery('#data-table').on('click', '.btn-edit', function(){
                 //     jQuery('.update-hari').show();
                 //     jQuery('.update-lainnya').show();
                 // })
                 
-                jQuery('.update-jumlah-hari').change(function(){
-                    var jumlah_hari = jQuery(this).val();
-                    var jumlah_hari_lainnya = jQuery(this).val();
-                    // var previouslySelected = '';
+                // jQuery('.update-jumlah-hari').change(function(){
+                //     var id_konversi_ketidakhadiran_jumlah_hari = jQuery(this).val();
+                //     var id_konversi_ketidakhadiran_jumlah_hari_lainnya = jQuery(this).val();
+                //     // var previouslySelected = '';
                     
-                    if (jumlah_hari === 'Lainnya')
-                    {
-                        // Tampilkan form input nilai tambahan jika opsi >4 Hari
-                        jQuery('.update-lainnya').show();
-                    }
-                    else
-                    {
-                        // Sembunyikan form input teks tambahan
-                        jQuery('.update-lainnya').hide();
-                    }
+                //     if (jumlah_hari === 'Lainnya')
+                //     {
+                //         // Tampilkan form input nilai tambahan jika opsi >4 Hari
+                //         jQuery('.update-lainnya').show();
+                //     }
+                //     else
+                //     {
+                //         // Sembunyikan form input teks tambahan
+                //         jQuery('.update-lainnya').hide();
+                //     }
                     
-                    if (jumlah_hari !== 'Lainnya')
-                    {
-                        jQuery.ajax({
-                            url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
-                            type: 'POST',
-                            beforeSend: function(xhr){
-                                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                            },
-                            data: {
-                                jumlah_hari: jumlah_hari,
-                                jumlah_hari_lainnya: jumlah_hari_lainnya,
-                            },
-                            success: function(response){
-                                jQuery('.update-nilai').val(response.nilai);
-                            },
-                            error: function(xhr, status, error){
-                                console.error('Gagal mendapatkan nilai otomatis', error);
-                            }
-                        });
-                    }
-                    else
-                    {
-                        jQuery.ajax({
-                            url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
-                            type: 'POST',
-                            beforeSend: function(xhr){
-                                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                            },
-                            data: {
-                                jumlah_hari: jumlah_hari,
-                            },
-                            success: function(response){
-                                jQuery('.update-nilai').val(response.nilai);
-                            },
-                            error: function(xhr, status, error){
-                                console.error('Gagal mendapatkan nilai otomatis', error);
-                            }
-                        });
+                //     if (jumlah_hari !== 'Lainnya')
+                //     {
+                //         jQuery.ajax({
+                //             url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
+                //             type: 'POST',
+                //             beforeSend: function(xhr){
+                //                 xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                //             },
+                //             data: {
+                //                 id_konversi_ketidakhadiran_jumlah_hari: id_konversi_ketidakhadiran_jumlah_hari,
+                //                 id_konversi_ketidakhadiran_jumlah_hari_lainnya: id_konversi_ketidakhadiran_jumlah_hari_lainnya,
+                //             },
+                //             success: function(response){
+                //                 jQuery('.update-nilai').val(response.nilai);
+                //             },
+                //             error: function(xhr, status, error){
+                //                 console.error('Gagal mendapatkan nilai otomatis', error);
+                //             }
+                //         });
+                //     }
+                //     else
+                //     {
+                //         jQuery.ajax({
+                //             url: 'http://127.0.0.1:8000/api/data-nilai/presensi-siswa/get-nilai',
+                //             type: 'POST',
+                //             beforeSend: function(xhr){
+                //                 xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                //             },
+                //             data: {
+                //                 id_konversi_ketidakhadiran_jumlah_hari: id_konversi_ketidakhadiran_jumlah_hari,
+                //             },
+                //             success: function(response){
+                //                 jQuery('.update-nilai').val(response.nilai);
+                //             },
+                //             error: function(xhr, status, error){
+                //                 console.error('Gagal mendapatkan nilai otomatis', error);
+                //             }
+                //         });
 
-                        // jQuery('.update-nilai').val();
+                //         // jQuery('.update-nilai').val();
 
-                    }
-                })
+                //     }
+                // })
 
                 // fungsi button delete
                 jQuery('#data-table').on('click', '.btn-delete', function(){

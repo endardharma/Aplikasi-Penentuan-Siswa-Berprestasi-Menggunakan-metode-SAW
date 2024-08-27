@@ -9,7 +9,7 @@ class KeterlambatanSiswa extends Model
 {
     use HasFactory;
     protected $table = 'keterlambatan_siswas';
-    protected $fillable = ['tajar_id','siswa_id','jurusan_id','jumlah_keterlambatan','nilai'];
+    protected $fillable = ['tajar_id','siswa_id','jurusan_id','konversi_keterlambatan_id'];
 
     public function tajar()
     {
@@ -24,5 +24,10 @@ class KeterlambatanSiswa extends Model
     public function jurusan()
     {
         return $this->belongsTo(MasterJurusanSiswa::class, 'jurusan_id');
+    }
+
+    public function konversiKeterlambatan()
+    {
+        return $this->belongsTo(KonversiKeterlambatan::class, 'konversi_keterlambatan_id');
     }
 }

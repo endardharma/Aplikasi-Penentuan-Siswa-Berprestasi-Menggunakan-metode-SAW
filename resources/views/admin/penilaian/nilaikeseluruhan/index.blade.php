@@ -459,6 +459,13 @@
                             <option value="-1">Semua Jurusan</option>
                         </select>
                     </div>
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <label for="tajar" class="form-label"></label>
+                        <select class="form-select form-tajar" name="tajar" id="select-tajar" required>
+                            <option disabled selected> -- Pilih Periode -- </option>
+                            <option value="-1">Semua Periode</option>
+                        </select>
+                    </div>
                 </div>
                 <!-- END : SortBy Jurusan -->
                 <!-- BEGIN: HTML Table Data -->
@@ -897,7 +904,7 @@
                 // })
 
                 // Data table list nilai keseluruhan
-                function loadDataTable (jurusanId = '')
+                function loadDataTable (jurusanId = '', tajarId = '')
                 {
                     jQuery('#data-table').dataTable({
                         "processing": true,
@@ -911,12 +918,14 @@
                                 'Authorization': 'Bearer ' + token
                             },
                             "data": function (d) {
-                                if (jurusanId === '-1')
+                                if (jurusanId === '-1' || tajarId === '-1')
                                 {
                                     d.jurusan_id = ' ';
+                                    d.tajar_id = ' ';
                                 } else
                                 {
                                     d.jurusan_id = jurusanId;
+                                    d.tajar_id = tajarId;
                                 }
                             }
                         },
@@ -995,7 +1004,8 @@
                 loadDataTable();
                 jQuery('#search-button').on('click', function() {
                     var jurusanId = $('#select-jurusan').val();
-                    loadDataTable(jurusanId);
+                    var tajarIid = $('#select-tajar').val();
+                    loadDataTable(jurusanId, tajarIid);
                 })
 
                 // Data Support Jurusan
@@ -1012,6 +1022,26 @@
                         for (let i = 0; i < item.length; i++)
                         {
                             selectSortByJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                        }
+                    });
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+
+                // Data Support Tahun Ajar
+                var url = 'http://127.0.0.1:8000/api/data-penilaian/nilai-keseluruhan/data-support/tajar';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }).then(response => response.json()).then(data => {
+                    var selectSortByTajar = jQuery('.form-tajar');
+
+                    jQuery.each(data, function (index, item) {
+                        for (let i = 0; i < item.length; i++)
+                        {
+                            selectSortByTajar.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -1052,7 +1082,7 @@
                     }); 
                 })
 
-            })
+            });
         </script>
         <!-- END: JS Assets -->
     </body>

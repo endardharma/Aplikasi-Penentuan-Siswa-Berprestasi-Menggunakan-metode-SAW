@@ -60,4 +60,27 @@ class NilaiKeseluruhan extends Model
     {
         return $this->belongsTo(MasterKriteria::class, 'kriteria_id');
     }
+
+    public function konversiKetidakhadiran()
+    {
+        return $this->belongsTo(KonversiKetidakhadiran::class, 'konversi_ketidakhadiran_id');
+    }
+
+    public function konversiSikap()
+    {
+        return $this->belongsTo(KonversiSikap::class, 'konversi_sikap_id');
+    }
+
+    public function konversiPrestaso()
+    {
+        return $this->belongsTo(KonversiPrestasi::class, 'konversi_prestasi_id');
+    }
+
+    public function konversiKeterlambatan()
+    {
+        return $this->belongsTo(KonversiKeterlambatan::class, 'konversi_keterlambatan_id');
+    }
+    
+
 }
+

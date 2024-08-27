@@ -6,6 +6,7 @@ use App\Exports\PrestasiSiswaExport;
 use App\Exports\PrestasiSiswaTemplate;
 use App\Exports\PrestasiSiswaTemplateIis;
 use App\Imports\PrestasiSiswaImport;
+use App\Models\KonversiPrestasi;
 use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
 use App\Models\PrestasiSiswa;
@@ -46,7 +47,7 @@ class PrestasiSiswaController extends Controller
         $totalData = PrestasiSiswa::count();
 
         // Query search and paginasi
-        $query = PrestasiSiswa::with(['tajar','siswa','jurusan'])
+        $query = PrestasiSiswa::with(['tajar','siswa','jurusan', 'konversiPrestasi'])
             ->when($jurusanId && $jurusanId != '-1', function ($q) use ($jurusanId) {
                 $q->whereHas('jurusan', function ($query) use ($jurusanId){
                     $query->where('jurusan_id', $jurusanId);
@@ -65,8 +66,12 @@ class PrestasiSiswaController extends Controller
                 ->orWhereHas('jurusan', function ($q) use ($search) {
                     $q->where('name','LIKE','%'.$search.'%');
                 })
-                ->orWhere('ket_prestasi','LIKE','%'.$search.'%')
-                ->orWhere('nilai','LIKE','%'.$search.'%');
+                ->orWhereHas('konversiPrestasi', function ($q) use ($search) {
+                    $q->where('ket_prestasi','LIKE','%'.$search.'%')
+                    ->orWhere('nilai_konversi','LIKE','%'.$search.'%');
+                });
+                // ->orWhere('ket_prestasi','LIKE','%'.$search.'%')
+                // ->orWhere('nilai','LIKE','%'.$search.'%');
             });
 
         // Hitung total filtered berdasarkan pencarian
@@ -84,14 +89,18 @@ class PrestasiSiswaController extends Controller
             $item['id'] = $p->id;
             $item['id_siswa_nama'] = $p->siswa_id;
             $item['nama_siswa'] = $p->siswa->name ?? '';
-            $item['ket_prestasi'] = $p->ket_prestasi;
+            
+           $item['id_konversi_prestasi_keterangan'] = $p->konversi_prestasi_id;
+           $item['ket_prestasi'] = $p->konversiPrestasi->ket_prestasi ?? '';
+            
             $item['id_jurusan_nama'] = $p->jurusan_id;
             $item['jurusan'] = $p->jurusan->name ?? '';
-            $item['id_tajar_semester'] = $p->tajar_id;
-            $item['semester'] = $p->tajar->semester ?? '';
+            
             $item['id_tajar_periode'] = $p->tajar_id;
             $item['tahun_ajar'] = $p->tajar->periode ?? '';
-            $item['nilai'] = $p->nilai;
+            
+            $item['id_konversi_prestasi_keterangan'] = $p->konversi_prestasi_id;
+            $item['nilai'] = $p->konversiPrestasi->nilai_konversi ?? '';
             $data[] = $item; 
         }
 
@@ -157,8 +166,7 @@ class PrestasiSiswaController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'siswa_id' => 'required',
-            'ket_prestasi' => 'required',
-            'nilai' => 'required',
+            'konversi_prestasi_id' => 'required',
             'jurusan_id' => 'required',
             'tajar_id' => 'required',
         ]);
@@ -170,8 +178,7 @@ class PrestasiSiswaController extends Controller
 
         $prestasi = new PrestasiSiswa();
         $prestasi->siswa_id = $request->siswa_id;
-        $prestasi->ket_prestasi = $request->ket_prestasi;
-        $prestasi->nilai = $this->getNilaiBasedOnPrestasi($request->ket_prestasi);
+        $prestasi->konversi_prestasi_id = $request->konversi_prestasi_id;
         $prestasi->jurusan_id = $request->jurusan_id;
         $prestasi->tajar_id = $request->tajar_id;
         $prestasi->save();
@@ -196,8 +203,7 @@ class PrestasiSiswaController extends Controller
         else
         {
             $request->siswa_id != null ? $find->siswa_id = $request->siswa_id : true;
-            $request->ket_prestasi != null ? $find->ket_prestasi = $request->ket_prestasi : true;
-            $request->nilai != null ? $find->nilai = $this->getNilaiBasedOnPrestasi($request->ket_prestasi) : true; // Nilai Otomatis berdasarkan keterangan prestaasi (getNilai)
+            $request->konversi_prestasi_id != null ? $find->konversi_prestasi_id = $request->konversi_prestasi_id : true;
             $request->jurusan_id != null ? $find->jurusan_id = $request->jurusan_id : true;
             $request->tajar_id != null ? $find->tajar_id = $request->tajar_id : true;
             $find->save();
@@ -241,35 +247,35 @@ class PrestasiSiswaController extends Controller
         }
     }
 
-    private function getNilaiBasedOnPrestasi($ket_prestasi)
-    {
-        $nilaiMapping = [
-            'Tingkat Internasional Juara 1' => 12,
-            'Tingkat Internasional Juara 2' => 11,
-            'Tingkat Internasional Juara 3' => 10,
-            'Tingkat Nasional Juara 1' => 9,
-            'Tingkat Nasional Juara 2' => 8,
-            'Tingkat Nasional Juara 3' => 7,
-            'Tingkat Provinsi Juara 1' => 6,
-            'Tingkat Provinsi Juara 2' => 5,
-            'Tingkat Provinsi Juara 3' => 4,
-            'Tingkat Kabupaten/Kota Juara 1' => 3,
-            'Tingkat Kabupaten/Kota Juara 2' => 2,
-            'Tingkat Kabupaten/Kota Juara 3' => 1,
-            'Tidak Ada' => 0,
-        ];
-        return $nilaiMapping[$ket_prestasi] ?? 0; // Nilai Default jika keterangan sikap tidak di temukan
-    }
+    // private function getNilaiBasedOnPrestasi($ket_prestasi)
+    // {
+    //     $nilaiMapping = [
+    //         'Tingkat Internasional Juara 1' => 12,
+    //         'Tingkat Internasional Juara 2' => 11,
+    //         'Tingkat Internasional Juara 3' => 10,
+    //         'Tingkat Nasional Juara 1' => 9,
+    //         'Tingkat Nasional Juara 2' => 8,
+    //         'Tingkat Nasional Juara 3' => 7,
+    //         'Tingkat Provinsi Juara 1' => 6,
+    //         'Tingkat Provinsi Juara 2' => 5,
+    //         'Tingkat Provinsi Juara 3' => 4,
+    //         'Tingkat Kabupaten/Kota Juara 1' => 3,
+    //         'Tingkat Kabupaten/Kota Juara 2' => 2,
+    //         'Tingkat Kabupaten/Kota Juara 3' => 1,
+    //         'Tidak Ada' => 0,
+    //     ];
+    //     return $nilaiMapping[$ket_prestasi] ?? 0; // Nilai Default jika keterangan sikap tidak di temukan
+    // }
 
-    public function getNilai(Request $request)
-    {
-        $ket_prestasi = $request->ket_prestasi;
-        $nilai = $this->getNilaiBasedOnPrestasi($ket_prestasi);
+    // public function getNilai(Request $request)
+    // {
+    //     $ket_prestasi = $request->ket_prestasi;
+    //     $nilai = $this->getNilaiBasedOnPrestasi($ket_prestasi);
 
-        return response()->json([
-            'nilai' => $nilai,
-        ], 200);
-    }
+    //     return response()->json([
+    //         'nilai' => $nilai,
+    //     ], 200);
+    // }
     
     public function supportTajar()
     {
@@ -323,6 +329,24 @@ class PrestasiSiswaController extends Controller
         ], 201);
     }
 
+    public function supportKonversiPrestasi()
+    {
+        $konversi = KonversiPrestasi::all();
+        $data = array();
+
+        foreach ($konversi as $k)
+        {
+            $item['id'] = $k->id;
+            $item['ket_prestasi'] = $k->ket_prestasi;
+            $item['nilai_konversi'] = $k->nilai_konversi;
+            $data[] = $item;
+        }
+
+        return response()->json([
+            'data' => $data,
+        ], 201);
+    }
+
     public function templateMipa(Request $request)
     {
         return Excel::download(new PrestasiSiswaTemplate($request->tajar), 'Template-Prestasi-Siswa-Mipa.xlsx');
@@ -346,9 +370,11 @@ class PrestasiSiswaController extends Controller
         $selectedTahunAjar = $request->input('selected_tahun_ajar');
         $selectedJurusan = $request->input('selected_jurusan');
 
-        Excel::import(new PrestasiSiswaImport($selectedTahunAjar, $selectedJurusan, function($ket_prestasi){
-            return $this->getNilaiBasedOnPrestasi($ket_prestasi);
-        }), $file);
+        // Excel::import(new PrestasiSiswaImport($selectedTahunAjar, $selectedJurusan, function($ket_prestasi){
+        //     return $this->getNilaiBasedOnPrestasi($ket_prestasi);
+        // }), $file);
+
+        Excel::import(new PrestasiSiswaImport($selectedTahunAjar, $selectedJurusan), $file);
 
         return response()->json([
             'success' => true,
@@ -364,8 +390,8 @@ class PrestasiSiswaController extends Controller
         {
             $item['id'] = $p->id;
             $item['nama_siswa'] = $p->siswa->name ?? '';
-            $item['ket_prestasi'] = $p->ket_prestasi;
-            $item['nilai'] = $p->nilai;
+            $item['ket_prestasi'] = $p->konversiPrestasi->ket_prestasi ?? '';
+            $item['nilai'] = $p->konversiPrestasi->nilai_konversi ?? '';
             $item['jurusan'] = $p->jurusan->name ?? '';
             $item['tahun_ajar'] = $p->tajar->periode ?? '';
             $data[] = $item;

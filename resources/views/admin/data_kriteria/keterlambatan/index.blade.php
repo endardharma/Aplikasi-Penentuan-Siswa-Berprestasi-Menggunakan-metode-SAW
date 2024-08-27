@@ -8,14 +8,14 @@
         <meta name="description" content="Tinker admin is super flexible, powerful, clean & modern responsive tailwind admin template with unlimited possibilities.">
         <meta name="keywords" content="admin template, Tinker Admin Template, dashboard template, flat admin template, responsive admin template, web app">
         <meta name="author" content="LEFT4CODE">
-        <title>Data Nilai Prestasi - Aplikasi PSB</title>
+        <title>Data Nilai Konversi Keterlambatan - Aplikasi PSB</title>
         <!-- BEGIN: CSS Assets-->
         <link rel="stylesheet" href="{{ asset('template/dist/css/app.css') }}" />
         <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
         <style>
-            /* Menyesuaikan lebar dropdown 'Show Entries' */
+            /* Menyesuaikan lebar dropdown "Show entries" */
             .dataTables_length {
-                width: 200px; /* Sesuaikan lebar sesuai dengan kebutuhan */
+                width: 200px; /* Sesuaikan lebar sesuai kebutuhan Anda */
             }
 
             /* Menyesuaikan lebar opsi dropdown */
@@ -165,7 +165,7 @@
                 <div class="side-nav__devider my-6"></div>
                 <ul>
                     <li class="desktop-dashboard">
-                        <a href="{{ route('dashboard') }}" class="side-menu">
+                        <a href="{{ route('dashboard') }}" class="side-menu ">
                             <div class="side-menu__icon"> <i data-lucide="airplay"></i> </div>
                             <div class="side-menu__title"> Dashboard </div>
                         </a>
@@ -206,8 +206,43 @@
                             <div class="side-menu__title"> Data Kriteria </div>
                         </a>
                     </li>
-                    <li class="desktop-datanilai">
-                        <a href="javascript:;" class="side-menu  side-menu--active">
+                    <li class="desktop-datakriteria">
+                        <a href="javascript:;" class="side-menu side-menu--active">
+                            <div class="side-menu__icon"><i data-lucide="align-justify"></i></div>
+                            <div class="side-menu__title">
+                                Konversi Nilai Kriteria
+                                <div class="side-menu__sub-icon"><i data-lucide="chevron-down"></i></div>
+                            </div>
+                        </a>
+                        <ul class="">
+                            <li class="desktop-konversi-presensi">
+                                <a href="{{ route('data_kriteria.presensi' )}}" class="side-menu">
+                                    <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                                    <div class="side-menu__title"> Presensi </div>
+                                </a>
+                            </li>
+                            <li class="desktop-konversi-sikap">
+                                <a href="{{ route('data_kriteria.sikap' )}}" class="side-menu">
+                                    <div class="side-menu__icon"><i data-lucide="thumbs-up"></i></div>
+                                    <div class="side-menu__title"> Sikap </div>
+                                </a>
+                            </li>
+                            <li class="desktop-konversi-prestasi">
+                                <a href="{{ route('data_kriteria.prestasi' )}}" class="side-menu">
+                                    <div class="side-menu__icon"><i data-lucide="activity"></i></div>
+                                    <div class="side-menu__title"> Prestasi </div>
+                                </a>
+                            </li>
+                            <li class="desktop-konversi-keterlambatan">
+                                <a href="{{ route('data_kriteria.keterlambatan' )}}" class="side-menu  side-menu--active">
+                                    <div class="side-menu__icon"><i data-lucide="calendar"></i></div>
+                                    <div class="side-menu__title"> Keterlambatan </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:;" class="side-menu">
                             <div class="side-menu__icon"> <i data-lucide="book-open"></i> </div>
                             <div class="side-menu__title">
                                 Data Nilai 
@@ -234,7 +269,7 @@
                                 </a>
                             </li>
                             <li class="desktop-prestasi">
-                                <a href="{{ route('data_nilai.prestasi') }}" class="side-menu  side-menu--active">
+                                <a href="{{ route('data_nilai.prestasi') }}" class="side-menu">
                                     <div class="side-menu__icon"> <i data-lucide="activity"></i> </div>
                                     <div class="side-menu__title"> Prestasi </div>
                                 </a>
@@ -285,7 +320,6 @@
                 </ul>
             </nav>
             <!-- END: Side Menu -->
-
             <!-- BEGIN: Content -->
             <div class="content">
                 <!-- BEGIN: Top Bar -->
@@ -294,7 +328,7 @@
                     <nav aria-label="breadcrumb" class="-intro-x mr-auto hidden sm:flex">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#">Aplikasi</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Data Nilai Prestasi Siswa</li>
+                            <li class="breadcrumb-item active" aria-current="page">Data Nilai Konversi Keterlabatan Siswa</li>
                         </ol>
                     </nav>
                     <!-- END: Breadcrumb -->
@@ -413,12 +447,12 @@
                 <!-- END: Top Bar -->
                 <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
                     <h2 class="text-lg font-medium mr-auto">
-                        List Data Nilai Prestasi Siswa
+                        List Data Nilai Konversi Keterlambatan Siswa
                     </h2>
                     {{-- <div class="w-full sm:w-10 flex mt-4 sm:mt-0">
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
-                                <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-lucide="list"></i> </span>
+                                <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-lucide="list"></i></span>
                             </button>
                             <div class="dropdown-menu w-40">
                                 <ul class="dropdown-content">
@@ -437,9 +471,9 @@
                             </button>
                             <div class="dropdown-menu w-40">
                                 <ul class="dropdown-content">
-                                    <li>
+                                    {{-- <li>
                                         <a href="#" class="dropdown-item modal-import"> <i data-lucide="file-plus" class="w-4 h-4 mr-2"></i> Import Data </a>
-                                    </li>
+                                    </li> --}}
                                     <li>
                                         <a href="#" class="dropdown-item btn-export"> <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export Excel </a>
                                     </li>
@@ -449,7 +483,7 @@
                     </div>
                 </div>
                 <!-- BEGIN : SortBy Jurusan -->
-                <div class="intro-y flex flex-col sm:flex-row items-center mt-1">
+                {{-- <div class="intro-y flex flex-col sm:flex-row items-center mt-1">
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
                         <button type="submit" class="btn btn-primary shadow-md mr-2 btn-cari" id="search-button">Cari</button>
                     </div>
@@ -460,7 +494,7 @@
                             <option value="-1">Semua Jurusan</option>
                         </select>
                     </div>
-                </div>
+                </div> --}}
                 <!-- END : SortBy Jurusan -->
                 <!-- BEGIN: HTML Table Data -->
                 <div class="intro-y box p-5 mt-5">
@@ -469,11 +503,8 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Nama Siswa</th>
-                                    <th>Keterangan Prestasi</th>
-                                    <th>Nilai</th>
-                                    <th>Jurusan</th>
-                                    <th>Tahun Ajar</th>
+                                    <th>Jumlah Keterlambatan</th>
+                                    <th>Nilai Konversi</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -485,78 +516,25 @@
                 <!-- END: HTML Table Data -->
             </div>
             <!-- END: Content -->
-            <!-- BEGIN: Modal Detail Content -->
-            <div id="header-detail-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <!-- BEGIN: Modal Header -->
-                        <div class="modal-header">
-                            <h2 class="font-medium text-base mr-auto">
-                                Detail Nilai Prestasi Siswa
-                            </h2>
-                            <a data-tw-dismiss="modal" href="javascript:;"> <i data-feather="x" class="w-8 h-8 text-gray-500"></i> </a>
-                        </div>
-                        <!-- END: Modal Header -->
-                        <!-- BEGIN: Modal Body -->
-                            <div class="intro-y box p-5 mt-5">
-                                <div class="overflow-x-auto scrollbar-hidden">
-                                    <table id="data-table-detail" class="table table-striped" style="width:100%">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Nama Siswa</th>
-                                                <th>Keterangan Prestasi</th>
-                                                <th>Nilai</th>
-                                                <th>Jurusan</th>
-                                                <th>Tahun Ajar</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        <!-- END: Modal Body -->
-                    </div>
-                </div>
-            </div>
-            <!-- END: Modal Detail Content -->
             <!-- BEGIN: Modal Tambah Data Content -->
             <div id="header-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <!-- BEGIN: Modal Header -->
                         <div class="modal-header">
-                            <h2 class="font-medium text-base mr-auto">Form Tambah Data Prestasi</h2>
+                            <h2 class="font-medium text-base mr-auto">Form Tambah Data Konversi Presens</h2>
                             <a href="javascript:;" data-tw-dismiss="modal"><i data-feather="x" class="w-8 h-8 text-gray-500"></i></a>
                         </div>
                         <!-- END: Modal Header -->
                         <!-- BEGIN: Modal Body -->
                         <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Nama Siswa</label>
-                                <input type="hidden" class="form-control">
-                                <select class="form-select create-nama-siswa">
-                                    <option disabled selected> --- Pilih Nama Siswa --- </option>
-                                </select>
+                            <div class="col-span-12 sm:col-span-12 create-keterlambatan">
+                                <label for="modal-form-2" class="form-label">Jumlah Keterlambatan</label>
+                                <input type="text" class="form-control create-jumlah-keterlambatan" placeholder="Masukkan Jumlah Keterlambatan Siswa">
                             </div>
                             <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Keterangan Prestasi</label>
-                                <select class="form-select create-ket-prestasi" required>
-                                    <option disabled selected> --- Pilih Keterangan Prestasi dan Nilai --- </option>
-                                </select>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Jurusan</label>
-                                <select class="form-select create-jurusan" required>
-                                    <option disabled selected> --- Pilih Jurusan --- </option>
-                                </select>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Tahun Ajar</label>
-                                <select class="form-select create-tahun-ajar" required>
-                                    <option disabled selected> --- Pilih Tahun Ajar --- </option>
-                                </select>
+                                <label for="modal-form-2" class="form-label">Nilai Konversi</label>
+                                <input type="number" class="form-control create-nilai-konversi" placeholder="Masukkan Nilai Konversi Ketidakhadiran Siswa" required>
                             </div>
                         </div>
                         <!-- END: Modal Body -->
@@ -570,24 +548,24 @@
                 </div>
             </div>
             <!-- END: Modal Tambah Data Content -->
-            <!-- BEGIN: Notification Sukses Create prestasi Content -->
+            <!-- BEGIN: Notification Sukses Create Keterlambatan Content -->
             <div id="success-create-notification-content" class="toastify-content hidden flex">
                 <i class="text-success" data-lucide="check-circle"></i>
                 <div class="ml-4 mr-4">
-                    <div class="font-medium">Berhasil menambahkan data prestasi siswa!</div>
+                    <div class="font-medium">Berhasil menambahkan data nilai konversi keterlambatan siswa!</div>
                     <div class="text-slate-500 mt-1 create-sukses"></div>
                 </div>
             </div>
-            <!-- END: Notification Sukses Create prestasi Content -->
-            <!-- BEGIN: Notification gagal Create prestasi Content -->
+            <!-- END: Notification Sukses Create Keterlambatan Content -->
+            <!-- BEGIN: Notification gagal Create Keterlambatan Content -->
             <div id="failed-create-notification-content" class="toastify-content hidden flex">
                 <i class="text-danger" data-lucide="x-circle"></i>
                 <div class="ml-4 mr-4">
-                    <div class="font-medium">Gagal menambahkan data prestasi siswa!</div>
+                    <div class="font-medium">Gagal menambahkan data nilai konversi keterlambatan siswa!</div>
                     <div class="text-slate-500 mt-1 create-gagal"></div>
                 </div>
             </div>
-            <!-- END: Notification gagal Create prestasi Content -->
+            <!-- END: Notification gagal Create Keterlambatan Content -->
             <!-- BEGIN: Modal Content Update -->
             <div id="header-update-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
@@ -595,37 +573,21 @@
                         <!-- BEGIN: Modal Header -->
                         <div class="modal-header">
                             <h2 class="font-medium text-base mr-auto">
-                                Form Update Data Nilai Prestasi Siswa
+                                Form Update Data Nilai Keterlambatan Siswa
                             </h2>
-                            <a href="javascript:;" data-tw-dismiss="modal"><i data-feather="x" class="w-8 h-8 tex-gray-500"></i></a>
+                            <a href="javascript:;" data-tw-dismiss="modal"><i data-feather="x" class="w-8 h-8 text-gray-500"></i></a>
                         </div>
                         <!-- END: Modal Header -->
                         <!-- BEGIN: Modal Body -->
                         <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Nama Siswa</label>
+                            <div class="col-span-12 sm:col-span-12 update-keterlambatan">
                                 <input type="hidden" class="form-control update-id">
-                                <select class="form-select update-nama-siswa" required>
-                                    <option disabled selected> --- Pilih Nama Siswa --- </option>
-                                </select>
+                                <label for="modal-form-2" class="form-label">Jumlah Keterlambatan</label>
+                                <input type="text" class="form-control update-jumlah-keterlambatan" placeholder="Masukkan Jumlah Keterlambatan Siswa">
                             </div>
                             <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Keterangan Prestasi</label>
-                                <select class="form-select update-ket-prestasi" required>
-                                    <option disabled selected> --- Pilih Keterangan Prestasi dan Nilai --- </option>
-                                </select>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Nama Jurusan</label>
-                                <select class="form-select update-jurusan" required>
-                                    <option disabled selected> --- Pilih Nama Jurusan --- </option>
-                                </select>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Nama Tahun Ajar</label>
-                                <select class="form-select update-tahun-ajar" required>
-                                    <option disabled selected> --- Pilih Nama Tahun Ajar --- </option>
-                                </select>
+                                <label for="modal-form-2" class="form-label">Nilai Konversi</label>
+                                <input type="number" class="form-control update-nilai-konversi" placeholder="Masukkan Nilai Konversi Ketidakhadiran Siswa" required>
                             </div>
                         </div>
                         <!-- END: Modal Body -->
@@ -638,171 +600,100 @@
                     </div>
                 </div>
             </div>
-            <!-- END: Modal Content Update -->
-            <!-- BEGIN: Notification Content Sukses Update Prestasi -->
+            <!-- END: END Modal Content Update -->
+            <!-- BEGIN: Notification Sukses Update Presensi Content -->
             <div id="success-update-notification-content" class="toastify-content hidden flex">
                 <i class="text-success" data-lucide="check-circle"></i>
                 <div class="ml-4 mr-4">
-                    <div class="font-medium">Berhasil update data nilai prestasi!</div>
+                    <div class="font-medium">Berhasil update data nilai konversi keterlambatan siswa!</div>
                     <div class="text-slate-500 mt-1 update-sukses"></div>
                 </div>
             </div>
-            <!-- END: Notification Content Sukses Update Prestasi -->
-            <!-- BEGIN: Notification Content Gagal Update Prestasi -->
+            <!-- END: Notification Sukses Update Presensi Content -->
+            <!-- BEGIN: Notification Gaga Update Presensi Content -->
             <div id="failed-update-notification-content" class="toastify-content hidden flex">
-                <i class="text-danger" data-lucide="x-circle"></i>
-                <div class="ml-4 mr-4">
-                    <div class="font-medium">Gagal update data nilai prestasi!</div>
-                    <div class="text-slate-500 mt-1 update-gagal"></div>
-                </div>
+                <i class="text-danger" data-lucide="check-circle"></i>
+                <div class="font-medium">Gagal update data keterlambatan nilai konversi siswa!</div>
+                <div class="text-slate-500 mt-1 update-gagal"></div>
             </div>
-            <!-- END: Notification Content Gagal Update Prestasi -->
-            <!-- BEGIN: Modal Content Delete -->
+            <!-- END: Notification Gaga Update Presensi Content -->
+            <!-- BEGIN: Modal Delete Content -->
             <div id="delete-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-body p-0">
                             <div class="p-5 text-center">
                                 <i data-lucide="x-circle" class="w-16 h-16 text-danger mx-auto mt-3"></i>
-                                <div class="text-3x1 mt-5">Apa kamu yakin ?</div>
+                                <div class="text-3xl mt-5">Apa kamu yakin ?</div>
                                 <div class="text-slate-500 mt-2">
-                                    Apa kamu yakin akan menghapus data nilai prestasi ini ?
+                                    Apa kamu yakin akan menghapus data nilai konversi keterlambatan siswa ini ?
                                     <br>
-                                    Data nilai prestasi yang dihapus ini, tidak bisa dikembalikan.
+                                    Data nilai konversi keterlambatan siswa yang dihapus ini, tidak bisa dikembalikan.
                                 </div>
                             </div>
                             <div class="px-5 pb-8 text-center">
-                                <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">Batalkan</button>
+                                <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">Batal</button>
                                 <button type="button" class="btn btn-danger w-24 btn-iya">Hapus</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- END: Modal Content Delete -->
-            <!-- BEGIN: Notification Content Sukses hapus Prestasi -->
+            <!-- END: Modal Delete Content -->
+            <!-- BEGIN: Notification Sukses Hapus Data Presensi Content -->
             <div id="success-hapus-notification-content" class="toastify-content hidden flex">
                 <i class="text-success" data-lucide="check-circle"></i>
                 <div class="ml-4 mr-4">
-                    <div class="font-medium">Berhasil hapus data nilai prestasi!</div>
+                    <div class="font-medium">Berhasil hapus data nilai konversi keterlambatan siswa!</div>
                     <div class="text-slate-500 mt-1 hapus-sukses"></div>
                 </div>
             </div>
-            <!-- END: Notification Content Sukses hapus Prestasi -->
-            <!-- BEGIN: Notification Content Gagal hapus Prestasi -->
+            <!-- END: Notification Sukses Hapus Data Presensi Content -->
+            <!-- BEGIN: Notification Gagal Hapus Data Presensi Content -->
             <div id="failed-hapus-notification-content" class="toastify-content hidden flex">
                 <i class="text-danger" data-lucide="x-circle"></i>
                 <div class="ml-4 mr-4">
-                    <div class="font-medium">Gagal hapus data nilai prestasi!</div>
+                    <div class="font-medium">Gagal hapus data nilai konversi keterlambatan siswa!</div>
                     <div class="text-slate-500 mt-1 hapus-gagal"></div>
                 </div>
             </div>
-            <!-- END: Notification Content Gagal Update Prestasi -->
-            <!-- BEGIN: Modal Content Import-->
-            <div id="header-import-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <!-- BEGIN: Modal Header -->
-                        <div class="modal-header">
-                            <h2 class="font-medium text-base mr-auto">
-                                Form Import Data Nilai Prestasi Siswa
-                            </h2>
-                            <a data-tw-dismiss="modal" href="javascript:;"> <i data-feather="x" class="w-8 h-8 text-gray-500"></i> </a>
-                        </div>
-                        <!-- END: Modal Header -->
-                        <!-- BEGIN: Modal Body -->
-                        <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-1" class="form-label">Unduh Template</label>
-                                <br/>
-                                <button type="button" class="btn btn-primary w-50 btn-unduh-mipa">Unduh Mipa</button>
-                                <button type="button" class="btn btn-primary w-50 btn-unduh-iis">Unduh Iis</button>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
-                            <label for="modal-form-6" class="form-label">Pilih Jurusan</label>
-                                <select id="jurusan-import" class="form-select import-jurusan">
-                                    <option selected disabled> --- Pilih Jurusan --- </option>
-                                </select>
-                            </div>
-                            <div class="col-span-12 sm:col-span-12">
-                            <label for="modal-form-6" class="form-label">Pilih Tahun Ajar</label>
-                                <select id="tajar-import" class="form-select import-tajar">
-                                    <option selected disabled> --- Pilih Tahun Ajar --- </option>
-                                </select>
-                            </div>
-                            <input type="hidden" id="selected-tahun-ajar" name="selected_tahun_ajar">
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="fileInput" class="form-label">File Excel</label>
-                                <input type="file" class="form-control" id="fileInput1" required>
-                            </div>
-                        </div>
-                        <!-- END: Modal Body -->
-                        <!-- BEGIN: Modal Footer -->
-                        <div class="modal-footer">
-                            <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Batal</button>
-                            <button type="button" class="btn btn-primary w-20 btn-import">Import</button>
-                        </div>
-                        <!-- END: Modal Footer -->
-                    </div>
-                </div>
-            </div>
-            <!-- END: Modal Content -->
-            <!-- BEGIN: Notification Sukses Import Data prestasi Siswa Content -->
-            <div id="success-import-notification-content" class="toastify-content hidden flex">
-                <i class="text-success" data-lucide="check-circle"></i> 
-                <div class="ml-4 mr-4">
-                    <div class="font-medium">Berhasil import data prestasi siswa!</div>
-                    <div class="text-slate-500 mt-1 import-sukses"></div>
-                </div>
-            </div>
-            <!-- END: Notification Sukses Import Data prestasi Siswa Content -->
-            <!-- BEGIN: Notification Gagal Import Data prestasi Siswa Content -->
-            <div id="failed-import-notification-content" class="toastify-content hidden flex">
-                <i class="text-danger" data-lucide="x-circle"></i> 
-                <div class="ml-4 mr-4">
-                    <div class="font-medium">Gagal import data prestasi siswa!</div>
-                    <div class="text-slate-500 mt-1 import-gagal"></div>
-                </div>
-            </div>
-            <!-- END: Notification Gagal Import Data prestasi Siswa Content -->
+            <!-- END: Notification Gagal Hapus Data Presensi Content -->
         </div>
-        <!-- BEGIN: JS Assets -->
+        <!-- BEGIN: JS Assets-->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.1/dist/feather.min.js"></script>
         <script src="{{ asset('template/dist/js/app.js') }}"></script>
         <script src="{{ asset('template/src/toastify.js') }}"></script>
         <script>
-            // Cek Package Jquery
-            jQuery(document).ready(function() {
-                // FUngsi untuk mengatur cookie
+            // cek package jquery
+            jQuery(document).ready(function(){
+                // Fungsi untuk mendapatkan nilai cookie
                 function getCookie(name){
                     var cookieName = name + "=";
                     var decodedCookie = decodeURIComponent(document.cookie);
                     var cookieArray = decodedCookie.split(';');
 
-                    for(var i = 0; i < cookieArray.length; i++){
+                    for (var i = 0; i < cookieArray.length; i++) {
                         var cookie = cookieArray[i];
-                        while (cookie.charAt(0) === ' '){
+                        while (cookie.charAt(0) === ' ') {
                             cookie = cookie.substring(1);
                         }
-                        if (cookie.indexOf(cookieName) === 0){
+                        if (cookie.indexOf(cookieName) === 0) {
                             return cookie.substring(cookieName.length, cookie.length);
                         }
                     }
                 }
 
                 var token = getCookie('token');
-                
-                if (token)
-                {
-                    // Token ada dalam cookie, lakukan tindakan yang sesuai
-                    console.log('Token', token);
-                } else {
+
+                if(token) {
+                    // token ada dalam cookie, lakukan tindakan yang sesuai
+                    console.log('Token:', token);
+                }else{
                     window.location.href = "{{ route('login') }}";
                 }
 
-                // Menampilkan Token pada Profil
                 var url = 'http://127.0.0.1:8000/api/dashboard/home';
                 fetch(url, {
                     method: 'GET',
@@ -810,7 +701,6 @@
                         'Authorization': 'Bearer ' + token
                     }
                 }).then(response => response.json()).then(data => {
-
                     // Pisahkan role sesuai user_id
                     if(data.role_id == 2)
                     {
@@ -1103,224 +993,70 @@
                         jQuery('.mobile-nilainormalisasi').show();
                         jQuery('.mobile-perangkingan').show();
                     }
-
+                    
                     jQuery('.nama-akun').text(data.name);
                     jQuery('.role-akun').text(data.role_name);
-                    
                 }).catch(error => {
-                    console.error('Error', error);
+                    console.error('Error:', error);
                 });
 
-                // Datatable List Nilai Prestasi
-                function loadDataTable (jurusanId = '')
-                {
-                    jQuery('#data-table').dataTable({
-                        "processing": true,
-                        "serverSide": true,
-                        "destroy": true,
-                        "ajax": {
-                            "url": "http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/list",
-                            "dataType": "json",
-                            "type": "POST",
-                            "headers": {
-                                'Authorization': 'Bearer ' + token
-                            },
-                            "data": function (d) {
-                                if (jurusanId === '-1'){
-                                    d.jurusan_id = ' ';
-                                } else {
-                                    d.jurusan_id = jurusanId;
-                                }
-                            }
+                jQuery('#data-table').dataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "destroy": true,
+                    "ajax": {
+                        "url": "http://127.0.0.1:8000/api/data-kriteria/konversi-keterlambatan/list",
+                        "dataType": "json",
+                        "type": "POST",
+                        "headers": {
+                            'Authorization': 'Bearer ' + token
                         },
-                        "columns": [
-                            { data: 'id', className: 'text-center' },
-                            { data: 'nama_siswa', className: 'text-center' },
-                            { data: 'ket_prestasi', className: 'text-center' },
-                            { data: 'nilai', className: 'text-center' },
-                            { data: 'jurusan', className: 'text-center' },
-                            { data: 'tahun_ajar', className: 'text-center' },
-                            {
-                                data: null,
-                                render: function(data, type, row){
-                                    // Create Action Buttons
-                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-id_siswa_nama="' + data.id_siswa_nama + '" data-id_konversi_prestasi_keterangan="' + data.id_konversi_prestasi_keterangan + '" data-nilai="' + data.nilai + '" data-id_jurusan_nama="' + data.id_jurusan_nama + '" data-id_tajar_periode="' + data.id_tajar_periode + '"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
-                                    var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
+                    },
+                    "columns": [
+                        { data: 'id', className: 'text-center' },
+                        { data: '.jumlah_keterlambatan', className: 'text-center'},
+                        { data: 'nilai_konversi', className: 'text-center'},
+                        {
+                            data: null,
+                            render: function (data, type, row){
+                                // Create action buttons
+                                var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id +'" data-jumlah_keterlambatan="' +data.jumlah_keterlambatan +'" data-nilai_konversi="' +data.nilai_konversi +'"><i data-feather="edit" class="w-4 h-4 mr-1"></i></button>';
+                                var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4 mr-1"></i></button>';
 
-                                    // Combine the Buttons
-                                    var action = editBtn + ' || ' + deleteBtn;
-                                    return action;
-                                }
+                                // Combine the buttons
+                                var actions = editBtn + ' || ' + deleteBtn;
+                                return actions;
                             }
-                        ],
-                        "drawCallback": function(settings){
-                            feather.replace();
                         }
-                    });
-                }
-
-                // Datatable Detail List Nilai Prestasi
-                // jQuery('#data-table-detail').dataTable({
-                //     "processing": true,
-                //     "serverSide": true,
-                //     "ajax": {
-                //         "url": "http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/list-detail",
-                //         "dataType": "json",
-                //         "type": "POST",
-                //         "headers": {
-                //             'Authorization': 'Bearer ' + token
-                //         }
-                //     },
-                //     "columns": [
-                //         { data: 'id', className: 'text-center'},
-                //         { data: 'nama_siswa', className: 'text-center'},
-                //         { data: 'ket_prestasi', className: 'text-center'},
-                //         { data: 'nilai', className: 'text-center'},
-                //         { data: 'jurusan', className: 'text-center'},
-                //         { data: 'tahun_ajar', className: 'text-center'},
-                //     ],
-                //     "drawCalllback": function(settings){
-                //         feather.replace();
-                //     }
-                // });
-            
-                // Hide Element
-                jQuery('.template-element').hide();
-                jQuery('.btn-import').hide();
-
-                // Show the modal
-                jQuery('.modal-detail').click(function(){
-                    // Show the modal
-                    const el = document.querySelector("#header-detail-footer-modal-preview");
-                    const modal = tailwind.Modal.getOrCreateInstance(el);
-                    modal.show();
-                });
-                
-                jQuery('.modal-import').click(function(){
-                    // Show the modal
-                    const el = document.querySelector("#header-import-footer-modal-preview");
-                    const modal = tailwind.Modal.getOrCreateInstance(el);
-                    modal.show();
+                    ],
+                    "drawCallback": function(settings) {
+                        feather.replace();
+                    }
                 });
 
-                // Show Element
-                jQuery('.import-tajar').change(function(){
-                    jQuery('.template-element').show();
-                    jQuery('.btn-import').show();
-                });
-
-                jQuery('.btn-tambah').click(function(){
-                    // show the modal
+                // Menampilkan btn-tambah
+                jQuery('.btn-tambah').click(function() {
+                    // show modal
                     const el = document.querySelector('#header-footer-modal-preview');
                     const modal = tailwind.Modal.getOrCreateInstance(el);
                     modal.show();
                 });
-                
-                // Fungsi button sortBy
-                loadDataTable();
-                jQuery('#search-button').on('click', function() {
-                    var jurusanId = $('#select-jurusan').val();
-                    loadDataTable(jurusanId);
-                });
-                
-                // Data Support Tahun Ajar
-                var url = 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/data-support/tajar';
-                fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
-                }).then(response => response.json()).then(data => {
 
-                    var select = jQuery('.import-tajar');
-                    var selectUpdatePeriode = jQuery('.update-tahun-ajar');
-                    var selectCreatePeriode = jQuery('.create-tahun-ajar');
-
-                    // Iterasi melalui data dan membuat objek untuk setiap entri
-                    jQuery.each(data, function(index, item){
-                        for (let i = 0; i < item.length; i++)
-                        {
-                            select.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
-                            selectUpdatePeriode.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
-                            selectCreatePeriode.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
-                        }
-                    });
-                }).catch(error => {
-                    console.error('Error:', error);
-                });
-
-                // Data Support Konversi Prestasi
-                var url = 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/data-support/konversi-prestasi';
-                fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
-                }).then(response => response.json()).then(data => {
-
-                    var selectUpdateKeterangan = jQuery('.update-ket-prestasi');
-                    var selectCreateKeterangan = jQuery('.create-ket-prestasi');
-
-                    // Iterasi melalui data dan membuat objek untuk setiap entri
-                    jQuery.each(data, function(index, item){
-                        for (let i = 0; i < item.length; i++)
-                        {
-                            selectUpdateKeterangan.append('<option value="' + item[i].id + '">' + item[i].ket_prestasi + ' - ' + item[i].nilai_konversi + '</option>');
-                            selectCreateKeterangan.append('<option value="' + item[i].id + '">' + item[i].ket_prestasi + ' - ' + item[i].nilai_konversi + '</option>');
-                        }
-                    });
-                }).catch(error => {
-                    console.error('Error:', error);
-                });
-
-                // Data support jurusan
-                var url = 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/data-support/jurusan';
-                fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
-                }).then(response => response.json()).then(data => {
-                    // Panggil element select
-                    var selectJurusan = jQuery('.form-jurusan');
-                    var selectUpdateNama = jQuery('.update-jurusan');
-                    var selectImportJurusan = jQuery('.import-jurusan');
-                    var selectCreateJurusan = jQuery('.create-jurusan');
-
-                    // Iterasi melalui data dan membuat objek untuk setiap entri
-                    jQuery.each(data, function(index, item) {
-                        for (let i = 0; i < item.length; i++) {
-                            // Isi data dengan nilai dalam database
-                            selectUpdateNama.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
-                            selectJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
-                            selectImportJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
-                            selectCreateJurusan.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
-                        }
-                    });
-                }).catch(error => {
-                    console.error('Error:', error);
-                });
-
-                // Button Simpan
                 jQuery('.btn-simpan').click(function(){
                     // show the modal
-                    event.preventDefault();
+                    event.preventDefault(); // Prevent default form submission
 
-                    // get form data
-                    var siswa_id_nama = jQuery('.create-nama-siswa').val();
-                    var konversi_prestasi_id_keterangan = jQuery('.create-ket-prestasi').val();
-                    var jurusan_id_nama = jQuery('.create-jurusan').val();
-                    var tajar_id_periode = jQuery('.create-tahun-ajar').val();
+                    // Get form data
+                    var jumlah_keterlambatan = jQuery('.create-jumlah-keterlambatan').val();
+                    var nilai_konversi = jQuery('.create-nilai-konversi').val();
 
                     var formData = new FormData();
-                    formData.append('siswa_id', siswa_id_nama);
-                    formData.append('konversi_prestasi_id', konversi_prestasi_id_keterangan);
-                    formData.append('jurusan_id', jurusan_id_nama);
-                    formData.append('tajar_id', tajar_id_periode);
+                    formData.append('jumlah_keterlambatan', jumlah_keterlambatan);
+                    formData.append('nilai_konversi', nilai_konversi);
 
                     // Kirim permintaan ke API
                     jQuery.ajax({
-                        url: 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/tambah-data',
+                        url: 'http://127.0.0.1:8000/api/data-kriteria/konversi-keterlambatan/tambah-data',
                         type: 'POST',
                         headers: {
                             'Authorization': 'Bearer ' + token,
@@ -1367,55 +1103,8 @@
                         }
                     });
                 });
-                
-                // Data Support Siswa
-                var url = 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/data-support/siswa';
-                fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
-                }).then(response => response.json()).then(data => {
-                    // panggil element select
-                    var selectUpdateNama = jQuery('.update-nama-siswa');
-                    var selectCreateNama = jQuery('.create-nama-siswa');
 
-                    // iterasi melalui data dan membuat objek untuk setiap entri
-                    jQuery.each(data, function(index, item){
-                        for (let i = 0; i < item.length; i++)
-                        {
-                            // isi data dengan nilai dalam database
-                            selectUpdateNama.append('<option value="' + item[i].id + '"> ' + item[i].name + ' </option>')
-                            selectCreateNama.append('<option value="' + item[i].id + '"> ' + item[i].name + ' </option>')
-                        }
-                    });
-                }).catch(error => {
-                    console.error('Error: ', error);
-                });
-
-                // Jika button-select create-ket-prestasi di klik, maka button-select create-nilai akan terisi otomatis
-                // jQuery('.create-ket-prestasi').change(function(){
-                //     var ket_prestasi = jQuery(this).val();
-
-                //     jQuery.ajax({
-                //         url: 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/get-nilai',
-                //         type: 'POST',
-                //         beforeSend: function(xhr) {
-                //             xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                //         },
-                //         data: {
-                //             ket_prestasi: ket_prestasi,
-                //         },
-                //         success: function(response){
-                //             jQuery('.create-nilai').val(response.nilai);
-                //         },
-                //         error: function(xhr, status, error){
-                //             console.error('Gagal mendapatkan nilai otomatis', error);
-                //         }
-                //     });
-                // });
-
-                // Button Edit
+                // Button Update
                 jQuery('#data-table').on('click', '.btn-edit', function(){
                     // show the modal
                     const el = document.querySelector('#header-update-footer-modal-preview');
@@ -1423,71 +1112,38 @@
                     modal.show();
 
                     var id = jQuery(this).attr("data-id");
-                    var id_siswa_nama = jQuery(this).attr("data-id_siswa_nama");
-                    var id_konversi_prestasi_keterangan = jQuery(this).attr("data-id_konversi_prestasi_keterangan");
-                    var id_jurusan_nama = jQuery(this).attr("data-id_jurusan_nama");
-                    var id_tajar_periode = jQuery(this).attr("data-id_tajar_periode");
+                    var jumlah_keterlambatan = jQuery(this).attr("data-jumlah_keterlambatan");
+                    var nilai_konversi = jQuery(this).attr("data-nilai_konversi");
 
+                    // handle edit action
                     jQuery('.update-id').val(id);
-                    jQuery('.update-nama-siswa').val(id_siswa_nama);
-                    jQuery('.update-ket-prestasi').val(id_konversi_prestasi_keterangan);
-                    jQuery('.update-jurusan').val(id_jurusan_nama);
-                    jQuery('.update-tahun-ajar').val(id_tajar_periode);
-                    
-                })
+                    jQuery('.update-jumlah-keterlambatan').val(jumlah_keterlambatan);
+                    jQuery('.update-nilai-konversi').val(nilai_konversi);
+                });
 
-                // Mendapatkan nilai otomatis berdasarkan keterangan prestasi
-                // jQuery('.update-ket-prestasi').change(function(){
-                //     var ket_prestasi = jQuery(this).val();
-
-                //     // Kirim pembaruan ke API
-                //     jQuery.ajax({
-                //         url: 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/get-nilai',
-                //         type: 'POST',
-                //         beforeSend: function(xhr){
-                //             xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                //         },
-                //         data: {
-                //             ket_prestasi: ket_prestasi,
-                //         },
-                //         success: function(response){
-                //             jQuery('.update-nilai').val(response.nilai);
-                //         },
-                //         error: function(xhr, status, error){
-                //             console.error('Gagal mendapatkan nilai otomatis', error);
-                //         }
-                //     });
-                // })
-                
-                // Button Update
+                // fungsi button update
                 jQuery('.btn-update').click(function(){
                     // ajax update
                     var id = jQuery('.update-id').val();
-                    var nama_siswa_id = jQuery('.update-nama-siswa').val();
-                    var keterangan_konversi_prestasi_id = jQuery('.update-ket-prestasi').val();
-                    var nilai = jQuery('.update-nilai').val();
-                    var nama_jurusan_id = jQuery('.update-jurusan').val();
-                    var periode_tajar_id = jQuery('.update-tahun-ajar').val();
-
-                    // kirim ppermintaan pembaruan produk ke API
+                    var jumlah_keterlambatan = jQuery('.update-jumlah-keterlambatan').val();
+                    var nilai_konversi = jQuery('.update-nilai-konversi').val();                 
+                    
+                    // kirim permintaan pembaruan produk ke API
                     jQuery.ajax({
-                        url: 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/update-data/' + id,
+                        url: 'http://127.0.0.1:8000/api/data-kriteria/konversi-keterlambatan/update-data/' + id,
                         type: 'PUT',
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader('Authorization', 'Bearer ' + token);
                         },
                         data: {
-                            siswa_id : nama_siswa_id,
-                            konversi_prestasi_id : keterangan_konversi_prestasi_id,
-                            nilai : nilai,
-                            jurusan_id : nama_jurusan_id,
-                            tajar_id : periode_tajar_id,
+                            jumlah_keterlambatan: jumlah_keterlambatan,
+                            nilai_konversi: nilai_konversi,
                         },
                         success: function(response){
                             // show the modal
                             jQuery('.update-sukses').text(response.message);
                             Toastify({
-                                node: $("#success-update-notification-content")
+                                node: $('#success-update-notification-content')
                                     .clone()
                                     .removeClass("hidden")[0],
                                 duration: 3000,
@@ -1502,11 +1158,10 @@
                                 location.reload();
                             }, 3000);
                         },
-                        error: function(xhr, response, error){
-                            // show the modal
+                        error: function(xhr, status, error) {
                             jQuery('.update-gagal').text(response.message);
                             Toastify({
-                                node: $("#failed-update-notification-content")
+                                node: $('#failed-update-notification-content')
                                     .clone()
                                     .removeClass("hidden")[0],
                                 duration: 5000,
@@ -1523,142 +1178,8 @@
                         }
                     });
                 })
-                
-                // Button Unduh Template Mipa
-                jQuery('.btn-unduh-mipa').click(function(){
-                    // Akses URL Export Data
-                    var linkto = 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/export-data/download-template-mipa';
-                    jQuery.ajax({
-                        xhrFields: {
-                            responseType: 'blob',
-                        },
-                        headers: {
-                            'Authorization': 'Bearer ' + token
-                        },
-                        type: 'GET',
-                        url: linkto,
-                        success: function(result, status, xhr){
-                            
-                            var disposition = xhr.getResponseHeader('content-disposition');
-                            var matches = /"([^"]*)"/.exec(disposition);
-                            var filename = (matches != null && matches[1] ? matches[1] : 'Template-Prestasi-Siswa-Mipa.xlsx');
 
-                            // The actual download
-                            var blob = new Blob([result], {
-                                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                            });
-                            var link = document.createElement('a');
-                            link.href = window.URL.createObjectURL(blob);
-                            link.download = filename;
-
-                            document.body.appendChild(link);
-
-                            link.click();
-                            document.body.removeChild(link);
-                        }
-                    });
-                });
-
-                // Button Unduh Template Iis
-                jQuery('.btn-unduh-iis').click(function(){
-                    // Akses URL Export Data
-                    var linkto = 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/export-data/download-template-iis';
-                    jQuery.ajax({
-                        xhrFields: {
-                            responseType: 'blob',
-                        },
-                        headers: {
-                            'Authorization': 'Bearer ' + token
-                        },
-                        type: 'GET',
-                        url: linkto,
-                        success: function(result, status, xhr){
-                            
-                            var disposition = xhr.getResponseHeader('content-disposition');
-                            var matches = /"([^"]*)"/.exec(disposition);
-                            var filename = (matches != null && matches[1] ? matches[1] : 'Template-Prestasi-Siswa-Iis.xlsx');
-
-                            // The actual download
-                            var blob = new Blob([result], {
-                                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                            });
-                            var link = document.createElement('a');
-                            link.href = window.URL.createObjectURL(blob);
-                            link.download = filename;
-
-                            document.body.appendChild(link);
-
-                            link.click();
-                            document.body.removeChild(link);
-                        }
-                    });
-                });
-                
-                // Button Import
-                jQuery('.btn-import').click(function() {
-                    // Get Form Data
-                    var inp = jQuery('#fileInput1')[0];
-                    var foto = inp.files[0];
-                    var selectedTahunAjar = jQuery('#tajar-import').val();
-                    var selectedJurusan = jQuery('#jurusan-import').val();
-
-                    var formData = new FormData();
-                    formData.append('excel', foto);
-                    formData.append('selected_tahun_ajar', selectedTahunAjar);
-                    formData.append('selected_jurusan', selectedJurusan);
-
-                    // Kirim permintaan pembaruan produk ke API
-                    jQuery.ajax({
-                        url: 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/import-data/import-xls',
-                        type: 'POST',
-                        headers: {
-                            "Authorization": "Bearer " + token
-                        },
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function(response){
-                            // Show the modal
-                            jQuery('.import-sukses').text(response.message);
-                            Toastify({
-                                node: $("#success-import-notification-content")
-                                    .clone()
-                                    .removeClass("hidden")[0],
-                                duration: 3000,
-                                newWindow: true,
-                                close: true,
-                                gravity: "top",
-                                position: "right",
-                                stopOnFocus: true,
-                            }).showToast();
-
-                            setTimeout(function() {
-                                location.reload();
-                            }, 3000); // 4000 milli secods = 3 secods
-                        },
-                        error: function(xhr, tahun_ajar, error) {
-                            // Show the modal
-                            jQuery('.import-gagal').text(error);
-                            Toastify({
-                                node: $("#failed-import-notification-content")
-                                    .clone()
-                                    .removeClass("hidden")[0],
-                                duration: 5000,
-                                newWindow: true,
-                                close: true,
-                                gravity: "top",
-                                position: "right",
-                                stopOnFocus: true,
-                            }).showToast();
-
-                            setTimeout(function() {
-                                // location.reload();
-                            }, 5000);
-                        }
-                    });
-                });
-
-                // Fungsi button delete
+                // fungsi button delete
                 jQuery('#data-table').on('click', '.btn-delete', function(){
                     var id = jQuery(this).attr("data-id");
 
@@ -1668,9 +1189,9 @@
                     modal.show();
 
                     jQuery('.btn-iya').click(function(){
-                        // ajax delete api
+                        // ajax delete API
                         jQuery.ajax({
-                            url: 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/hapus-data/' + id,
+                            url: 'http://127.0.0.1:8000/api/data-kriteria/konversi-keterlambatan/hapus-data/' + id,
                             type: 'DELETE',
                             headers: {
                                 'Authorization': 'Bearer ' + token
@@ -1694,9 +1215,9 @@
                                     location.reload();
                                 }, 3000);
                             },
-                            error: function(xhr, response, error) {
+                            error: function(xhr, status, error){
                                 // show the modal
-                                jQuery('.hapus-gagal').text(response.message);
+                                jQuery('.hapus-gagal').text(error);
                                 Toastify({
                                     node: $("#failed-hapus-notification-content")
                                         .clone()
@@ -1716,45 +1237,8 @@
                         })
                     })
                 })
-                
-                // Button Export
-                jQuery('.btn-export').click(function() {
-                    // Akses URL Export data
-                    var linkto = 'http://127.0.0.1:8000/api/data-nilai/prestasi-siswa/export-data/export-xls';
-                    jQuery.ajax({
-                        xhrFields: {
-                            responseType: 'blob',
-                        },
-                        headers: {
-                            'Authorization': 'Bearer ' + token
-                        },
-                        type: 'GET',
-                        url: linkto,
-                        success: function(result, tahun_ajar, xhr){
 
-                            var disposition = xhr.getResponseHeader('content-disposition');
-                            var matches = /"([^"]*)"/.exec(disposition);
-                            var filename = (matches != null && matches[1] ? matches[1] : 'Export-Prestasi-Siswa.xlsx');
-
-                            // The actual download
-                            var blob = new Blob([result], {
-                                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                            });
-                            
-                            var link = document.createElement('a');
-                            link.href = window.URL.createObjectURL(blob);
-                            link.download = filename;
-                            
-                            document.body.appendChild(link);
-                            
-                            link.click();
-                            document.body.removeChild(link);
-                            
-                        }
-                    });
-                });
-                
-            })
+            });
         </script>
         <!-- END: JS Assets -->
     </body>

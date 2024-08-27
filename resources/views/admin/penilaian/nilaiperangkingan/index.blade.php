@@ -445,6 +445,27 @@
                         </div>
                     </div>
                 </div>
+                <!-- BEGIN : SortBy Jurusan -->
+                <div class="intro-y flex flex-col sm:flex-row items-center mt-1">
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <button type="submit" class="btn btn-primary shadow-md mr-2 btn-cari-mipa" id="search-button-mipa">Cari</button>
+                    </div>
+                    {{-- <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <label for="jurusan" class="form-label"></label>
+                        <select class="form-select form-jurusan" name="jurusan" id="select-jurusan" required>
+                            <option disabled selected> -- Pilih Jurusan -- </option>
+                            <option value="-1">Semua Jurusan</option>
+                        </select>
+                    </div> --}}
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <label for="tajar-mipa" class="form-label"></label>
+                        <select class="form-select form-tajar-mipa" name="tajar-mipa" id="select-tajar-mipa" required>
+                            <option disabled selected> -- Pilih Periode -- </option>
+                            <option value="-1">Semua Periode</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- END : SortBy Jurusan -->
                 <!-- BEGIN: HTML Table Data -->
                 <div class="intro-y box p-5 mt-5">
                     <div class="overflow-x-auto scrollbar-hidden">
@@ -455,7 +476,7 @@
                                     <th>Nama Siswa</th>
                                     <th>Nilai Akhir</th>
                                     <th>Jurusan</th>
-                                    <th>Semester</th>
+                                    {{-- <th>Semester</th> --}}
                                     <th>Tahun Ajar</th>
                                 </tr>
                             </thead>
@@ -501,6 +522,20 @@
                         </div>
                     </div>
                 </div>
+                <!-- BEGIN : SortBy Jurusan -->
+                <div class="intro-y flex flex-col sm:flex-row items-center mt-1">
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <button type="submit" class="btn btn-primary shadow-md mr-2 btn-cari-iis" id="search-button-iis">Cari</button>
+                    </div>
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <label for="tajar-iis" class="form-label"></label>
+                        <select class="form-select form-tajar-iis" name="tajar-iis" id="select-tajar-iis" required>
+                            <option disabled selected> -- Pilih Periode -- </option>
+                            <option value="-1">Semua Periode</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- END : SortBy Jurusan -->
                 <!-- BEGIN: HTML Table Data -->
                 <div class="intro-y box p-5 mt-5">
                     <div class="overflow-x-auto scrollbar-hidden">
@@ -511,7 +546,7 @@
                                     <th>Nama Siswa</th>
                                     <th>Nilai Akhir</th>
                                     <th>Jurusan</th>
-                                    <th>Semester</th>
+                                    {{-- <th>Semester</th> --}}
                                     <th>Tahun Ajar</th>
                                 </tr>
                             </thead>
@@ -873,55 +908,135 @@
                     console.error('Error: ', error);
                 });
 
-                // Data table list nilai perangkingan MIPA
-                jQuery('#data-table-mipa').dataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": "http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/listMipa",
-                        "dataType": "json",
-                        "type": "POST",
-                        "headers": {
-                            'Authorization': 'Bearer ' + token
-                        },
-                    },
-                    "columns": [
-                        { data: 'id', className: 'text-center' },
-                        { data: 'nama_siswa', className: 'text-center' },
-                        { data: 'nilai_akhir', className: 'text-center' },
-                        { data: 'jurusan', className: 'text-center' },
-                        { data: 'semester', className: 'text-center' },
-                        { data: 'tahun_ajar', className: 'text-center' },
-                    ],
-                    "drawCallback": function (settings) {
-                        feather.replace(); // Asumsikan feather adalah plugin ikon yang digunakan
+                // Data Support Tahun Ajar Mipa
+                var url = 'http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/data-support/tajar-mipa';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
                     }
+                }).then(response => response.json()).then(data => {
+                    var selectSortByTajar = jQuery('.form-tajar-mipa');
+
+                    jQuery.each(data, function (index, item) {
+                        for (let i = 0; i < item.length; i++)
+                        {
+                            selectSortByTajar.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
+                        }
+                    });
+                }).catch(error => {
+                    console.error('Error:', error);
                 });
 
-                // Data table list nilai perangkingan IIS
-                jQuery('#data-table-iis').dataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": "http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/listIis",
-                        "dataType": "json",
-                        "type": "POST",
-                        "headers": {
-                            'Authorization': 'Bearer ' + token
-                        },
-                    },
-                    "columns": [
-                        { data: 'id', className: 'text-center' },
-                        { data: 'nama_siswa', className: 'text-center' },
-                        { data: 'nilai_akhir', className: 'text-center' },
-                        { data: 'jurusan', className: 'text-center' },
-                        { data: 'semester', className: 'text-center' },
-                        { data: 'tahun_ajar', className: 'text-center' },
-                    ],
-                    "drawCallback": function (settings) {
-                        feather.replace(); // Asumsikan feather adalah plugin ikon yang digunakan
+                // Data Support Tahun Ajar Iis
+                var url = 'http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/data-support/tajar-iis';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
                     }
+                }).then(response => response.json()).then(data => {
+                    var selectSortByTajar = jQuery('.form-tajar-iis');
+
+                    jQuery.each(data, function (index, item) {
+                        for (let i = 0; i < item.length; i++)
+                        {
+                            selectSortByTajar.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
+                        }
+                    });
+                }).catch(error => {
+                    console.error('Error:', error);
                 });
+
+                 // Fungsi button sortBy Mipa
+                loadDataTableMipa();
+                jQuery('#search-button-mipa').on('click', function() {
+                    var tajarIdMipa = $('#select-tajar-mipa').val();
+                    loadDataTableMipa(tajarIdMipa);
+                });
+
+                function loadDataTableMipa (tajarIdMipa = '')
+                {
+                    // Data table list nilai perangkingan MIPA
+                    jQuery('#data-table-mipa').dataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "destroy": true,
+                        "ajax": {
+                            "url": "http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/listMipa",
+                            "dataType": "json",
+                            "type": "POST",
+                            "headers": {
+                                'Authorization': 'Bearer ' + token
+                            },
+                            "data": function (d) {
+                                if (tajarIdMipa === '-1')
+                                {
+                                    d.tajar_id = ' ';
+                                } else
+                                {
+                                    d.tajar_id = tajarIdMipa;
+                                }
+                            }
+                        },
+                        "columns": [
+                            { data: 'id', className: 'text-center' },
+                            { data: 'nama_siswa', className: 'text-center' },
+                            { data: 'nilai_akhir', className: 'text-center' },
+                            { data: 'jurusan', className: 'text-center' },
+                            // { data: 'semester', className: 'text-center' },
+                            { data: 'tahun_ajar', className: 'text-center' },
+                        ],
+                        "drawCallback": function (settings) {
+                            feather.replace(); // Asumsikan feather adalah plugin ikon yang digunakan
+                        }
+                    });
+                }
+                
+                // Fungsi button sortBy Iis
+                loadDataTableIis();
+                jQuery('#search-button-iis').on('click', function() {
+                    var tajarIdIis = $('#select-tajar-iis').val();
+                    loadDataTableIis(tajarIdIis);
+                });
+
+                function loadDataTableIis (tajarIdIis = '')
+                {
+                    // Data table list nilai perangkingan MIPA
+                    jQuery('#data-table-iis').dataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "destroy": true,
+                        "ajax": {
+                            "url": "http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/listIis",
+                            "dataType": "json",
+                            "type": "POST",
+                            "headers": {
+                                'Authorization': 'Bearer ' + token
+                            },
+                            "data": function (d) {
+                                if (tajarIdIis === '-1')
+                                {
+                                    d.tajar_id = ' ';
+                                } else
+                                {
+                                    d.tajar_id = tajarIdIis;
+                                }
+                            }
+                        },
+                        "columns": [
+                            { data: 'id', className: 'text-center' },
+                            { data: 'nama_siswa', className: 'text-center' },
+                            { data: 'nilai_akhir', className: 'text-center' },
+                            { data: 'jurusan', className: 'text-center' },
+                            // { data: 'semester', className: 'text-center' },
+                            { data: 'tahun_ajar', className: 'text-center' },
+                        ],
+                        "drawCallback": function (settings) {
+                            feather.replace(); // Asumsikan feather adalah plugin ikon yang digunakan
+                        }
+                    });
+                }
 
                 // Show modal detail
                 jQuery('.modal-detail').click(function(){

@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\KeterlambatanSiswa;
+use App\Models\KonversiKeterlambatan;
 use App\Models\MasterJurusan;
 use App\Models\MasterJurusanSiswa;
 use App\Models\MasterSiswa;
@@ -28,13 +29,13 @@ class KeterlambatanSiswaImport implements ToCollection, WithHeadingRow
 
     protected $selectedTahunAjar;
     protected $selectedJurusan;
-    protected $nilaiCallback;
+    // protected $nilaiCallback;
 
-    public function __construct($selectedTahunAjar, $selectedJurusan, $nilaiCallback)
+    public function __construct($selectedTahunAjar, $selectedJurusan)
     {
         $this->selectedTahunAjar = $selectedTahunAjar;
         $this->selectedJurusan = $selectedJurusan;
-        $this->nilaiCallback = $nilaiCallback;
+        // $this->nilaiCallback = $nilaiCallback;
     }
 
     public function collection(Collection $rows)
@@ -44,21 +45,22 @@ class KeterlambatanSiswaImport implements ToCollection, WithHeadingRow
         foreach($rows as $row)
         {
             $siswa = MasterSiswa::where('name', $row['nama_siswa'])->first();
+            $konversiKeterlambatan = KonversiKeterlambatan::where('jumlah_keterlambatan', $row['jumlah_keterlambatan'])->first();
             $tajar = TahunAjar::find($this->selectedTahunAjar);
             $jurusan = MasterJurusanSiswa::find($this->selectedJurusan);
 
-            if($tajar && $siswa && $jurusan)
+            if($tajar && $siswa && $jurusan && $konversiKeterlambatan)
             {
-                $nilai = call_user_func($this->nilaiCallback, $row['jumlah_keterlambatan']);
+                // $nilai = call_user_func($this->nilaiCallback, $row['jumlah_keterlambatan']);
                     KeterlambatanSiswa::updateOrCreate([
                     'tajar_id' => $tajar->id,
                     'siswa_id' => $siswa->id,
                     'jurusan_id' => $jurusan->id,
-                    'nilai' => $nilai
+                    'konversi_keterlambatan_id' => $konversiKeterlambatan->id,
                 ], [
+                    'konversi_keterlambatan_id' => $konversiKeterlambatan->id,
                     'nama_siswa' => $row['nama_siswa'],
                     'jumlah_keterlambatan' => $row['jumlah_keterlambatan'],
-                    'nilai' => $nilai,
                     'jurusan' => $jurusan->name,
                     'tahun_ajar' => $tajar->name,
                 ]);

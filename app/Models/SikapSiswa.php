@@ -10,7 +10,7 @@ class SikapSiswa extends Model
 {
     use HasFactory;
     protected $table = 'sikap_siswas';
-    protected $fillable = ['tajar_id','siswa_id','jurusan_id','ket_sikap','nilai'];
+    protected $fillable = ['tajar_id','siswa_id','jurusan_id','konversi_sikap_id'];
 
     public function tajar()
     {
@@ -25,5 +25,10 @@ class SikapSiswa extends Model
     public function jurusan()
     {
         return $this->belongsTo(MasterJurusanSiswa::class, 'jurusan_id');
+    }
+
+    public function konversiSikap()
+    {
+        return $this->belongsTo(KonversiSikap::class, 'konversi_sikap_id');
     }
 }

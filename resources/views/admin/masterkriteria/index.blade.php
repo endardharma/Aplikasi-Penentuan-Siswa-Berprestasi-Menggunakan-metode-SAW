@@ -518,9 +518,16 @@ License: You must have a valid license purchased only from themeforest(the above
             <!-- END: Notification Sukses Tambah Master Kriteria Content -->
             <!-- BEGIN: Notification Gagal Tambah Master Kriteria Content -->
             <div id="failed-notification-content" class="toastify-content hidden flex">
-                <i class="text-success" data-lucide="x-circle"></i> 
+                <i class="text-danger" data-lucide="x-circle"></i> 
                 <div class="ml-4 mr-4">
                     <div class="font-medium">Gagal membuat data master kriteria baru!</div>
+                    <div class="text-slate-500 mt-1 pesan-gagal"></div>
+                </div>
+            </div>
+            <div id="failed-notification-content-bobot" class="toastify-content hidden flex">
+                <i class="text-danger" data-lucide="x-circle"></i> 
+                <div class="ml-4 mr-4">
+                    <div class="font-medium">Gagal menambahkan data, total bobot tidak boleh lebih dari 100%!</div>
                     <div class="text-slate-500 mt-1 pesan-gagal"></div>
                 </div>
             </div>
@@ -1052,10 +1059,25 @@ License: You must have a valid license purchased only from themeforest(the above
                                 location.reload();
                             }, 3000); // 3000 milliseconds = 3 seconds
                         },
-                         error: function(xhr, status, error) {
-                            // Show the modal
-                            var response = xhr.responseJson;
-                            jQuery('.pesan-gagal').text(error);
+                        error: function(xhr, status, error) {
+                        // Handle specific bobot > 100% case
+                        if (xhr.status === 400 && xhr.responseJSON.message === 'Gagal menambahkan data, total bobot tidak boleh lebih dari 100%') {
+                            // Show the specific bobot error notification
+                            Toastify({
+                                node: $("#failed-notification-content-bobot")
+                                    .clone()
+                                    .removeClass("hidden")[0],
+                                duration: 5000,
+                                newWindow: true,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                stopOnFocus: true,
+                            }).showToast();
+                        } else {
+                            // General error handling
+                            var response = xhr.responseJSON;
+                            jQuery('.pesan-gagal').text(response ? response.message : error);
                             Toastify({
                                 node: $("#failed-notification-content")
                                     .clone()
@@ -1067,6 +1089,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 position: "right",
                                 stopOnFocus: true,
                             }).showToast();
+                        }
 
                             setTimeout(function() {
                                 location.reload();
