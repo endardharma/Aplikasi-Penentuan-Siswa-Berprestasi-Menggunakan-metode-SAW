@@ -903,6 +903,15 @@
                 //     }
                 // })
 
+                
+                // Fungsi button sortBy
+                loadDataTable();
+                jQuery('#search-button').on('click', function() {
+                    var jurusanId = $('#select-jurusan').val();
+                    var tajarId = $('#select-tajar').val();
+                    loadDataTable(jurusanId, tajarId);
+                })
+
                 // Data table list nilai keseluruhan
                 function loadDataTable (jurusanId = '', tajarId = '')
                 {
@@ -917,16 +926,18 @@
                             "headers": {
                                 'Authorization': 'Bearer ' + token
                             },
+                            // "data": function (d) {
+                            //     if (jurusanId === '-1')
+                            //     {
+                            //         d.jurusan_id = ' ';
+                            //     } else
+                            //     {
+                            //         d.jurusan_id = jurusanId;
+                            //     }
+                            // }
                             "data": function (d) {
-                                if (jurusanId === '-1' || tajarId === '-1')
-                                {
-                                    d.jurusan_id = ' ';
-                                    d.tajar_id = ' ';
-                                } else
-                                {
-                                    d.jurusan_id = jurusanId;
-                                    d.tajar_id = tajarId;
-                                }
+                                d.jurusan_id = (jurusanId === '-1') ? '' : jurusanId;
+                                d.tajar_id = (tajarId === '-1') ? '' : tajarId; // Kirim nilai periode yang dipilih atau kosong jika 'Semua Periode' dipilih
                             }
                         },
                         "columns": [
@@ -954,7 +965,6 @@
                         }
                     });
                 }
-
                 
                 // Data table list detail nilai keseluruhan
                 jQuery('#data-table').on('click', '.btn-detail', function() {
@@ -998,14 +1008,6 @@
                     const el = document.querySelector("#header-detail-footer-modal-preview");
                     const modal = tailwind.Modal.getOrCreateInstance(el);
                     modal.show();
-                })
-
-                // Fungsi button sortBy
-                loadDataTable();
-                jQuery('#search-button').on('click', function() {
-                    var jurusanId = $('#select-jurusan').val();
-                    var tajarIid = $('#select-tajar').val();
-                    loadDataTable(jurusanId, tajarIid);
                 })
 
                 // Data Support Jurusan

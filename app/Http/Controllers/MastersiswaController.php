@@ -58,7 +58,7 @@ class MastersiswaController extends Controller
             $item['jenkel'] = $s->jenkel;
             $item['telpon'] = $s->telpon;
             $item['tajar_id'] = $s->tajar_id;
-            $item['tajar_name'] = $s->tajar->name ?? '';
+            $item['tajar_name'] = $s->tajar->periode ?? '';
             $data[] = $item;
         }
 
@@ -95,7 +95,7 @@ class MastersiswaController extends Controller
         $siswa->kelas_id = $request->kelas_id;
         $siswa->jenkel = $request->jenkel;
         $siswa->telpon = $request->telpon;
-        $siswa->tajar_id = $request->tajar_id;
+        $siswa->tajar_id = $request->periode;
         $siswa->save();
 
         return response()->json([

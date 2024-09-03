@@ -609,7 +609,12 @@
                                 <label for="modal-form-2" class="form-label">Keterangan Ketidakhadiran</label>
                                 <select class="form-select create-ket-ketidakhadiran" required>
                                     <option disabled selected> --- Pilih Keterangan Ketidakhadiran --- </option>
+                                    <option value="Tidak Ada"> Tidak Ada </option>
+                                    <option value="Sakit"> Sakit </option>
+                                    <option value="Izin"> Izin </option>
+                                    <option value="Tanpa Keterangan"> Tanpa Keterangan </option>
                                 </select>
+                                {{-- <input type="text" class="form-control create-ket-ketidakhadiran" placeholder="Masukkan Keterangan Ketidakhadiran Siswa" required> --}}
                             </div>
                             {{-- <div class="col-span-12 sm:col-span-12 create-hari">
                                 <label for="modal-form-2" class="form-label">Jumlah Hari</label>
@@ -623,6 +628,10 @@
                                     <option disabled selected> --- Pilih Jumlah Hari Lainnya --- </option>
                                 </select>
                             </div> --}}
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Jumlah Hari</label>
+                                <input type="text" class="form-control create-jumlah-hari" placeholder="Masukkan Jumlah Hari Ketidakhadiran Siswa" required>
+                            </div>
                             {{-- <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Nilai</label>
                                 <input type="number" class="form-control create-nilai" placeholder="Masukkan Nilai Ketidakhadiran Siswa" required readonly>
@@ -1232,7 +1241,8 @@
                     jQuery.each(data, function(index, item) {
                         for (let i = 0; i < item.length; i++)
                         {
-                            selectCreateKetidakhadiran.append('<option value="' + item[i].id + '">' + item[i].ket_ketidakhadiran + ' - ' + item[i].jumlah_hari + ' - ' + item[i].nilai_konversi + '</option>');
+                            // selectCreateKetidakhadiran.append('<option value="' + item[i].id + '">' + item[i].ket_ketidakhadiran + ' - ' + item[i].jumlah_hari + ' - ' + item[i].nilai_konversi + '</option>');
+                            // selectCreateKetidakhadiran.append('<option value="' + item[i].id + '">' + item[i].ket_ketidakhadiran + '</option>');
                             selectCreateJumlahHari.append('<option value="' + item[i].id + '">' + item[i].jumlah_hari + '</option>');
                             selectCreateJumlahHariLainnya.append('<option value="' + item[i].id + '">' + item[i].jumlah_hari_lainnya + '</option>');
                             selectUpdateKetidakhadiran.append('<option value="' + item[i].id + '">' + item[i].ket_ketidakhadiran + ' - ' + item[i].jumlah_hari + ' - ' + item[i].nilai_konversi + '</option>');
@@ -1590,14 +1600,16 @@
 
                     // Get form data
                     var siswa_id_nama = jQuery('.create-nama-siswa').val();
-                    var konversi_ketidakhadiran_id_keterangan = jQuery('.create-ket-ketidakhadiran').val();
+                    var ket_ketidakhadiran = jQuery('.create-ket-ketidakhadiran').val();
+                    var jumlah_hari = jQuery('.create-jumlah-hari').val();
                     // var id_konversi_ketidakhadiran_nilai = jQuery('.create-nilai').val();
                     var jurusan_id_nama = jQuery('.create-jurusan').val();
                     var tajar_id_periode = jQuery('.create-tahun-ajar').val();
 
                     var formData = new FormData();
                     formData.append('siswa_id', siswa_id_nama);
-                    formData.append('konversi_ketidakhadiran_id', konversi_ketidakhadiran_id_keterangan);
+                    formData.append('ket_ketidakhadiran', ket_ketidakhadiran);
+                    formData.append('jumlah_hari', jumlah_hari);
                     // formData.append('nilai', id_konversi_ketidakhadiran_nilai);
                     formData.append('jurusan_id', jurusan_id_nama);
                     formData.append('tajar_id', tajar_id_periode);

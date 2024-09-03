@@ -512,7 +512,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-6" class="form-label">Periode Angkatan</label>
-                                <select class="form-select form-tajar" required>
+                                <select class="form-select form-periode" required>
                                     <option selected disabled> --- Pilih Periode Angkatan Tahun Ajar --- </option>
                                 </select>
                             </div>
@@ -593,7 +593,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-6" class="form-label">Periode Angkatan</label>
-                                <select class="form-select update-tajar" required>
+                                <select class="form-select update-periode" required>
                                     <option selected disabled> --- Pilih Periode Angkatan Tahun Ajar --- </option>
                                 </select>
                             </div>
@@ -689,7 +689,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             </div>
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-6" class="form-label">Periode Angkatan</label>
-                                <select id="tajar-import" class="form-select import-tajar" required>
+                                <select id="tajar-import" class="form-select import-periode" required>
                                     <option selected disabled> --- Pilih Periode Angkatan Tahun Ajar --- </option>
                                 </select>
                             </div>
@@ -1114,15 +1114,15 @@ License: You must have a valid license purchased only from themeforest(the above
                         'Authorization': 'Bearer ' + token
                     }
                 }).then(response => response.json()).then(data => {
-                    var select = jQuery('.form-tajar');
-                    var selectUpdate = jQuery('.update-tajar');
-                    var selectTajar = jQuery('.import-tajar');
+                    var select = jQuery('.form-periode');
+                    var selectUpdate = jQuery('.update-periode');
+                    var selectTajar = jQuery('.import-periode');
 
                     // Iterasi melalui data dan membuat objek untuk setiap entri
                     jQuery.each(data, function(index, item) {
                         for (let i = 0; i < item.length; i++) {
-                            select.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
-                            selectUpdate.append('<option value="' + item[i].id + '">' + item[i].name + '</option>');
+                            select.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
+                            selectUpdate.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
                             selectTajar.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
                         }
                     });
@@ -1135,7 +1135,7 @@ License: You must have a valid license purchased only from themeforest(the above
                 jQuery('.btn-import').hide();
 
                 // Show the element
-                jQuery('.import-tajar').change(function(){
+                jQuery('.import-periode').change(function(){
                     jQuery('.template-element').show();
                     jQuery('.btn-import').show();
                 });
@@ -1207,7 +1207,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             }).showToast();
 
                             setTimeout(function() {
-                                location.reload();
+                                // location.reload();
                             }, 5000); // 3000 milliseconds = 3 seconds
                         }
                     });
@@ -1276,7 +1276,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     jQuery('.update-kelas').val(kelas_id);
                     jQuery('.update-jenkel').val(jenkel);
                     jQuery('.update-telpon').val(telpon);
-                    jQuery('.update-tajar').val(tajar_id);
+                    jQuery('.update-periode').val(tajar_id);
                 });
 
                 // Fungsi button update data
@@ -1289,7 +1289,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     var jenkel = jQuery('.update-jenkel').val();
                     var kelas_id = jQuery('.update-kelas').val();
                     var telpon = jQuery('.update-telpon').val();
-                    var tajar_id = jQuery('.update-tajar').val();
+                    var tajar_id = jQuery('.update-periode').val();
 
                     // Kirim permintaan pembaruan produk ke API
                     jQuery.ajax({
@@ -1342,7 +1342,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             }).showToast();
 
                             setTimeout(function() {
-                                location.reload();
+                                // location.reload();
                             }, 5000); // 3000 milliseconds = 3 seconds
                         }
                     });

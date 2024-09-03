@@ -369,37 +369,88 @@ class PresensiSiswaController extends Controller
     // }
 
     // REVISI
+    // public function tambahData(Request $request)
+    // {
+    //     // Validasi input
+    //     $validator = Validator::make($request->all(), [
+    //         'siswa_id' => 'required',
+    //         'konversi_ketidakhadiran_id' => 'required',
+    //         // 'nilai' => 'required', // Ini mungkin tidak perlu jika nilai diatur berdasarkan keterangan
+    //         'jurusan_id' => 'required',
+    //         'tajar_id' => 'required',
+    //     ]);
+
+    //     // Tanggapan jika validasi gagal
+    //     if ($validator->fails()) {
+    //         return response()->json($validator->errors(), 400);
+    //     }
+
+    //     $konversi = KonversiKetidakhadiran::where('ket_ketidakhadiran', $request->ket_ketidakhadiran)
+    //     ->where('jumlah_hari', $request->jumlah_hari)
+    //     ->first();
+
+    //     if (!$konversi) {
+    //         return response()->json(['error' => 'Data konversi ketidakhadiran tidak ditemukan'], 404);
+    //     }
+
+    //     $presensi = new PresensiSiswa();
+    //     $presensi->siswa_id = $request->siswa_id;
+    //     $presensi->konversi_ketidakhadiran_id = $konversi->id;
+    //     // $presensi->nilai = $nilai; // Menggunakan nilai dari konversi
+    //     $presensi->jurusan_id = $request->jurusan_id;
+    //     $presensi->tajar_id = $request->tajar_id;
+    //     $presensi->save();
+        
+        
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Berhasil menambahkan data nilai ketidakhadiran siswa',
+    //     ], 201);
+    // }
+
+    // REVISI 2
     public function tambahData(Request $request)
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
             'siswa_id' => 'required',
-            'konversi_ketidakhadiran_id' => 'required',
-            // 'nilai' => 'required', // Ini mungkin tidak perlu jika nilai diatur berdasarkan keterangan
+            'ket_ketidakhadiran' => 'required', // Menambahkan validasi untuk ket_ketidakhadiran
+            'jumlah_hari' => 'required', // Menambahkan validasi untuk jumlah_hari
             'jurusan_id' => 'required',
             'tajar_id' => 'required',
         ]);
-
+    
         // Tanggapan jika validasi gagal
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-
+    
+        // Mencari konversi_ketidakhadiran_id berdasarkan ket_ketidakhadiran dan jumlah_hari
+        $konversi = KonversiKetidakhadiran::where('ket_ketidakhadiran', $request->ket_ketidakhadiran)
+                                          ->where('jumlah_hari', $request->jumlah_hari)
+                                          ->first();
+    
+        if (!$konversi) {
+            return response()->json(['error' => 'Data konversi ketidakhadiran tidak ditemukan'], 404);
+        }
+    
+        // Membuat data baru untuk PresensiSiswa
         $presensi = new PresensiSiswa();
         $presensi->siswa_id = $request->siswa_id;
-        $presensi->konversi_ketidakhadiran_id = $request->konversi_ketidakhadiran_id;
-        // $presensi->nilai = $nilai; // Menggunakan nilai dari konversi
+        $presensi->konversi_ketidakhadiran_id = $konversi->id; // Menggunakan ID dari tabel konversi
         $presensi->jurusan_id = $request->jurusan_id;
         $presensi->tajar_id = $request->tajar_id;
         $presensi->save();
         
-        
         return response()->json([
             'success' => true,
-            'message' => 'Berhasil menambahkan data nilai ketidakhadiran siswa',
+            'message' => 'Berhasil menambahkan data presensi siswa',
         ], 201);
     }
-
+    
+    
+    
+    
     
     public function updateData(Request $request, $id)
     {

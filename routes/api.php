@@ -110,6 +110,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post("/tambah-data", [MasterkriteriaController::class, 'tambahKriteria']);
         Route::put("/update-data/{id}", [MasterkriteriaController::class, 'updateData']);
         Route::delete("/hapus-data/{id}", [MasterkriteriaController::class, 'hapusData']);
+        Route::get("/data-support/tajar", [MasterkriteriaController::class, 'supportTajar']);
     });
 
     Route::prefix('data-kriteria')->group(function() {
@@ -267,7 +268,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post("listIis", [NilaiPerangkinganController::class, 'listNilaiPerangkinganIis']);
             Route::post("list-detail", [NilaiPerangkinganController::class, 'listDetailNilaiPerangkingan']);
             Route::get("/export-data/export-xls-mipa", [NilaiPerangkinganController::class, 'exportDataMipa']);
+            Route::get("/export-data/export-xls-mipa/3-best", [NilaiPerangkinganController::class, 'exportDataMipa3Best']);
             Route::get("/export-data/export-xls-iis", [NilaiPerangkinganController::class, 'exportDataIis']);
+            Route::get("/export-data/export-xls-iis/3-best", [NilaiPerangkinganController::class, 'exportDataIis3Best']);
             Route::get("/data-support/tajar-mipa", [NilaiPerangkinganController::class, 'supportTajarMipa']);
             Route::get("/data-support/tajar-iis", [NilaiPerangkinganController::class, 'supportTajarIis']);
         });

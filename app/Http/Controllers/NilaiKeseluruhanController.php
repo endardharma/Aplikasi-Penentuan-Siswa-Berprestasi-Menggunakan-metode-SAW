@@ -27,6 +27,639 @@ class NilaiKeseluruhanController extends Controller
     }
 
     // Eloquent ORM Di Pakai
+    // public function listNilaiKeseluruhan(Request $request)
+    // {
+    //     $columns = [
+    //         0 => 'id',
+    //         1 => 'tajar_id',
+    //         2 => 'siswa_id',
+    //         3 => 'kriteria_id',
+    //         4 => 'nilai',
+    //     ];
+        
+    //     $start = $request->start;
+    //     $limit = $request->length;
+    //     $orderColumnIndex = $request->input('order.0.column');
+    //     $orderColumn = isset($columns[$orderColumnIndex]) ? $columns [$orderColumnIndex] : 'id';
+    //     $dir = $request->input('order.0.dir');
+    //     $search = $request->input('search')['value'];
+    //     $jurusanId = $request->input('jurusan_id');
+    //     $tajarId = $request->input('tajar_id');
+    //     $kelasId = $request->input('kelas_id');
+    
+    //     // Hitung total keseluruhan data tanpa paginasi dan pencarian
+    //     $totalData = MasterSiswa::count();
+    
+    //     // Query untuk mendapatkan nilai akhir dengan nama kriteria
+    //     $query = MasterSiswa::with(['tajar','kelas.jurusan'])
+    //         ->when($jurusanId && $jurusanId != '-1', function ($q) use ($jurusanId) {
+    //             $q->whereHas('jurusan', function ($query) use ($jurusanId){
+    //                 $query->where('jurusan_id', $jurusanId);
+    //             });
+    //         })
+    //         ->when(empty($jurusanid) || $jurusanId == '-1', function ($q) {
+    //         })    
+    //         ->when($search, function ($query) use ($search) {
+    //             $query->whereHas('jurusan', function ($q) use ($search) {
+    //                 $q->where('name','LIKE','%'.$search.'%');
+    //             })
+    //             ->orWhereHas('tajar', function ($q) use ($search) {
+    //                 $q->where('periode','LIKE','%'.$search.'%')
+    //                 ->orWhere('semester','LIKE','%'.$search.'%');
+    //             });
+    //         })
+    //         ->when($kelasId, function ($q) use ($kelasId) {
+    //             $q->where('kelas_id', $kelasId);
+    //         })
+    //         ->when($tajarId && $tajarId != '-1', function ($q) use ($tajarId) {
+    //             $q->whereHas('jurusan', function ($query) use ($tajarId){
+    //                 $query->where('jurusan_id', $tajarId);
+    //             });
+    //         })
+    //         ->when(empty($tajarid) || $tajarId == '-1', function ($q) {
+    //         })    
+    //         ->when($search, function ($query) use ($search) {
+    //             $query->whereHas('jurusan', function ($q) use ($search) {
+    //                 $q->where('name','LIKE','%'.$search.'%');
+    //             })
+    //             ->orWhereHas('tajar', function ($q) use ($search) {
+    //                 $q->where('periode','LIKE','%'.$search.'%')
+    //                 ->orWhere('semester','LIKE','%'.$search.'%');
+    //             });
+    //         });
+    
+    //     // Hitung total keseluruhan data sesuai dengan kriteria pencarian
+    //     $totalFiltered = $query->count();
+    
+    //     // Pagination
+    //     $siswaList = $query
+    //     ->orderBy($orderColumn, $dir)
+    //     ->skip($start)
+    //     ->take($limit)
+    //     ->get();
+    
+    //     $data = array();
+    //     foreach($siswaList as $s)
+    //     {
+    //         $item['id'] = $s->id;
+
+    //         $item['nama_siswa'] = $s->name ?? '';
+
+    //         $item['jurusan'] = $s->kelas->jurusan->name ?? '';
+
+    //         $item['semester'] = $s->tajar->semester ?? '';
+
+    //         $item['tahun_ajar'] = $s->tajar->periode ?? '';
+
+    //         $data[] = $item;
+
+    //         // save data nilai keseluruhan
+    //         $kriteria = MasterKriteria::pluck('id', 'name');
+
+    //         foreach($kriteria as $namaKriteria => $kriteriaId){
+    //             $nilai = 0;
+
+    //             switch($namaKriteria)
+    //             {
+    //                 case 'Nilai Raport':
+    //                     // $nilai = $s->rapor->where('jurusan_id', $s->kelas->jurusan_id)->average('nilai');
+    //                      // dihitung berdasarkan periode
+    //                      $nilai = $s->rapor->where('jurusan_id', $s->kelas->jurusan_id)
+    //                      ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
+    //                      ->average('nilai');
+    //                 break;
+    //                 case 'Presensi':
+    //                     // $nilai = $s->presensi->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+                        
+    //                     // $nilai = $s->presensi->where('jurusan_id', $s->kelas->jurusan_id)
+    //                     // ->map(function($presensi) {
+    //                     //     // Mengambil nilai konversi dari relasi konversi_ketidakhadirans
+    //                     //     return $presensi->konversiKetidakhadiran->nilai_konversi;
+    //                     // })
+    //                     // ->sum();
+
+    //                     // dihitung berdasarkan periode
+    //                     $nilai = $s->presensi->where('jurusan_id', $s->kelas->jurusan_id)
+    //                     ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
+    //                     ->map(function($presensi) {
+    //                         return $presensi->konversiKetidakhadiran->nilai_konversi;
+    //                     })
+    //                     ->sum();
+                       
+    //                 break;
+    //                 case 'Sikap':
+    //                     // $nilai = $s->sikap->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+    //                     $nilai = $s->sikap->where('jurusan_id', $s->kelas->jurusan_id)
+    //                     ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
+    //                     ->map(function($sikap) {
+    //                         // Mengambil nilai konversi dari relasi konversi_ketidakhadirans
+    //                         return $sikap->konversiSikap->nilai_konversi;
+    //                     })
+    //                     ->sum();
+    //                 break;
+    //                 case 'Prestasi':
+    //                     // $nilai = $s->prestasi->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+    //                     $nilai = $s->prestasi->where('jurusan_id', $s->kelas->jurusan_id)
+    //                     ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
+    //                     ->map(function($prestasi) {
+    //                         // Mengambil nilai konversi dari relasi konversi_ketidakhadirans
+    //                         return $prestasi->konversiPrestasi->nilai_konversi;
+    //                     })
+    //                     ->sum();
+    //                 break;
+    //                 case 'Keterlambatan Masuk Sekolah':
+    //                     // $nilai = $s->keterlambatan->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
+    //                     $nilai = $s->keterlambatan->where('jurusan_id', $s->kelas->jurusan_id)
+    //                     ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
+    //                     ->map(function($keterlambatan) {
+    //                         // Mengambil nilai konversi dari relasi konversi_ketidakhadirans
+    //                         return $keterlambatan->konversiKeterlambatan->nilai_konversi;
+    //                     })
+    //                     ->sum();
+    //                 break;
+    //                 case 'Hafalan Juz Al-Quran':
+    //                     $nilai = $s->hafalan->where('jurusan_id', $s->kelas->jurusan_id)
+    //                     ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
+    //                     ->sum('nilai');
+    //                 break;
+    //             }
+
+    //             NilaiKeseluruhan::updateOrCreate(
+    //                 [
+    //                     'siswa_id' => $s->id,
+    //                     'tajar_id' => $s->tajar->id,
+    //                     'jurusan_id' => $s->kelas->jurusan_id,
+    //                     'kriteria_id' => $kriteriaId,
+    //                 ],
+    //                 [
+    //                     'nilai' => $nilai,
+    //                 ]
+    //             );
+    //         }
+    //     }
+        
+    //     return response()->json([
+    //         'draw' => $request->draw,
+    //         'recordsTotal' => $totalData,
+    //         'recordsFiltered' => $totalFiltered,
+    //         'data' => $data,
+    //     ],200);
+    // }
+
+    //REVISI 1
+    // public function listNilaiKeseluruhan(Request $request)
+    // {
+    //     $columns = [
+    //         0 => 'id',
+    //         1 => 'tajar_id',
+    //         2 => 'siswa_id',
+    //         3 => 'kriteria_id',
+    //         4 => 'nilai',
+    //     ];
+    
+    //     $start = $request->start;
+    //     $limit = $request->length;
+    //     $orderColumnIndex = $request->input('order.0.column');
+    //     $orderColumn = isset($columns[$orderColumnIndex]) ? $columns[$orderColumnIndex] : 'id';
+    //     $dir = $request->input('order.0.dir');
+    //     $search = $request->input('search.value');
+    //     $jurusanId = $request->input('jurusan_id');
+    //     $tajarId = $request->input('tajar_id');
+    //     $kelasId = $request->input('kelas_id');
+    
+    //     // Hitung total keseluruhan data tanpa paginasi dan pencarian
+    //     $totalData = MasterSiswa::count();
+    
+    //     // Query untuk mendapatkan nilai akhir dengan nama kriteria
+    //     $query = MasterSiswa::with(['tajar', 'kelas.jurusan'])
+    //         ->when($jurusanId && $jurusanId != '-1', function ($q) use ($jurusanId) {
+    //             $q->whereHas('kelas.jurusan', function ($query) use ($jurusanId) {
+    //                 $query->where('id', $jurusanId);
+    //             });
+    //         })
+    //         ->when($kelasId, function ($q) use ($kelasId) {
+    //             $q->where('kelas_id', $kelasId);
+    //         })
+    //         ->when($tajarId && $tajarId != '-1', function ($q) use ($tajarId) {
+    //             $q->whereHas('tajar', function ($query) use ($tajarId) {
+    //                 $query->where('id', $tajarId);
+    //             });
+    //         })
+    //         ->when($search, function ($query) use ($search) {
+    //             $query->whereHas('kelas.jurusan', function ($q) use ($search) {
+    //                 $q->where('name', 'LIKE', '%' . $search . '%');
+    //             })
+    //             ->orWhereHas('tajar', function ($q) use ($search) {
+    //                 $q->where('periode', 'LIKE', '%' . $search . '%')
+    //                 ->orWhere('semester', 'LIKE', '%' . $search . '%');
+    //             });
+    //         });
+    
+    //     // Hitung total keseluruhan data sesuai dengan kriteria pencarian
+    //     $totalFiltered = $query->count();
+    
+    //     // Pagination
+    //     $siswaList = $query
+    //         ->orderBy($orderColumn, $dir)
+    //         ->skip($start)
+    //         ->take($limit)
+    //         ->get();
+    
+    //     $data = [];
+    //     foreach ($siswaList as $s) {
+    //         $item['id'] = $s->id;
+    //         $item['nama_siswa'] = $s->name ?? '';
+    //         $item['jurusan'] = $s->kelas->jurusan->name ?? '';
+    //         $item['semester'] = $s->tajar->semester ?? '';
+    //         $item['tahun_ajar'] = $s->tajar->periode ?? '';
+    
+    //         $data[] = $item;
+    
+    //         // Save data nilai keseluruhan
+    //         $kriteria = MasterKriteria::pluck('id', 'name');
+    
+    //         foreach ($kriteria as $namaKriteria => $kriteriaId) {
+    //             $nilai = 0;
+    
+    //             switch ($namaKriteria) {
+    //                 case 'Nilai Raport':
+    //                     $nilai = $s->rapor->where('jurusan_id', $s->kelas->jurusan_id)
+    //                         ->where('tajar_id', $s->tajar->id)
+    //                         ->average('nilai');
+    //                     break;
+    //                 case 'Presensi':
+    //                     $nilai = $s->presensi->where('jurusan_id', $s->kelas->jurusan_id)
+    //                         ->where('tajar_id', $s->tajar->id)
+    //                         ->map(function ($presensi) {
+    //                             return $presensi->konversiKetidakhadiran->nilai_konversi;
+    //                         })
+    //                         ->sum();
+    //                     break;
+    //                 case 'Sikap':
+    //                     $nilai = $s->sikap->where('jurusan_id', $s->kelas->jurusan_id)
+    //                         ->where('tajar_id', $s->tajar->id)
+    //                         ->map(function ($sikap) {
+    //                             return $sikap->konversiSikap->nilai_konversi;
+    //                         })
+    //                         ->sum();
+    //                     break;
+    //                 case 'Prestasi':
+    //                     $nilai = $s->prestasi->where('jurusan_id', $s->kelas->jurusan_id)
+    //                         ->where('tajar_id', $s->tajar->id)
+    //                         ->map(function ($prestasi) {
+    //                             return $prestasi->konversiPrestasi->nilai_konversi;
+    //                         })
+    //                         ->sum();
+    //                     break;
+    //                 case 'Keterlambatan Masuk Sekolah':
+    //                     $nilai = $s->keterlambatan->where('jurusan_id', $s->kelas->jurusan_id)
+    //                         ->where('tajar_id', $s->tajar->id)
+    //                         ->map(function ($keterlambatan) {
+    //                             return $keterlambatan->konversiKeterlambatan->nilai_konversi;
+    //                         })
+    //                         ->sum();
+    //                     break;
+    //                 case 'Hafalan Juz Al-Quran':
+    //                     $nilai = $s->hafalan->where('jurusan_id', $s->kelas->jurusan_id)
+    //                         ->where('tajar_id', $s->tajar->id)
+    //                         ->sum('nilai');
+    //                     break;
+    //             }
+    
+    //             NilaiKeseluruhan::updateOrCreate(
+    //                 [
+    //                     'siswa_id' => $s->id,
+    //                     'tajar_id' => $s->tajar->id,
+    //                     'jurusan_id' => $s->kelas->jurusan_id,
+    //                     'kriteria_id' => $kriteriaId,
+    //                 ],
+    //                 [
+    //                     'nilai' => $nilai,
+    //                 ]
+    //             );
+    //         }
+    //     }
+    
+    //     return response()->json([
+    //         'draw' => $request->draw,
+    //         'recordsTotal' => $totalData,
+    //         'recordsFiltered' => $totalFiltered,
+    //         'data' => $data,
+    //     ], 200);
+    // }
+
+    // REVISI 2
+    // public function listNilaiKeseluruhan(Request $request)
+    // {
+    //     $columns = [
+    //         0 => 'id',
+    //         1 => 'tajar_id',
+    //         2 => 'siswa_id',
+    //         3 => 'kriteria_id',
+    //         4 => 'nilai',
+    //     ];
+    
+    //     $start = $request->start;
+    //     $limit = $request->length;
+    //     $orderColumnIndex = $request->input('order.0.column');
+    //     $orderColumn = isset($columns[$orderColumnIndex]) ? $columns[$orderColumnIndex] : 'id';
+    //     $dir = $request->input('order.0.dir');
+    //     $search = $request->input('search.value');
+    //     $jurusanId = $request->input('jurusan_id');
+    //     $kelasId = $request->input('kelas_id');
+    //     $tajarId = $request->input('tajar_id');
+    
+    //     // Hitung total keseluruhan data tanpa paginasi dan pencarian
+    //     $totalData = MasterSiswa::count();
+
+    //     $query = MasterSiswa::with(['tajar','kelas.jurusan'])
+    //         ->when($jurusanId && $jurusanId != '-1', function ($q) use ($jurusanId) {
+    //             $q->whereHas('jurusan', function ($query) use ($jurusanId){
+    //                 $query->where('jurusan_id', $jurusanId);
+    //             });
+    //         })
+    //         ->when(empty($jurusanid) || $jurusanId == '-1', function ($q) {
+    //         })    
+    //         ->when($tajarId, function ($q) use ($tajarId) {
+    //             $q->where('kelas_id', $tajarId);
+    //         })
+    //         ->when($search, function ($query) use ($search) {
+    //             $query->whereHas('jurusan', function ($q) use ($search) {
+    //                 $q->where('name','LIKE','%'.$search.'%');
+    //             })
+    //             ->orWhereHas('tajar', function ($q) use ($search) {
+    //                 $q->where('periode','LIKE','%'.$search.'%')
+    //                 ->orWhere('semester','LIKE','%'.$search.'%');
+    //             });
+    //         })
+    //         ->when($kelasId, function ($q) use ($kelasId) {
+    //             $q->where('kelas_id', $kelasId);
+    //         })   
+    //         ->when($search, function ($query) use ($search) {
+    //             $query->whereHas('jurusan', function ($q) use ($search) {
+    //                 $q->where('name','LIKE','%'.$search.'%');
+    //             })
+    //             ->orWhereHas('tajar', function ($q) use ($search) {
+    //                 $q->where('periode','LIKE','%'.$search.'%')
+    //                 ->orWhere('semester','LIKE','%'.$search.'%');
+    //             });
+    //         });
+    
+    //     // Hitung total keseluruhan data sesuai dengan kriteria pencarian
+    //     $totalFiltered = $query->count();
+    
+    //     // Pagination
+    //     $siswaList = $query
+    //         ->orderBy($orderColumn, $dir)
+    //         ->skip($start)
+    //         ->take($limit)
+    //         ->get();
+    
+    //     $data = [];
+    //     foreach ($siswaList as $s) {
+    //         $item['id'] = $s->id;
+    //         $item['nama_siswa'] = $s->name ?? '';
+    //         $item['jurusan'] = $s->kelas->jurusan->name ?? '';
+    //         $item['semester'] = $s->tajar->semester ?? '';
+    //         $item['tahun_ajar'] = $s->tajar->periode ?? '';
+    
+    //         $data[] = $item;
+    
+    //         // Save data nilai keseluruhan
+    //         $kriteria = MasterKriteria::pluck('id', 'name');
+    //         dd($kriteria);
+            
+    //         foreach ($kriteria as $namaKriteria => $kriteriaId) {
+    //             $nilai = 0;
+    
+    //             switch ($namaKriteria) {
+    //                 case 'Nilai Raport':
+    //                     $nilai = $s->rapor->where('jurusan_id', $s->kelas->jurusan_id)
+    //                         ->where('tajar_id', $s->tajar->id)
+    //                         ->average('nilai');
+    //                     break;
+    //                 case 'Presensi':
+    //                     $nilai = $s->presensi->where('jurusan_id', $s->kelas->jurusan_id)
+    //                         ->where('tajar_id', $s->tajar->id)
+    //                         ->map(function ($presensi) {
+    //                             return $presensi->konversiKetidakhadiran->nilai_konversi ?? 0;
+    //                         })
+    //                         ->sum();
+    //                     break;
+    //                 case 'Sikap':
+    //                     $nilai = $s->sikap->where('jurusan_id', $s->kelas->jurusan_id)
+    //                         ->where('tajar_id', $s->tajar->id)
+    //                         ->map(function ($sikap) {
+    //                             return $sikap->konversiSikap->nilai_konversi ?? 0;
+    //                         })
+    //                         ->sum();
+    //                     break;
+    //                 case 'Prestasi':
+    //                     $nilai = $s->prestasi->where('jurusan_id', $s->kelas->jurusan_id)
+    //                         ->where('tajar_id', $s->tajar->id)
+    //                         ->map(function ($prestasi) {
+    //                             return $prestasi->konversiPrestasi->nilai_konversi ?? 0;
+    //                         })
+    //                         ->sum();
+    //                     break;
+    //                 case 'Keterlambatan Masuk Sekolah':
+    //                     $nilai = $s->keterlambatan->where('jurusan_id', $s->kelas->jurusan_id)
+    //                         ->where('tajar_id', $s->tajar->id)
+    //                         ->map(function ($keterlambatan) {
+    //                             return $keterlambatan->konversiKeterlambatan->nilai_konversi ?? 0;
+    //                         })
+    //                         ->sum();
+    //                     break;
+    //                 case 'Hafalan Juz Al-Quran':
+    //                     $nilai = $s->hafalan->where('jurusan_id', $s->kelas->jurusan_id)
+    //                         ->where('tajar_id', $s->tajar->id)
+    //                         ->sum('nilai');
+    //                     break;
+    //             }
+
+    //             // dd($kriteria)->toArray();
+    
+    //             // Pastikan nilai tidak null
+    //             $nilai = $nilai ?? 0;
+    
+    //             NilaiKeseluruhan::updateOrCreate(
+    //                 [
+    //                     'siswa_id' => $s->id,
+    //                     'tajar_id' => $s->tajar->id,
+    //                     'jurusan_id' => $s->kelas->jurusan_id,
+    //                     'kriteria_id' => $kriteriaId,
+    //                 ],
+    //                 [
+    //                     'nilai' => $nilai,
+    //                 ]
+    //             );
+    //         }
+    //     }
+    
+    //     return response()->json([
+    //         'draw' => $request->draw,
+    //         'recordsTotal' => $totalData,
+    //         'recordsFiltered' => $totalFiltered,
+    //         'data' => $data,
+    //     ], 200);
+    // }    
+
+    // REVISI 3 Hampir Benar
+    // public function listNilaiKeseluruhan(Request $request)
+    // {
+    //     $columns = [
+    //         0 => 'id',
+    //         1 => 'tajar_id',
+    //         2 => 'siswa_id',
+    //         3 => 'kriteria_id',
+    //         4 => 'nilai',
+    //     ];
+    
+    //     $start = $request->start;
+    //     $limit = $request->length;
+    //     $orderColumnIndex = $request->input('order.0.column');
+    //     $orderColumn = isset($columns[$orderColumnIndex]) ? $columns[$orderColumnIndex] : 'id';
+    //     $dir = $request->input('order.0.dir');
+    //     $search = $request->input('search.value');
+    //     $jurusanId = $request->input('jurusan_id');
+    //     $kelasId = $request->input('kelas_id');
+    //     $tajarId = $request->input('tajar_id');
+    
+    //     // Hitung total keseluruhan data tanpa paginasi dan pencarian
+    //     $totalData = MasterSiswa::count();
+    
+    //     $query = MasterSiswa::with(['tajar', 'kelas.jurusan'])
+    //         ->when($jurusanId && $jurusanId != '-1', function ($q) use ($jurusanId) {
+    //             $q->whereHas('kelas.jurusan', function ($query) use ($jurusanId) {
+    //                 $query->where('id', $jurusanId);
+    //             });
+    //         })
+    //         ->when($kelasId, function ($q) use ($kelasId) {
+    //             $q->where('kelas_id', $kelasId);
+    //         })
+    //         ->when($tajarId, function ($q) use ($tajarId) {
+    //             $q->whereHas('tajar', function ($query) use ($tajarId) {
+    //                 $query->where('id', $tajarId);
+    //             });
+    //         })
+    //         ->when($search, function ($query) use ($search) {
+    //             $query->whereHas('kelas.jurusan', function ($q) use ($search) {
+    //                 $q->where('name', 'LIKE', '%' . $search . '%');
+    //             })
+    //             ->orWhereHas('tajar', function ($q) use ($search) {
+    //                 $q->where('periode', 'LIKE', '%' . $search . '%')
+    //                     ->orWhere('semester', 'LIKE', '%' . $search . '%');
+    //             });
+    //         });
+    
+    //     // Hitung total keseluruhan data sesuai dengan kriteria pencarian
+    //     $totalFiltered = $query->count();
+    
+    //     // Pagination
+    //     $siswaList = $query
+    //         ->orderBy($orderColumn, $dir)
+    //         ->skip($start)
+    //         ->take($limit)
+    //         ->get();
+    
+    //     $data = [];
+    //     // Ambil kriteria di luar loop siswa
+    //     // $kriteriaList = MasterKriteria::pluck('id', 'name')->toArray();
+    //     $kriteriaList = MasterKriteria::all()->keyBy('tajar_id');
+        
+    //     // dd($kriteriaList);
+    
+    //     foreach ($siswaList as $s) {
+    //         $item['id'] = $s->id;
+    //         $item['nama_siswa'] = $s->name ?? '';
+    //         $item['jurusan'] = $s->kelas->jurusan->name ?? '';
+    //         $item['semester'] = $s->tajar->semester ?? '';
+    //         $item['tahun_ajar'] = $s->tajar->periode ?? '';
+    
+    //         $data[] = $item;
+    
+    //         foreach ($kriteriaList as $namaKriteria => $kriteriaId) {
+    //             $nilai = 0;
+    //             // Ambil tajar_id dari kriteria
+    //             $kriteria = MasterKriteria::find($kriteriaId);
+    //             if ($kriteria) {
+    //                 $kriteriaTajarId = $kriteria->tajar_id;
+    
+    //                 // Hanya ambil nilai berdasarkan tajar_id dari kriteria
+    //                 if ($s->tajar->id == $kriteriaTajarId) {
+    //                     switch ($namaKriteria) {
+    //                         case 'Nilai Raport':
+    //                             $nilai = $s->rapor->where('jurusan_id', $s->kelas->jurusan_id)
+    //                                 ->where('tajar_id', $s->tajar->id)
+    //                                 ->average('nilai');
+    //                             break;
+    //                         case 'Presensi':
+    //                             $nilai = $s->presensi->where('jurusan_id', $s->kelas->jurusan_id)
+    //                                 ->where('tajar_id', $s->tajar->id)
+    //                                 ->map(function ($presensi) {
+    //                                     return $presensi->konversiKetidakhadiran->nilai_konversi ?? 0;
+    //                                 })
+    //                                 ->sum();
+    //                             break;
+    //                         case 'Sikap':
+    //                             $nilai = $s->sikap->where('jurusan_id', $s->kelas->jurusan_id)
+    //                                 ->where('tajar_id', $s->tajar->id)
+    //                                 ->map(function ($sikap) {
+    //                                     return $sikap->konversiSikap->nilai_konversi ?? 0;
+    //                                 })
+    //                                 ->sum();
+    //                             break;
+    //                         case 'Prestasi':
+    //                             $nilai = $s->prestasi->where('jurusan_id', $s->kelas->jurusan_id)
+    //                                 ->where('tajar_id', $s->tajar->id)
+    //                                 ->map(function ($prestasi) {
+    //                                     return $prestasi->konversiPrestasi->nilai_konversi ?? 0;
+    //                                 })
+    //                                 ->sum();
+    //                             break;
+    //                         case 'Keterlambatan Masuk Sekolah':
+    //                             $nilai = $s->keterlambatan->where('jurusan_id', $s->kelas->jurusan_id)
+    //                                 ->where('tajar_id', $s->tajar->id)
+    //                                 ->map(function ($keterlambatan) {
+    //                                     return $keterlambatan->konversiKeterlambatan->nilai_konversi ?? 0;
+    //                                 })
+    //                                 ->sum();
+    //                             break;
+    //                         case 'Hafalan Juz Al-Quran':
+    //                             $nilai = $s->hafalan->where('jurusan_id', $s->kelas->jurusan_id)
+    //                                 ->where('tajar_id', $s->tajar->id)
+    //                                 ->sum('nilai');
+    //                             break;
+    //                     }
+    
+    //                     // Pastikan nilai tidak null
+    //                     $nilai = $nilai ?? 0;
+    
+    //                     NilaiKeseluruhan::updateOrCreate(
+    //                         [
+    //                             'siswa_id' => $s->id,
+    //                             'tajar_id' => $s->tajar->id,
+    //                             'jurusan_id' => $s->kelas->jurusan_id,
+    //                             'kriteria_id' => $kriteriaId,
+    //                         ],
+    //                         [
+    //                             'nilai' => $nilai,
+    //                         ]
+    //                     );
+    //                 }
+    //             }
+    //         }
+    //     }
+    
+    //     return response()->json([
+    //         'draw' => $request->draw,
+    //         'recordsTotal' => $totalData,
+    //         'recordsFiltered' => $totalFiltered,
+    //         'data' => $data,
+    //     ], 200);
+    // }
+
+    // REVISI 4
     public function listNilaiKeseluruhan(Request $request)
     {
         $columns = [
@@ -36,55 +669,41 @@ class NilaiKeseluruhanController extends Controller
             3 => 'kriteria_id',
             4 => 'nilai',
         ];
-        
+    
         $start = $request->start;
         $limit = $request->length;
         $orderColumnIndex = $request->input('order.0.column');
-        $orderColumn = isset($columns[$orderColumnIndex]) ? $columns [$orderColumnIndex] : 'id';
+        $orderColumn = isset($columns[$orderColumnIndex]) ? $columns[$orderColumnIndex] : 'id';
         $dir = $request->input('order.0.dir');
-        $search = $request->input('search')['value'];
+        $search = $request->input('search.value');
         $jurusanId = $request->input('jurusan_id');
-        $tajarId = $request->input('tajar_id');
         $kelasId = $request->input('kelas_id');
+        $tajarId = $request->input('tajar_id');
     
         // Hitung total keseluruhan data tanpa paginasi dan pencarian
         $totalData = MasterSiswa::count();
     
-        // Query untuk mendapatkan nilai akhir dengan nama kriteria
-        $query = MasterSiswa::with(['tajar','kelas.jurusan'])
+        $query = MasterSiswa::with(['tajar', 'kelas.jurusan'])
             ->when($jurusanId && $jurusanId != '-1', function ($q) use ($jurusanId) {
-                $q->whereHas('jurusan', function ($query) use ($jurusanId){
-                    $query->where('jurusan_id', $jurusanId);
-                });
-            })
-            ->when(empty($jurusanid) || $jurusanId == '-1', function ($q) {
-            })    
-            ->when($search, function ($query) use ($search) {
-                $query->whereHas('jurusan', function ($q) use ($search) {
-                    $q->where('name','LIKE','%'.$search.'%');
-                })
-                ->orWhereHas('tajar', function ($q) use ($search) {
-                    $q->where('periode','LIKE','%'.$search.'%')
-                    ->orWhere('semester','LIKE','%'.$search.'%');
+                $q->whereHas('kelas.jurusan', function ($query) use ($jurusanId) {
+                    $query->where('id', $jurusanId);
                 });
             })
             ->when($kelasId, function ($q) use ($kelasId) {
                 $q->where('kelas_id', $kelasId);
             })
-            ->when($tajarId && $tajarId != '-1', function ($q) use ($tajarId) {
-                $q->whereHas('jurusan', function ($query) use ($tajarId){
-                    $query->where('jurusan_id', $tajarId);
+            ->when($tajarId, function ($q) use ($tajarId) {
+                $q->whereHas('tajar', function ($query) use ($tajarId) {
+                    $query->where('id', $tajarId);
                 });
             })
-            ->when(empty($tajarid) || $tajarId == '-1', function ($q) {
-            })    
             ->when($search, function ($query) use ($search) {
-                $query->whereHas('jurusan', function ($q) use ($search) {
-                    $q->where('name','LIKE','%'.$search.'%');
+                $query->whereHas('kelas.jurusan', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', '%' . $search . '%');
                 })
                 ->orWhereHas('tajar', function ($q) use ($search) {
-                    $q->where('periode','LIKE','%'.$search.'%')
-                    ->orWhere('semester','LIKE','%'.$search.'%');
+                    $q->where('periode', 'LIKE', '%' . $search . '%')
+                        ->orWhere('semester', 'LIKE', '%' . $search . '%');
                 });
             });
     
@@ -93,103 +712,85 @@ class NilaiKeseluruhanController extends Controller
     
         // Pagination
         $siswaList = $query
-        ->orderBy($orderColumn, $dir)
-        ->skip($start)
-        ->take($limit)
-        ->get();
+            ->orderBy($orderColumn, $dir)
+            ->skip($start)
+            ->take($limit)
+            ->get();
     
-        $data = array();
-        foreach($siswaList as $s)
-        {
+        $data = [];
+        // Ambil kriteria dan kelompokkan berdasarkan tajar_id
+        $kriteriaList = MasterKriteria::all()->groupBy('tajar_id');
+    
+        foreach ($siswaList as $s) {
             $item['id'] = $s->id;
-
             $item['nama_siswa'] = $s->name ?? '';
-
             $item['jurusan'] = $s->kelas->jurusan->name ?? '';
-
             $item['semester'] = $s->tajar->semester ?? '';
-
             $item['tahun_ajar'] = $s->tajar->periode ?? '';
-
+    
             $data[] = $item;
-
-            // save data nilai keseluruhan
-            $kriteria = MasterKriteria::pluck('id', 'name');
-
-            foreach($kriteria as $namaKriteria => $kriteriaId){
+    
+            // Ambil kriteria berdasarkan tajar_id dari siswa
+            $kriteriaForTajar = $kriteriaList->get($s->tajar->id, collect());
+    
+            foreach ($kriteriaForTajar as $kriteria) {
+                $namaKriteria = $kriteria->name;
                 $nilai = 0;
-
-                switch($namaKriteria)
-                {
+    
+                switch ($namaKriteria) {
                     case 'Nilai Raport':
-                        // $nilai = $s->rapor->where('jurusan_id', $s->kelas->jurusan_id)->average('nilai');
-                         // dihitung berdasarkan periode
-                         $nilai = $s->rapor->where('jurusan_id', $s->kelas->jurusan_id)
-                         ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
-                         ->average('nilai');
-                    break;
+                        $nilai = $s->rapor->where('jurusan_id', $s->kelas->jurusan_id)
+                            ->where('tajar_id', $s->tajar->id)
+                            ->average('nilai');
+                        break;
                     case 'Presensi':
-                        // $nilai = $s->presensi->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
-                        
-                        // $nilai = $s->presensi->where('jurusan_id', $s->kelas->jurusan_id)
-                        // ->map(function($presensi) {
-                        //     // Mengambil nilai konversi dari relasi konversi_ketidakhadirans
-                        //     return $presensi->konversiKetidakhadiran->nilai_konversi;
-                        // })
-                        // ->sum();
-
-                        // dihitung berdasarkan periode
                         $nilai = $s->presensi->where('jurusan_id', $s->kelas->jurusan_id)
-                        ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
-                        ->map(function($presensi) {
-                            return $presensi->konversiKetidakhadiran->nilai_konversi;
-                        })
-                        ->sum();
-                       
-                    break;
+                            ->where('tajar_id', $s->tajar->id)
+                            ->map(function ($presensi) {
+                                return $presensi->konversiKetidakhadiran->nilai_konversi ?? 0;
+                            })
+                            ->sum();
+                        break;
                     case 'Sikap':
-                        // $nilai = $s->sikap->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
                         $nilai = $s->sikap->where('jurusan_id', $s->kelas->jurusan_id)
-                        ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
-                        ->map(function($sikap) {
-                            // Mengambil nilai konversi dari relasi konversi_ketidakhadirans
-                            return $sikap->konversiSikap->nilai_konversi;
-                        })
-                        ->sum();
-                    break;
+                            ->where('tajar_id', $s->tajar->id)
+                            ->map(function ($sikap) {
+                                return $sikap->konversiSikap->nilai_konversi ?? 0;
+                            })
+                            ->sum();
+                        break;
                     case 'Prestasi':
-                        // $nilai = $s->prestasi->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
                         $nilai = $s->prestasi->where('jurusan_id', $s->kelas->jurusan_id)
-                        ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
-                        ->map(function($prestasi) {
-                            // Mengambil nilai konversi dari relasi konversi_ketidakhadirans
-                            return $prestasi->konversiPrestasi->nilai_konversi;
-                        })
-                        ->sum();
-                    break;
+                            ->where('tajar_id', $s->tajar->id)
+                            ->map(function ($prestasi) {
+                                return $prestasi->konversiPrestasi->nilai_konversi ?? 0;
+                            })
+                            ->sum();
+                        break;
                     case 'Keterlambatan Masuk Sekolah':
-                        // $nilai = $s->keterlambatan->where('jurusan_id', $s->kelas->jurusan_id)->sum('nilai');
                         $nilai = $s->keterlambatan->where('jurusan_id', $s->kelas->jurusan_id)
-                        ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
-                        ->map(function($keterlambatan) {
-                            // Mengambil nilai konversi dari relasi konversi_ketidakhadirans
-                            return $keterlambatan->konversiKeterlambatan->nilai_konversi;
-                        })
-                        ->sum();
-                    break;
+                            ->where('tajar_id', $s->tajar->id)
+                            ->map(function ($keterlambatan) {
+                                return $keterlambatan->konversiKeterlambatan->nilai_konversi ?? 0;
+                            })
+                            ->sum();
+                        break;
                     case 'Hafalan Juz Al-Quran':
                         $nilai = $s->hafalan->where('jurusan_id', $s->kelas->jurusan_id)
-                        ->where('tajar_id', $s->tajar->id) // Memfilter berdasarkan periode
-                        ->sum('nilai');
-                    break;
+                            ->where('tajar_id', $s->tajar->id)
+                            ->sum('nilai');
+                        break;
                 }
-
+    
+                // Pastikan nilai tidak null
+                $nilai = $nilai ?? 0;
+    
                 NilaiKeseluruhan::updateOrCreate(
                     [
                         'siswa_id' => $s->id,
                         'tajar_id' => $s->tajar->id,
                         'jurusan_id' => $s->kelas->jurusan_id,
-                        'kriteria_id' => $kriteriaId,
+                        'kriteria_id' => $kriteria->id,
                     ],
                     [
                         'nilai' => $nilai,
@@ -197,13 +798,13 @@ class NilaiKeseluruhanController extends Controller
                 );
             }
         }
-        
+    
         return response()->json([
             'draw' => $request->draw,
             'recordsTotal' => $totalData,
             'recordsFiltered' => $totalFiltered,
             'data' => $data,
-        ],200);
+        ], 200);
     }
 
     // Eloquent ORM 2 Di Pakai
@@ -357,6 +958,67 @@ class NilaiKeseluruhanController extends Controller
             'data' => $data,
         ], 201);
     }
+
+    // public function listDetailNilaiKeseluruhan(Request $request)
+    // {
+    //     $siswaId = $request->input('siswa_id');
+    //     $tajarId = $request->input('tajar_id'); // Menangkap input tahun ajar dari request
+    
+    //     $columns = [
+    //         0 => 'id',
+    //         1 => 'tajar_id',
+    //         2 => 'siswa_id',
+    //         3 => 'kriteria_id',
+    //     ];
+    
+    //     $start = $request->start;
+    //     $limit = $request->length;
+    //     $orderColumn = $columns[$request->input('order.0.column')];
+    //     $dir = $request->input('order.0.dir');
+    //     $search = $request->input('search')['value'];
+    
+    //     // Hitung total data berdasarkan siswa dan tahun ajar tertentu
+    //     $hitung = NilaiKeseluruhan::where('siswa_id', $siswaId)
+    //                 ->where('tajar_id', $tajarId) // Filter tahun ajar
+    //                 ->count();
+    
+    //     // Ambil data nilai keseluruhan dengan relasi kriteria dan siswa
+    //     $nilaiKeseluruhan = NilaiKeseluruhan::with(['siswa', 'kriteria'])
+    //         ->where('siswa_id', $siswaId)
+    //         ->where('tajar_id', $tajarId) // Filter berdasarkan tahun ajar
+    //         ->when($search, function ($query, $search){
+    //             return $query->whereHas('kriteria', function ($q) use ($search) {
+    //                 $q->where('name', 'LIKE', '%'.$search.'%');
+    //             });
+    //         })
+    //         ->orderby($orderColumn, $dir)
+    //         ->skip($start)
+    //         ->take($limit)
+    //         ->get();
+    
+    //     // Menyusun data yang akan dikirimkan ke front-end
+    //     $data = array();
+    //     foreach ($nilaiKeseluruhan as $n)
+    //     {
+    //         $item = [
+    //             'id' => $n->id,
+    //             'id_siswa_nama' => $n->siswa_id,
+    //             'nama_siswa' => $n->siswa->name ?? '',
+    //             'id_kriteria_nama' => $n->kriteria_id,
+    //             'nama_kriteria' => $n->kriteria->name ?? '',
+    //             'nilai' => $n->nilai,
+    //         ];
+    //         $data[] = $item;
+    //     }
+    
+    //     return response()->json([
+    //         'draw' => intval($request->draw),
+    //         'recordsTotal' => $hitung,
+    //         'recordsFiltered' => $hitung,
+    //         'data' => $data,
+    //     ], 201);
+    // }
+    
     
     public function exportData()
     {

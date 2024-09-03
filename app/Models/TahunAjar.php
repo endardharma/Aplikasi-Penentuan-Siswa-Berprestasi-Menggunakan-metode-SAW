@@ -44,5 +44,12 @@ class TahunAjar extends Model
     {
         return $this->hasMany(HafalanSiswa::class, 'tajar_id')->orderby('id','asc');
     }
+
+    public function kriteria()
+    {
+        return $this->hasMany(MasterKriteria::class, 'tajar_id')->orderby('id','asc');
+    }
+
+
     
 }

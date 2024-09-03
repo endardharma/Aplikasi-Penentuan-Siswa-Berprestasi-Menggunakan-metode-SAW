@@ -434,15 +434,31 @@
                             </button>
                             <div class="dropdown-menu w-40">
                                 <ul class="dropdown-content">
-                                    {{-- <li>
-                                        <a href="#" class="dropdown-item modal-import"> <i data-lucide="file-plus" class="w-4 h-4 mr-2"></i> Import Data </a>
-                                    </li> --}}
                                     <li>
-                                        <a href="#" class="dropdown-item btn-export-mipa"> <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export Excel </a>
+                                        <a href="#" class="dropdown-item btn-export-mipa"> <i data-lucide="file-text" class="w-5 h-5 mr-2"></i> Export Data MIPA </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="dropdown-item btn-export-mipa-best-3"> <i data-lucide="file-text" class="w-5 h-5 mr-2"></i> Export 3 Terbaik MIPA</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" id="export-mipa-pdf" class="dropdown-item btn-export-pdf">
+                                            <i data-lucide="file-text" class="w-5 h-5 mr-2"></i> Export Data MIPA PDF
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="dropdown-item btn-export-mipa-pdf-best-3"> <i data-lucide="file-text" class="w-5 h-5 mr-2"></i> Export 3 Terbaik MIPA PDF</a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="intro-y flex flex-col sm:flex-row items-center mt-1 mr-auto">
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0 items-center">
+                        <label for="showTop3Mipa" class="form-label flex items-center space-x-2">
+                            <input type="checkbox" id="showTop3Mipa" />
+                            <span>Tampilkan 3 Siswa Teratas</span>
+                        </label>
                     </div>
                 </div>
                 <!-- BEGIN : SortBy Jurusan -->
@@ -450,21 +466,15 @@
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
                         <button type="submit" class="btn btn-primary shadow-md mr-2 btn-cari-mipa" id="search-button-mipa">Cari</button>
                     </div>
-                    {{-- <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-                        <label for="jurusan" class="form-label"></label>
-                        <select class="form-select form-jurusan" name="jurusan" id="select-jurusan" required>
-                            <option disabled selected> -- Pilih Jurusan -- </option>
-                            <option value="-1">Semua Jurusan</option>
-                        </select>
-                    </div> --}}
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-                        <label for="tajar-mipa" class="form-label"></label>
-                        <select class="form-select form-tajar-mipa" name="tajar-mipa" id="select-tajar-mipa" required>
+                        <label for="periode" class="form-label"></label>
+                        <select class="form-select form-periode" name="periode" id="select-periode" required>
                             <option disabled selected> -- Pilih Periode -- </option>
                             <option value="-1">Semua Periode</option>
                         </select>
                     </div>
                 </div>
+                
                 <!-- END : SortBy Jurusan -->
                 <!-- BEGIN: HTML Table Data -->
                 <div class="intro-y box p-5 mt-5">
@@ -515,11 +525,27 @@
                                         <a href="#" class="dropdown-item modal-import"> <i data-lucide="file-plus" class="w-4 h-4 mr-2"></i> Import Data </a>
                                     </li> --}}
                                     <li>
-                                        <a href="#" class="dropdown-item btn-export-iis"> <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export Excel </a>
+                                        <a href="#" class="dropdown-item btn-export-iis"> <i data-lucide="file-text" class="w-5 h-5 mr-2"></i> Export Data IIS </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="dropdown-item btn-export-iis-best-3"> <i data-lucide="file-text" class="w-5 h-5 mr-2"></i> Export 3 Terbaik IIS</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" id="export-iis-pdf" class="dropdown-item btn-export-pdf">
+                                            <i data-lucide="file-text" class="w-5 h-5 mr-2"></i> Export Data IIS PDF
+                                        </a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="intro-y flex flex-col sm:flex-row items-center mt-1 mr-auto">
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0 items-center">
+                        <label for="showTop3Iis" class="form-label flex items-center space-x-2">
+                            <input type="checkbox" id="showTop3Iis" />
+                            <span>Tampilkan 3 Siswa Teratas</span>
+                        </label>
                     </div>
                 </div>
                 <!-- BEGIN : SortBy Jurusan -->
@@ -528,8 +554,8 @@
                         <button type="submit" class="btn btn-primary shadow-md mr-2 btn-cari-iis" id="search-button-iis">Cari</button>
                     </div>
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-                        <label for="tajar-iis" class="form-label"></label>
-                        <select class="form-select form-tajar-iis" name="tajar-iis" id="select-tajar-iis" required>
+                        <label for="periode" class="form-label"></label>
+                        <select class="form-select form-periode-iis" name="periode" id="select-periode-iis" required>
                             <option disabled selected> -- Pilih Periode -- </option>
                             <option value="-1">Semua Periode</option>
                         </select>
@@ -565,6 +591,11 @@
         <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.1/dist/feather.min.js"></script>
         <script src="{{ asset('template/dist/js/app.js') }}"></script>
         <script src="{{ asset('template/src/toastify.js') }}"></script>
+
+        <!----------------------------------------------------------------------------------------->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+
         <script>
             // Cek package jQuery
             jQuery(document).ready(function(){
@@ -916,7 +947,7 @@
                         'Authorization': 'Bearer ' + token
                     }
                 }).then(response => response.json()).then(data => {
-                    var selectSortByTajar = jQuery('.form-tajar-mipa');
+                    var selectSortByTajar = jQuery('.form-periode');
 
                     jQuery.each(data, function (index, item) {
                         for (let i = 0; i < item.length; i++)
@@ -936,7 +967,7 @@
                         'Authorization': 'Bearer ' + token
                     }
                 }).then(response => response.json()).then(data => {
-                    var selectSortByTajar = jQuery('.form-tajar-iis');
+                    var selectSortByTajar = jQuery('.form-periode-iis');
 
                     jQuery.each(data, function (index, item) {
                         for (let i = 0; i < item.length; i++)
@@ -948,17 +979,60 @@
                     console.error('Error:', error);
                 });
 
-                 // Fungsi button sortBy Mipa
+                // var table;
+                // function loadDataTableMipa (tajarIdMipa = '')
+                // {
+                //     // Data table list nilai perangkingan MIPA
+                //     table = jQuery('#data-table-mipa').dataTable({
+                //         "processing": true,
+                //         "serverSide": true,
+                //         "destroy": true,
+                //         "ajax": {
+                //             "url": "http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/listMipa",
+                //             "dataType": "json",
+                //             "type": "POST",
+                //             "headers": {
+                //                 'Authorization': 'Bearer ' + token
+                //             },
+                //             "data": function (d) {
+                //                 d.tajar_id = (tajarIdMipa === '-1') ? ' ' : tajarIdMipa;
+                //                 d.show_top_3 = jQuery('#showTop3').is(':checked') ? 1 : 0;
+                //                 d.order = d.order[0] || {}; // Pastikan d.order memiliki nilai default
+                //                 d.order.column = d.order.column || 0; // Kolom default jika tidak ada
+                //                 d.order.dir = d.order.dir && ['asc', 'desc'].includes(d.order.dir) ? d.order.dir : 'asc'; // Nilai default untuk dir
+                //             }
+                //         },
+                //         "columns": [
+                //             { data: 'id', className: 'text-center' },
+                //             { data: 'nama_siswa', className: 'text-center' },
+                //             { data: 'nilai_akhir', className: 'text-center' },
+                //             { data: 'jurusan', className: 'text-center' },
+                //             // { data: 'semester', className: 'text-center' },
+                //             { data: 'tahun_ajar', className: 'text-center' },
+                //         ],
+                //         "order": [[2, 'desc']],
+                //         "drawCallback": function (settings) {
+                //             feather.replace(); // Asumsikan feather adalah plugin ikon yang digunakan
+                //         }
+                //     });
+
+                //     // Event listener untuk checkbox
+                //     jQuery('#showTop3').change(function() {
+                //         table.ajax.reload(); // Reload data table dengan parameter baru
+                //     });
+                // }
+
+                // Fungsi button sortBy
                 loadDataTableMipa();
                 jQuery('#search-button-mipa').on('click', function() {
-                    var tajarIdMipa = $('#select-tajar-mipa').val();
+                    var tajarIdMipa = $('#select-periode').val();
                     loadDataTableMipa(tajarIdMipa);
-                });
+                })
 
-                function loadDataTableMipa (tajarIdMipa = '')
+                var tableMipa; // Deklarasi variabel global
+                function loadDataTableMipa(tajarIdMipa = '') 
                 {
-                    // Data table list nilai perangkingan MIPA
-                    jQuery('#data-table-mipa').dataTable({
+                    tableMipa = jQuery('#data-table-mipa').DataTable({
                         "processing": true,
                         "serverSide": true,
                         "destroy": true,
@@ -970,13 +1044,11 @@
                                 'Authorization': 'Bearer ' + token
                             },
                             "data": function (d) {
-                                if (tajarIdMipa === '-1')
-                                {
-                                    d.tajar_id = ' ';
-                                } else
-                                {
-                                    d.tajar_id = tajarIdMipa;
-                                }
+                                d.tajar_id = (tajarIdMipa === '-1') ? '' : tajarIdMipa; // Kirim nilai periode yang dipilih atau kosong jika 'Semua Periode' dipilih
+                                d.show_top_3_mipa = jQuery('#showTop3Mipa').is(':checked') ? 1 : 0;
+                                d.order = d.order[0] || {}; // Pastikan d.order memiliki nilai default
+                                d.order.column = d.order.column || 0; // Kolom default jika tidak ada
+                                d.order.dir = d.order.dir && ['asc', 'desc'].includes(d.order.dir) ? d.order.dir : 'asc'; // Nilai default untuk dir
                             }
                         },
                         "columns": [
@@ -984,26 +1056,97 @@
                             { data: 'nama_siswa', className: 'text-center' },
                             { data: 'nilai_akhir', className: 'text-center' },
                             { data: 'jurusan', className: 'text-center' },
-                            // { data: 'semester', className: 'text-center' },
                             { data: 'tahun_ajar', className: 'text-center' },
                         ],
+                        "order": [[2, 'desc']], // Default sorting by 'nilai_akhir' in descending order
                         "drawCallback": function (settings) {
                             feather.replace(); // Asumsikan feather adalah plugin ikon yang digunakan
                         }
                     });
+
+                    // Event listener untuk checkbox
+                    jQuery('#showTop3Mipa').change(function() {
+                        if (tableMipa) {
+                            tableMipa.ajax.reload(); // Reload data table dengan parameter baru
+                        }
+                    });
                 }
                 
-                // Fungsi button sortBy Iis
-                loadDataTableIis();
-                jQuery('#search-button-iis').on('click', function() {
-                    var tajarIdIis = $('#select-tajar-iis').val();
-                    loadDataTableIis(tajarIdIis);
+                // Panggil fungsi untuk inisialisasi DataTable
+                loadDataTableMipa();
+
+                // EXPORT PDF MIPA
+                document.getElementById('export-mipa-pdf').addEventListener('click', function() {
+                    // Menggunakan jsPDF dari window.jspdf untuk versi terbaru
+                    const { jsPDF } = window.jspdf;
+
+                    html2canvas(document.querySelector("#data-table-mipa")).then(canvas => {
+                        const imgData = canvas.toDataURL('image/png');
+                        const pdf = new jsPDF('p', 'mm', 'a4');
+                        const imgWidth = 210; // A4 size width in mm
+                        const pageHeight = 295; // A4 size height in mm
+                        const imgHeight = canvas.height * imgWidth / canvas.width;
+                        let heightLeft = imgHeight;
+
+                        let position = 0;
+
+                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                        heightLeft -= pageHeight;
+
+                        while (heightLeft >= 0) {
+                            position = heightLeft - imgHeight;
+                            pdf.addPage();
+                            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                            heightLeft -= pageHeight;
+                        }
+
+                        pdf.save('data-mipa.pdf');
+                    }).catch(err => {
+                        console.error('Error capturing the table:', err);
+                    });
                 });
 
-                function loadDataTableIis (tajarIdIis = '')
-                {
-                    // Data table list nilai perangkingan MIPA
-                    jQuery('#data-table-iis').dataTable({
+                // EXPORT PDF MIPA
+                document.getElementById('export-iis-pdf').addEventListener('click', function() {
+                    // Menggunakan jsPDF dari window.jspdf untuk versi terbaru
+                    const { jsPDF } = window.jspdf;
+
+                    html2canvas(document.querySelector("#data-table-iis")).then(canvas => {
+                        const imgData = canvas.toDataURL('image/png');
+                        const pdf = new jsPDF('p', 'mm', 'a4');
+                        const imgWidth = 210; // A4 size width in mm
+                        const pageHeight = 295; // A4 size height in mm
+                        const imgHeight = canvas.height * imgWidth / canvas.width;
+                        let heightLeft = imgHeight;
+
+                        let position = 0;
+
+                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                        heightLeft -= pageHeight;
+
+                        while (heightLeft >= 0) {
+                            position = heightLeft - imgHeight;
+                            pdf.addPage();
+                            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                            heightLeft -= pageHeight;
+                        }
+
+                        pdf.save('data-iis.pdf');
+                    }).catch(err => {
+                        console.error('Error capturing the table:', err);
+                    });
+                });
+                
+                // Fungsi button sortBy
+                loadDataTableIis();
+                jQuery('#search-button-iis').on('click', function() {
+                    var tajarIdIis = $('#select-periode-iis').val();
+                    loadDataTableIis(tajarIdIis);
+                })
+
+                var tableIis; // Deklarasi variabel global
+                function loadDataTableIis(tajarIdIis = '') {
+                    tableIis = jQuery('#data-table-iis').DataTable({
                         "processing": true,
                         "serverSide": true,
                         "destroy": true,
@@ -1015,13 +1158,11 @@
                                 'Authorization': 'Bearer ' + token
                             },
                             "data": function (d) {
-                                if (tajarIdIis === '-1')
-                                {
-                                    d.tajar_id = ' ';
-                                } else
-                                {
-                                    d.tajar_id = tajarIdIis;
-                                }
+                                d.tajar_id = (tajarIdIis === '-1') ? '' : tajarIdIis; // Kirim nilai periode yang dipilih atau kosong jika 'Semua Periode' dipilih
+                                d.show_top_3_iis = jQuery('#showTop3Iis').is(':checked') ? 1 : 0;
+                                d.order = d.order[0] || {}; // Pastikan d.order memiliki nilai default
+                                d.order.column = d.order.column || 0; // Kolom default jika tidak ada
+                                d.order.dir = d.order.dir && ['asc', 'desc'].includes(d.order.dir) ? d.order.dir : 'asc'; // Nilai default untuk dir
                             }
                         },
                         "columns": [
@@ -1029,14 +1170,23 @@
                             { data: 'nama_siswa', className: 'text-center' },
                             { data: 'nilai_akhir', className: 'text-center' },
                             { data: 'jurusan', className: 'text-center' },
-                            // { data: 'semester', className: 'text-center' },
                             { data: 'tahun_ajar', className: 'text-center' },
                         ],
+                        "order": [[2, 'desc']], // Default sorting by 'nilai_akhir' in descending order
                         "drawCallback": function (settings) {
                             feather.replace(); // Asumsikan feather adalah plugin ikon yang digunakan
                         }
                     });
+
+                    // Event listener untuk checkbox
+                    jQuery('#showTop3Iis').change(function() {
+                        if (tableIis) {
+                            tableIis.ajax.reload(); // Reload data table dengan parameter baru
+                        }
+                    });
                 }
+                loadDataTableIis();
+
 
                 // Show modal detail
                 jQuery('.modal-detail').click(function(){
@@ -1080,6 +1230,40 @@
                     }); 
                 })
 
+                jQuery('.btn-export-mipa-best-3').click(function() {
+                    // Akses URL Export data
+                    var linkto = 'http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/export-data/export-xls-mipa/3-best';
+                    jQuery.ajax({
+                        xhrFields: {
+                            responseType: 'blob',
+                        },
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        type: 'GET',
+                        url: linkto,
+                        success: function(result, status, xhr) {
+
+                            var disposition = xhr.getResponseHeader('content-disposition');
+                            var matches = /"([^"]*)"/.exec(disposition);
+                            var filename = (matches != null && matches[1] ? matches[1] : 'Export-Nilai-Rangking-Siswa-Mipa-3-Terbaik.xlsx');
+
+                            // The actual download
+                            var blob = new Blob([result], {
+                                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                            });
+                            var link = document.createElement('a');
+                            link.href = window.URL.createObjectURL(blob);
+                            link.download = filename;
+
+                            document.body.appendChild(link);
+
+                            link.click();
+                            document.body.removeChild(link);
+                        }
+                    }); 
+                })
+
                 jQuery('.btn-export-iis').click(function() {
                     // Akses URL Export data
                     var linkto = 'http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/export-data/export-xls-iis';
@@ -1097,6 +1281,40 @@
                             var disposition = xhr.getResponseHeader('content-disposition');
                             var matches = /"([^"]*)"/.exec(disposition);
                             var filename = (matches != null && matches[1] ? matches[1] : 'Export-Nilai-Rangking-Siswa-Iis.xlsx');
+
+                            // The actual download
+                            var blob = new Blob([result], {
+                                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                            });
+                            var link = document.createElement('a');
+                            link.href = window.URL.createObjectURL(blob);
+                            link.download = filename;
+
+                            document.body.appendChild(link);
+
+                            link.click();
+                            document.body.removeChild(link);
+                        }
+                    }); 
+                })
+
+                jQuery('.btn-export-iis-best-3').click(function() {
+                    // Akses URL Export data
+                    var linkto = 'http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/export-data/export-xls-iis/3-best';
+                    jQuery.ajax({
+                        xhrFields: {
+                            responseType: 'blob',
+                        },
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        type: 'GET',
+                        url: linkto,
+                        success: function(result, status, xhr) {
+
+                            var disposition = xhr.getResponseHeader('content-disposition');
+                            var matches = /"([^"]*)"/.exec(disposition);
+                            var filename = (matches != null && matches[1] ? matches[1] : 'Export-Nilai-Rangking-Siswa-Iis-3-Terbaik.xlsx');
 
                             // The actual download
                             var blob = new Blob([result], {

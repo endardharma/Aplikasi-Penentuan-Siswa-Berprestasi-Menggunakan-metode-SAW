@@ -430,6 +430,20 @@ License: You must have a valid license purchased only from themeforest(the above
                 <ol class="breadcrumb">
                     <li id="warning-notification-content" class="breadcrumb-item active" aria-current="page"></li>
                 </ol>
+                <!-- BEGIN: SHORT BY PERIODE -->
+                <div class="intro-y flex flex-col sm:flex-row items-center mt-1">
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <button type="submit" class="btn btn-primary shadow-md mr-2 btn-cari" id="search-button">Cari</button>
+                    </div>
+                    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        <label for="periode" class="form-label"></label>
+                        <select class="form-select form-periode" name="periode" id="select-periode" required>
+                            <option disabled selected> -- Pilih Periode -- </option>
+                            <option value="-1">Semua Periode</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- END: SHORT BY PERIODE -->
                 <!-- BEGIN: HTML Table Data -->
                 <div class="intro-y box p-5 mt-5">
                     <div class="overflow-x-auto scrollbar-hidden">
@@ -441,7 +455,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <th>Nama</th>
                                     <th>Atribut</th>
                                     <th>Bobot</th>
-                                    <th>Semester</th>
+                                    <th>Periode</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -488,11 +502,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <input type="number" class="form-control form-bobot" placeholder="80" required>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-3" class="form-label">Kurikulum</label>
-                                <select class="form-select form-kurikulum" required>
-                                    <option selected disabled> --- Pilih Kurikulum Kriteria --- </option>
-                                    <option value="KTSP"> KTSP </option>
-                                    <option value="Merdeka"> Merdeka </option>
+                                <label for="modal-form-3" class="form-label">Periode</label>
+                                <select class="form-select form-tahun-ajar" required>
+                                    <option selected disabled> --- Pilih Periode Kriteria --- </option>
                                 </select>
                             </div>
                         </div>
@@ -577,11 +589,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <input type="number" class="form-control update-bobot" placeholder="80" required>
                             </div>
                             <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-3" class="form-label">Kurikulum</label>
-                                <select class="form-select update-kurikulum" required>
-                                    <option selected disabled> --- Pilih Kurikulum Kriteria --- </option>
-                                    <option value="KTSP"> KTSP </option>
-                                    <option value="Merdeka"> Merdeka </option>
+                                <label for="modal-form-3" class="form-label">Periode</label>
+                                <select class="form-select update-tahun-ajar" required>
+                                    <option selected disabled> --- Pilih Periode Kriteria --- </option>
                                 </select>
                             </div>
                         </div>
@@ -611,6 +621,13 @@ License: You must have a valid license purchased only from themeforest(the above
                 <div class="ml-4 mr-4">
                     <div class="font-medium">Gagal update data master kriteria!</div>
                     <div class="text-slate-500 mt-1 update-gagal"></div>
+                </div>
+            </div>
+            <div id="failed-update-notification-content-bobot" class="toastify-content hidden flex">
+                <i class="text-danger" data-lucide="x-circle"></i> 
+                <div class="ml-4 mr-4">
+                    <div class="font-medium">Gagal meng-update data, total bobot tidak boleh lebih dari 100%!</div>
+                    <div class="text-slate-500 mt-1 pesan-gagal"></div>
                 </div>
             </div>
             <!-- END: Notification Gagal Update Master Kriteria Content -->
@@ -1012,6 +1029,32 @@ License: You must have a valid license purchased only from themeforest(the above
                     modal.show();
                 });
 
+                // data support tajar
+                var url = 'http://127.0.0.1:8000/api/master-kriteria/data-support/tajar';
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }).then(response => response.json()).then(data => {
+
+                    var selectCreateTajar = jQuery('.form-tahun-ajar');
+                    var selectUpdateTajar = jQuery('.update-tahun-ajar');
+                    var selectPeriode = jQuery('.form-periode');
+
+                    jQuery.each(data, function(index, item) {
+                        for (let i=0; i<item.length; i++)
+                        {
+                            selectCreateTajar.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
+                            selectUpdateTajar.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
+                            selectPeriode.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
+                        }
+                    });
+                    
+                }).catch(error => {
+                    console.error('Error: ', error);
+                });
+                
                 jQuery('.btn-simpan').click(function() {
                     // Show the modal
                     event.preventDefault(); // Prevent default form submission
@@ -1021,14 +1064,14 @@ License: You must have a valid license purchased only from themeforest(the above
                     var name = jQuery(".form-name").val();
                     var atribut = jQuery(".form-atribut").val();
                     var bobot = jQuery(".form-bobot").val();
-                    var kurikulum = jQuery(".form-kurikulum").val();
+                    var id_tajar_periode = jQuery(".form-tahun-ajar").val();
 
                     var formData = new FormData();
                     formData.append('kode', kode);
                     formData.append('name', name);
                     formData.append('atribut', atribut);
                     formData.append('bobot', bobot);
-                    formData.append('kurikulum', kurikulum);
+                    formData.append('tajar_id', id_tajar_periode);
 
                     // Kirim permintaan pembaruan produk ke API
                     jQuery.ajax({
@@ -1092,7 +1135,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         }
 
                             setTimeout(function() {
-                                location.reload();
+                                // location.reload();
                             }, 5000); // 3000 milliseconds = 3 seconds
                         }
                     });
@@ -1189,76 +1232,318 @@ License: You must have a valid license purchased only from themeforest(the above
                 // }
 
                 // Datatable list Cabang
-                jQuery('#data-table').DataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ajax": {
-                        "url": "http://127.0.0.1:8000/api/master-kriteria/list",
-                        "type": "POST",
-                        "dataType": "json",
-                        "headers": {
-                            'Authorization': 'Bearer ' + token
-                        },
-                        "dataSrc": function (json) {
-                            var totalBobot = 0;
+                // jQuery('#data-table').DataTable({
+                //     "processing": true,
+                //     "serverSide": true,
+                //     "ajax": {
+                //         "url": "http://127.0.0.1:8000/api/master-kriteria/list",
+                //         "type": "POST",
+                //         "dataType": "json",
+                //         "headers": {
+                //             'Authorization': 'Bearer ' + token
+                //         },
+                //         "dataSrc": function (json) {
+                //             var totalBobot = 0;
 
-                            // Loop through the data to calculate total bobot
-                            json.data.forEach(function (item) {
-                                totalBobot += parseFloat(item.bobot_percent);
-                            });
+                //             // Loop through the data to calculate total bobot
+                //             json.data.forEach(function (item) {
+                //                 totalBobot += parseFloat(item.bobot_percent);
+                //             });
 
-                            // Check if totalBobot exceeds 100%
-                            // if (totalBobot > 100) {
-                            //     // Show the warning notification content using Toastify
-                            //     Toastify({
-                            //         node: $("#warning-notification-content").clone().removeClass('hidden')[0], // Cloning and removing 'hidden'
-                            //         duration: 3000,
-                            //         gravity: "top",
-                            //         position: "right",
-                            //         backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
-                            //         stopOnFocus: true, 
-                            //     }).showToast();
-                            // }
-                            var warningElement = $('#warning-notification-content');
-                            if (totalBobot > 100) {
-                                // Show the warning notification by setting the text and making it visible
-                                warningElement.text('*Total bobot melebihi 100%! Harap periksa kembali.');
-                                warningElement.addClass('text-danger');
-                                warningElement.css('color', 'red'); // Optional: add a class to style the warning
-                            } else {
-                                // Clear the warning message when total bobot is valid
-                                warningElement.text('');
-                                warningElement.removeClass('text-danger');
-                            }
+                //             // Check if totalBobot exceeds 100%
+                //             // if (totalBobot > 100) {
+                //             //     // Show the warning notification content using Toastify
+                //             //     Toastify({
+                //             //         node: $("#warning-notification-content").clone().removeClass('hidden')[0], // Cloning and removing 'hidden'
+                //             //         duration: 3000,
+                //             //         gravity: "top",
+                //             //         position: "right",
+                //             //         backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                //             //         stopOnFocus: true, 
+                //             //     }).showToast();
+                //             // }
+                //             var warningElement = $('#warning-notification-content');
+                //             if (totalBobot > 100) {
+                //                 // Show the warning notification by setting the text and making it visible
+                //                 warningElement.text('*Total bobot melebihi 100%! Harap periksa kembali.');
+                //                 warningElement.addClass('text-danger');
+                //                 warningElement.css('color', 'red'); // Optional: add a class to style the warning
+                //             } else {
+                //                 // Clear the warning message when total bobot is valid
+                //                 warningElement.text('');
+                //                 warningElement.removeClass('text-danger');
+                //             }
 
-                            return json.data;
-                        }
-                    },
-                    "columns": [
-                        { data: 'id', className: 'text-center' },
-                        { data: 'kode', className: 'text-center' },
-                        { data: 'name', className: 'text-center' },
-                        { data: 'atribut', className: 'text-center' },
-                        { data: 'bobot_percent', className: 'text-center' },
-                        { data: 'kurikulum', className: 'text-center' },
-                        {
-                            data: null,
-                            render: function (data, type, row) {
+                //             return json.data;
+                //         }
+                //     },
+                //     "columns": [
+                //         { data: 'id', className: 'text-center' },
+                //         { data: 'kode', className: 'text-center' },
+                //         { data: 'name', className: 'text-center' },
+                //         { data: 'atribut', className: 'text-center' },
+                //         { data: 'bobot_percent', className: 'text-center' },
+                //         { data: 'tahun_ajar', className: 'text-center' },
+                //         {
+                //             data: null,
+                //             render: function (data, type, row) {
 
-                                // Create action buttons
-                                var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-kode="' + data.kode + '" data-name="' + data.name + '" data-atribut="' + data.atribut + '" data-bobot="' + data.bobot + '" data-kurikulum="' + data.kurikulum + '"><i data-feather="edit" class="w-4 h-4"></i></button>';
-                                var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4"></i></button>';
+                //                 // Create action buttons
+                //                 var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-kode="' + data.kode + '" data-name="' + data.name + '" data-atribut="' + data.atribut + '" data-bobot="' + data.bobot + '" data-id_tajar_periode="' + data.id_tajar_periode + '"><i data-feather="edit" class="w-4 h-4"></i></button>';
+                //                 var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4"></i></button>';
 
-                                // Combine the buttons
-                                var actions = editBtn + ' || ' + deleteBtn;
-                                return actions;
-                            }
-                        }
-                    ],
-                    "drawCallback": function(settings) {
-                        feather.replace();
-                    }
+                //                 // Combine the buttons
+                //                 var actions = editBtn + ' || ' + deleteBtn;
+                //                 return actions;
+                //             }
+                //         }
+                //     ],
+                //     "drawCallback": function(settings) {
+                //         feather.replace();
+                //     }
+                // });
+
+                // Fungsi button sortBy
+                // loadDataTable();
+                // jQuery('#search-button').on('click', function() {
+                //     var tajarId = $('#select-periode').val();
+                //     loadDataTable(tajarId);
+                // });
+                // function loadDataTable(tajarId = '')
+                // {
+                //     jQuery('#data-table').DataTable({
+                //         "processing": true,
+                //         "serverSide": true,
+                //         "ajax": {
+                //             "url": "http://127.0.0.1:8000/api/master-kriteria/list",
+                //             "type": "POST",
+                //             "dataType": "json",
+                //             "headers": {
+                //                 'Authorization': 'Bearer ' + token
+                //             },
+                //             "dataSrc": function (json) {
+                //                 var totalBobotPerTajar = {}; // Object to store total bobot per tajar_id
+    
+                //                 // Loop through the data to calculate total bobot per tajar_id
+                //                 json.data.forEach(function (item) {
+                //                     var tajarId = item.id_tajar_periode;
+    
+                //                     // Initialize the bobot for this tajar_id if not already set
+                //                     if (!totalBobotPerTajar[tajarId]) {
+                //                         totalBobotPerTajar[tajarId] = 0;
+                //                     }
+    
+                //                     // Accumulate bobot for the current tajar_id
+                //                     totalBobotPerTajar[tajarId] += parseFloat(item.bobot);
+    
+                //                     // If any period exceeds 100%, display a warning
+                //                     var warningElement = $('#warning-notification-content');
+                //                     warningElement.html(''); // Clear previous warnings
+                //                     Object.keys(totalBobotPerTajar).forEach(function(tajarId) {
+                //                         if (totalBobotPerTajar[tajarId] > 100) {
+                //                             var periodeName = item.tahun_ajar; // Get periode name from item
+    
+                //                             // Show the warning notification for each period that exceeds 100%
+                //                             warningElement.append('<p class="text-danger">*Total bobot untuk periode ' + periodeName + ' melebihi 100%! Harap periksa kembali. Total bobot: ' + totalBobotPerTajar[tajarId] + '%</p>');
+                //                             warningElement.css('color', 'red');
+                //                         }
+                //                     });
+                //                 });
+    
+                //                 return json.data;
+                //             },
+                //             "data": function(d) {
+                //                 d.tajar_id = (tajarId === '-1') ? '' : tajarId; // Kirim nilai periode yang dipilih atau kosong jika 'Semua Periode' dipilih
+                //             }
+                //         },
+                //         "columns": [
+                //             { data: 'id', className: 'text-center' },
+                //             { data: 'kode', className: 'text-center' },
+                //             { data: 'name', className: 'text-center' },
+                //             { data: 'atribut', className: 'text-center' },
+                //             { data: 'bobot_percent', className: 'text-center' },
+                //             { data: 'tahun_ajar', className: 'text-center' },
+                //             {
+                //                 data: null,
+                //                 render: function (data, type, row) {
+                //                     // Create action buttons
+                //                     var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-kode="' + data.kode + '" data-name="' + data.name + '" data-atribut="' + data.atribut + '" data-bobot="' + data.bobot + '" data-id_tajar_periode="' + data.id_tajar_periode + '"><i data-feather="edit" class="w-4 h-4"></i></button>';
+                //                     var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4"></i></button>';
+    
+                //                     // Combine the buttons
+                //                     var actions = editBtn + ' || ' + deleteBtn;
+                //                     return actions;
+                //                 }
+                //             }
+                //         ],
+                //         "drawCallback": function(settings) {
+                //             feather.replace();
+                //         }
+                //     });
+                // }
+
+                // Load DataTable pertama kali tanpa parameter
+                loadDataTable();
+
+                // Klik tombol search untuk memuat ulang DataTable berdasarkan pilihan periode
+                jQuery('#search-button').on('click', function() {
+                    var tajarId = $('#select-periode').val();
+                    loadDataTable(tajarId);
                 });
+
+                // function loadDataTable(tajarId = '') {
+                //     // Inisialisasi DataTable
+                //     jQuery('#data-table').DataTable({
+                //         "processing": true,
+                //         "serverSide": true,
+                //         "ajax": {
+                //             "url": "http://127.0.0.1:8000/api/master-kriteria/list",
+                //             "type": "POST",
+                //             "dataType": "json",
+                //             "headers": {
+                //                 'Authorization': 'Bearer ' + token
+                //             },
+                //             "dataSrc": function (json) {
+                //                 var totalBobotPerTajar = {}; // Object untuk menyimpan total bobot per tajar_id
+
+                //                 // Bersihkan elemen peringatan sebelumnya
+                //                 var warningElement = $('#warning-notification-content');
+                //                 warningElement.html(''); 
+
+                //                 // Loop melalui data untuk menghitung total bobot per tajar_id
+                //                 json.data.forEach(function (item) {
+                //                     var tajarId = item.id_tajar_periode;
+
+                //                     // Inisialisasi bobot untuk tajar_id ini jika belum diatur
+                //                     if (!totalBobotPerTajar[tajarId]) {
+                //                         totalBobotPerTajar[tajarId] = 0;
+                //                     }
+
+                //                     // Akumulasi bobot untuk tajar_id saat ini
+                //                     totalBobotPerTajar[tajarId] += parseFloat(item.bobot);
+                //                 });
+
+                //                 // Tampilkan peringatan jika ada periode yang melebihi 100%
+                //                 Object.keys(totalBobotPerTajar).forEach(function(tajarId) {
+                //                     if (totalBobotPerTajar[tajarId] > 100) {
+                //                         var periodeName = json.data.find(function(item) {
+                //                             return item.id_tajar_periode === tajarId;
+                //                         }).tahun_ajar; // Mendapatkan nama periode dari data
+
+                //                         // Tampilkan peringatan
+                //                         warningElement.append('<p class="text-danger">*Total bobot untuk periode ' + periodeName + ' melebihi 100%! Harap periksa kembali. Total bobot: ' + totalBobotPerTajar[tajarId] + '%</p>');
+                //                         warningElement.css('color', 'red');
+                //                     }
+                //                 });
+
+                //                 return json.data;
+                //             }
+                //         },
+                //         "columns": [
+                //             { data: 'id', className: 'text-center' },
+                //             { data: 'kode', className: 'text-center' },
+                //             { data: 'name', className: 'text-center' },
+                //             { data: 'atribut', className: 'text-center' },
+                //             { data: 'bobot_percent', className: 'text-center' },
+                //             { data: 'tahun_ajar', className: 'text-center' },
+                //             {
+                //                 data: null,
+                //                 render: function (data, type, row) {
+                //                     // Membuat tombol aksi
+                //                     var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-kode="' + data.kode + '" data-name="' + data.name + '" data-atribut="' + data.atribut + '" data-bobot="' + data.bobot + '" data-id_tajar_periode="' + data.id_tajar_periode + '"><i data-feather="edit" class="w-4 h-4"></i></button>';
+                //                     var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4"></i></button>';
+
+                //                     // Gabungkan tombol
+                //                     var actions = editBtn + ' || ' + deleteBtn;
+                //                     return actions;
+                //                 }
+                //             }
+                //         ],
+                //         "drawCallback": function(settings) {
+                //             feather.replace();
+                //         }
+                //     });
+                // }
+
+                var table; // Deklarasi variabel global
+                function loadDataTable(tajarId = '') {
+                    // Inisialisasi DataTable
+                    table = jQuery('#data-table').DataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "destroy": true,
+                        "ajax": {
+                            "url": "http://127.0.0.1:8000/api/master-kriteria/list",
+                            "type": "POST",
+                            "dataType": "json",
+                            "headers": {
+                                'Authorization': 'Bearer ' + token
+                            },
+                            "data": function (d) {
+                                // Tambahkan tajarId ke data yang dikirim ke server
+                                d.tajar_id = (tajarId === '-1') ? '' : tajarId; // Kirim nilai periode yang dipilih atau kosong jika 'Semua Periode' dipilih
+                            },
+                            "dataSrc": function (json) {
+                                var totalBobotPerTajar = {}; // Object untuk menyimpan total bobot per tajar_id
+
+                                // Bersihkan elemen peringatan sebelumnya
+                                var warningElement = $('#warning-notification-content');
+                                warningElement.html(''); 
+
+                                // Loop melalui data untuk menghitung total bobot per tajar_id
+                                json.data.forEach(function (item) {
+                                    var tajarId = item.id_tajar_periode;
+
+                                    // Inisialisasi bobot untuk tajar_id ini jika belum diatur
+                                    if (!totalBobotPerTajar[tajarId]) {
+                                        totalBobotPerTajar[tajarId] = 0;
+                                    }
+
+                                    // Akumulasi bobot untuk tajar_id saat ini
+                                    totalBobotPerTajar[tajarId] += parseFloat(item.bobot);
+                                });
+
+                                // Tampilkan peringatan jika ada periode yang melebihi 100%
+                                Object.keys(totalBobotPerTajar).forEach(function(tajarId) {
+                                    if (totalBobotPerTajar[tajarId] > 100) {
+                                        var periodeName = json.data.find(function(item) {
+                                            return item.id_tajar_periode === tajarId;
+                                        }).tahun_ajar; // Mendapatkan nama periode dari data
+
+                                        // Tampilkan peringatan
+                                        warningElement.append('<p class="text-danger">*Total bobot untuk periode ' + periodeName + ' melebihi 100%! Harap periksa kembali. Total bobot: ' + totalBobotPerTajar[tajarId] + '%</p>');
+                                        warningElement.css('color', 'red');
+                                    }
+                                });
+
+                                return json.data;
+                            }
+                        },
+                        "columns": [
+                            { data: 'id', className: 'text-center' },
+                            { data: 'kode', className: 'text-center' },
+                            { data: 'name', className: 'text-center' },
+                            { data: 'atribut', className: 'text-center' },
+                            { data: 'bobot_percent', className: 'text-center' },
+                            { data: 'tahun_ajar', className: 'text-center' },
+                            {
+                                data: null,
+                                render: function (data, type, row) {
+                                    // Membuat tombol aksi
+                                    var editBtn = '<button class="btn btn-primary btn-edit" data-id="' + data.id + '" data-kode="' + data.kode + '" data-name="' + data.name + '" data-atribut="' + data.atribut + '" data-bobot="' + data.bobot + '" data-id_tajar_periode="' + data.id_tajar_periode + '"><i data-feather="edit" class="w-4 h-4"></i></button>';
+                                    var deleteBtn = '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i data-feather="trash-2" class="w-4 h-4"></i></button>';
+
+                                    // Gabungkan tombol
+                                    var actions = editBtn + ' || ' + deleteBtn;
+                                    return actions;
+                                }
+                            }
+                        ],
+                        "drawCallback": function(settings) {
+                            feather.replace();
+                        }
+                    });
+                }
 
                 // Handle button click events
                 jQuery('#data-table').on('click', '.btn-edit', function() {
@@ -1272,7 +1557,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         var name = jQuery(this).attr("data-name");
                         var atribut = jQuery(this).attr("data-atribut");
                         var bobot = jQuery(this).attr("data-bobot");
-                        var kurikulum = jQuery(this).attr("data-kurikulum");
+                        var id_tajar_periode = jQuery(this).attr("data-id_tajar_periode");
 
                         // Handle edit action
                         jQuery('.update-id').val(id);
@@ -1280,7 +1565,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         jQuery('.update-nama').val(name);
                         jQuery('.update-atribut').val(atribut);
                         jQuery('.update-bobot').val(bobot);
-                        jQuery('.update-kurikulum').val(kurikulum);
+                        jQuery('.update-tahun-ajar').val(id_tajar_periode);
                     });
 
                     // Tombol Update Admin
@@ -1291,7 +1576,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         var name = jQuery('.update-nama').val();
                         var atribut = jQuery('.update-atribut').val();
                         var bobot = jQuery('.update-bobot').val();
-                        var kurikulum = jQuery('.update-kurikulum').val();
+                        var periode_tajar_id = jQuery('.update-tahun-ajar').val();
 
                         // Kirim permintaan pembaruan produk ke API
                         jQuery.ajax({
@@ -1305,7 +1590,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 name: name,
                                 atribut: atribut,
                                 bobot: bobot,
-                                kurikulum: kurikulum,
+                                tajar_id: periode_tajar_id,
                             },
                             success: function(response) {
                                 jQuery('.update-sukses').text(response.message);
@@ -1326,9 +1611,11 @@ License: You must have a valid license purchased only from themeforest(the above
                                 }, 3000); // 3000 milliseconds = 3 seconds
                             },
                             error: function(xhr, status, error) {
-                                jQuery('.update-gagal').text(error);
+                            // Handle specific bobot > 100% case
+                            if (xhr.status === 400 && xhr.responseJSON.message === 'Gagal meng-update data, total bobot tidak boleh lebih dari 100%') {
+                                // Show the specific bobot error notification
                                 Toastify({
-                                    node: $("#failed-update-notification-content")
+                                    node: $("#failed-update-notification-content-bobot")
                                         .clone()
                                         .removeClass("hidden")[0],
                                     duration: 5000,
@@ -1338,6 +1625,26 @@ License: You must have a valid license purchased only from themeforest(the above
                                     position: "right",
                                     stopOnFocus: true,
                                 }).showToast();
+                            } else {
+                                // General error handling
+                                var response = xhr.responseJSON;
+                                jQuery('.pesan-gagal').text(response ? response.message : error);
+                                Toastify({
+                                    node: $("#failed-notification-content")
+                                        .clone()
+                                        .removeClass("hidden")[0],
+                                    duration: 5000,
+                                    newWindow: true,
+                                    close: true,
+                                    gravity: "top",
+                                    position: "right",
+                                    stopOnFocus: true,
+                                }).showToast();
+                            }
+
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 5000); // 3000 milliseconds = 3 seconds
                             }
                         });
                     });
