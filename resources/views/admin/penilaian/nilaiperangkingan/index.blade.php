@@ -428,6 +428,7 @@
                         </div>
                     </div> --}}
                     <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+                        {{-- <button class="btn btn-primary shadow-md mr-2 btn-export-data">Export Data</button> --}}
                         <div class="dropdown ml-auto sm:ml-0">
                             <button class="dropdown-toggle btn px-2 box" aria-expanded="false" data-tw-toggle="dropdown">
                                 <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-lucide="plus"></i> </span>
@@ -496,6 +497,54 @@
                     </div>
                 </div>
                 <!-- END: HTML Table Data -->
+                <!-- BEGIN: Modal Content -->
+            <div id="header-export-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- BEGIN: Modal Header -->
+                        <div class="modal-header">
+                            <h2 class="font-medium text-base mr-auto">
+                                Form Export Data Nilai Perangkingan
+                            </h2>
+                            <a data-tw-dismiss="modal" href="javascript:;"> <i data-feather="x" class="w-8 h-8 text-gray-500"></i> </a>
+                        </div>
+                        <!-- END: Modal Header -->
+                        <!-- BEGIN: Modal Body -->
+                        <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                            <div class="col-span-12 sm:col-span-12">
+                            <label for="modal-form-6" class="form-label">Pilih Tahun Ajar</label>
+                                <select id="tajar-import" class="form-select form-export-periode">
+                                    <option selected disabled> --- Pilih Tahun Ajar --- </option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                            <label for="modal-form-6" class="form-label">Pilih Export Data</label>
+                                <select id="tajar-import" class="form-select form-export-data">
+                                    <option selected disabled> --- Pilih Export Data --- </option>
+                                    <option value="Semua Data"> Semua Data </option>
+                                    <option value="Tiga Siswa Terbaik"> Tiga Siswa Terbaik </option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12">
+                            <label for="modal-form-6" class="form-label">Pilih Jenis Export Data</label>
+                                <select id="tajar-import" class="form-select form-export-jenis-data">
+                                    <option selected disabled> --- Pilih Jenis Export Data --- </option>
+                                    <option value="PDF"> PDF </option>
+                                    <option value="Excel"> Excel </option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- END: Modal Body -->
+                        <!-- BEGIN: Modal Footer -->
+                        <div class="modal-footer">
+                            <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Batal</button>
+                            <button type="button" class="btn btn-primary w-20 btn-export">Export</button>
+                        </div>
+                        <!-- END: Modal Footer -->
+                    </div>
+                </div>
+            </div>
+            <!-- END: Modal Content -->
                 <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
                     <h2 class="text-lg font-medium mr-auto">
                         List Nilai Perangkingan Jurusan IIS
@@ -948,11 +997,13 @@
                     }
                 }).then(response => response.json()).then(data => {
                     var selectSortByTajar = jQuery('.form-periode');
+                    var selectExportPeriode = jQuery('.form-export-periode');
 
                     jQuery.each(data, function (index, item) {
                         for (let i = 0; i < item.length; i++)
                         {
                             selectSortByTajar.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
+                            selectExportPeriode.append('<option value="' + item[i].id + '">' + item[i].periode + '</option>');
                         }
                     });
                 }).catch(error => {
@@ -1332,6 +1383,53 @@
                     }); 
                 })
 
+                jQuery('.btn-export-data').click(function() {
+                    // show the modal
+                    const el = document.querySelector('#header-export-footer-modal-preview');
+                    const modal = tailwind.Modal.getOrCreateInstance(el);
+                    modal.show();
+                });
+                jQuery('.btn-export').on('click', function() {
+                    // Ambil nilai dari select option untuk 'Tahun Ajar', 'Export Data', dan 'Jenis Export'
+                    var periode = jQuery('.form-export-periode').val();
+                    var exportData = jQuery('.form-export-data').val();
+                    var exportType = jQuery('.form-export-jenis-data').val();
+
+                    // Validasi: Pastikan semua field diisi
+                    if (!periode || !exportData || !exportType) {
+                        alert('Pastikan semua pilihan telah diisi!');
+                        return;
+                    }
+
+                    // Buat request AJAX untuk export data
+                    jQuery.ajax({
+                        url: 'http://127.0.0.1:8000/api/data-penilaian/nilai-perangkingan/export-data/export',
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + token, // Pastikan variabel token sudah didefinisikan dengan benar
+                        },
+                        data: {
+                            periode: periode, // Kirim sebagai 'periode' sesuai validasi di controller
+                            exportData: exportData,
+                            exportType: exportType,
+                        },
+                        success: function(response) {
+                            // Jika export type PDF, redirect ke halaman yang mengandung window.print
+                            if (exportType === 'PDF') {
+                                window.location.href = response.url; 
+                            }
+                            // Jika export type Excel, browser akan memulai download otomatis
+                            else if (exportType === 'Excel') {
+                                window.location.href = response.url;
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Terjadi kesalahan:', error);
+                            alert('Export data gagal. Silakan coba lagi.');
+                        }
+                    });
+                });
+                
             })
         </script>
         <!-- END: JS Assets -->

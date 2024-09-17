@@ -1942,5 +1942,53 @@ class NilaiPerangkinganController extends Controller
         return Excel::download(new NilaiPerangkinganExport($data), 'Data-Perangkingan-Top3-Mipa.xlsx');
     }
 
+    public function exportData(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'periode' => 'required',
+            'exportData' => 'required',
+            'exportType' => 'required'
+        ]);
+
+        // Mengambil data NilaiPerangkingan hanya untuk jurusan MIPA
+        $query = NilaiPerangkingan::with(['siswa', 'jurusan', 'tajar'])
+            ->whereHas('jurusan', function ($query) {
+                $query->where('name', 'MIPA'); // Pastikan 'MIPA' sesuai dengan data yang ada
+            })
+            ->whereHas('tajar', function ($query) use ($request) {
+                $query->where('id', $request->tajar);
+            });
+
+        // Jika memilih Tiga Siswa Terbaik, batasi data yang diambil
+        if ($request->exportData === 'Tiga Siswa Terbaik') {
+            $query = $query->orderBy('nilai_akhir', 'desc')->limit(3);
+        } else {
+            $query = $query->orderBy('nilai_akhir', 'desc');
+        }
+
+        $rangking = $query->get();
+
+        $data = array();
+
+        foreach ($rangking as $r) {
+            $item['id'] = $r->id;
+            $item['nama_siswa'] = $r->siswa->name ?? '';
+            $item['nilai_akhir'] = $r->nilai_akhir;
+            $item['jurusan'] = $r->jurusan->name ?? '';
+            $item['tahun_ajar'] = $r->tajar->periode ?? '';
+            $data[] = $item;
+        }
+
+        // Tentukan jenis export
+        if ($request->exportType === 'PDF') {
+            // Redirect ke halaman khusus untuk print dengan data yang diperlukan
+            return view('exports.ranking-print', compact('data'));
+        } else if ($request->exportType === 'Excel') {
+            return Excel::download(new NilaiPerangkinganExport($data), 'Data-Perangkingan-Mipa.xlsx');
+        }
+
+        return response()->json(['error' => 'Jenis export tidak valid'], 400);
+    }
     
 }

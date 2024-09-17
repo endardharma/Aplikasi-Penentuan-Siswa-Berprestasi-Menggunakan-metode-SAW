@@ -271,6 +271,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get("/export-data/export-xls-mipa/3-best", [NilaiPerangkinganController::class, 'exportDataMipa3Best']);
             Route::get("/export-data/export-xls-iis", [NilaiPerangkinganController::class, 'exportDataIis']);
             Route::get("/export-data/export-xls-iis/3-best", [NilaiPerangkinganController::class, 'exportDataIis3Best']);
+            Route::post("/export-data/export", [NilaiPerangkinganController::class, 'exportData']);
             Route::get("/data-support/tajar-mipa", [NilaiPerangkinganController::class, 'supportTajarMipa']);
             Route::get("/data-support/tajar-iis", [NilaiPerangkinganController::class, 'supportTajarIis']);
         });
